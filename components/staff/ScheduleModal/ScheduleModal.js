@@ -1,13 +1,8 @@
 import styles from './styles.module.css';
-import React, {useEffect, useRef, useState} from "react";
+import React, {useState} from "react";
 import {useAuth} from "../../../context/AuthContext";
-import {APIConnector} from "../../APIConnector";
-import {Button, Form, Modal, Notification, RangeSlider, Schema, toaster} from "rsuite";
-import {Field} from "../../inputs/Field";
-import {InputPassword} from "../../inputs/InputPassword";
+import {Button, Modal, Notification, RangeSlider, toaster} from "rsuite";
 import {TimeHelper} from "../../../utils/TimeHelper";
-
-const {StringType} = Schema.Types;
 
 export default function ScheduleModal(props) {
 
@@ -27,6 +22,17 @@ export default function ScheduleModal(props) {
         setSubmitted(true);
         try {
             // await (await APIConnector.create(2000, currentUser)).post("/staff/change-password", {...formValue, uid: props.staff.uid });
+            Object.keys(values).forEach((day) => {
+                if (values[day]["day"]) {
+                    values[day]["day"][0] = sliderValTo24(values[day]["day"][0]);
+                    values[day]["day"][1] = sliderValTo24(values[day]["day"][1]);
+                }
+                if (values[day]["lunch"]) {
+                    values[day]["lunch"][0] = sliderValTo24(values[day]["lunch"][0]);
+                    values[day]["lunch"][1] = sliderValTo24(values[day]["lunch"][1]);
+                }
+            })
+
             toaster.push(<Notification type={"success"} header={"Schedule updated!"}/>, {
                 placement: 'topEnd'
             });
@@ -42,59 +48,72 @@ export default function ScheduleModal(props) {
         }
     }
 
+    function sliderValTo24(mark) {
+        return mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
+    }
+
     return (
 
         <Modal open={visible} onClose={() => setVisible(false)} backdrop={"static"} size={"lg"}>
             <Modal.Header>
-                <div className={`d-flex align-items-center`} style={{ gap: '1rem' }}>
-                    <Modal.Title style={{ width: 'auto' }}>{props.staff.firstname} {props.staff.lastname}&apos;s Schedule</Modal.Title>
-                    {days.map((day) => <Button key={day} appearance="subtle" className={selectedDay === day ? styles.active : ""} onClick={() => setSelectedDay(day)}>{day}</Button>)}
+                <div className={`d-flex align-items-center`} style={{gap: '1rem'}}>
+                    <Modal.Title style={{width: 'auto'}}>{props.staff.firstname} {props.staff.lastname}&apos;s
+                        Schedule</Modal.Title>
+                    {days.map((day) => <Button key={day} appearance="subtle"
+                                               className={selectedDay === day ? styles.active : ""}
+                                               onClick={() => setSelectedDay(day)}>{day}</Button>)}
                 </div>
 
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{ overflow: 'hidden', display: 'flex' }}>
                 <div className={styles.body}>
                     <div className={styles.slider}>
                         <span className={styles.header}>Day End</span>
-                        <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.day || [22, 22]} defaultValue={[22, 22]} graduated
-                                     progress vertical tooltip={false} renderMark={mark => {
-                            const timestamp24 = mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
-                            return <span>{TimeHelper.convertTime24to12(timestamp24)}</span>;
-                        }} onChange={v => {
-                            if (values[selectedDay]) {
-                                values[selectedDay]["day"] = v;
-                            } else {
-                                values[selectedDay] = {
-                                    day: v
+                        <div className={styles.inner}>
+                            <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.day || [22, 22]}
+                                         defaultValue={[22, 22]} handleClassName={styles.handle} graduated
+                                         progress vertical tooltip={false} renderMark={mark => {
+                                const timestamp24 = sliderValTo24(mark);
+                                return <span>{TimeHelper.convertTime24to12(timestamp24)}</span>;
+                            }} onChange={v => {
+                                if (values[selectedDay]) {
+                                    values[selectedDay]["day"] = v;
+                                } else {
+                                    values[selectedDay] = {
+                                        day: v
+                                    }
                                 }
-                            }
-                            setValues(values);
-                            setTriggerRender(!triggerRender)
-                        }}/>
+                                setValues(values);
+                                setTriggerRender(!triggerRender)
+                            }}/>
+                        </div>
                         <span className={styles.header}>Day Start</span>
                     </div>
                     <div className={styles.slider}>
                         <span className={styles.header}>Lunch End</span>
-                        <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.lunch || [22, 22]} defaultValue={[22, 22]} graduated
-                                     progress vertical tooltip={false} renderMark={mark => {
-                            const timestamp24 = mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
-                            return <span>{TimeHelper.convertTime24to12(timestamp24)}</span>;
-                        }} onChange={v => {
-                            if (values[selectedDay]) {
-                                values[selectedDay]["lunch"] = v;
-                            } else {
-                                values[selectedDay] = {
-                                    lunch: v
+                        <div className={styles.inner}>
+                            <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.lunch || [22, 22]}
+                                         defaultValue={[22, 22]} handleClassName={styles.handle} graduated
+                                         progress vertical tooltip={false} renderMark={mark => {
+                                const timestamp24 = mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
+                                return <span>{TimeHelper.convertTime24to12(timestamp24)}</span>;
+                            }} onChange={v => {
+                                if (values[selectedDay]) {
+                                    values[selectedDay]["lunch"] = v;
+                                } else {
+                                    values[selectedDay] = {
+                                        lunch: v
+                                    }
                                 }
-                            }
-                            setValues(values);
-                            setTriggerRender(!triggerRender)
-                        }}/>
+                                setValues(values);
+                                setTriggerRender(!triggerRender)
+                            }}/>
+                        </div>
                         <span className={styles.header}>Lunch Start</span>
                     </div>
                 </div>
             </Modal.Body>
-            <Modal.Footer style={{ height: '56px' }}>
+            <Modal.Footer style={{height: '56px'}}>
                 <br/>
                 <Button onClick={setSchedule} appearance="primary" loading={submitted}>
                     Submit

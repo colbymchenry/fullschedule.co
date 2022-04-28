@@ -2,6 +2,16 @@ import {FirebaseAdmin} from "../utils/firebase/FirebaseAdmin";
 
 export class Staff {
 
+    constructor(data) {
+        this.data = data;
+    }
+
+    async setSchedule(schedule) {
+        await FirebaseAdmin.firestore().collection("staff").doc(this.data.doc_id).update({
+           schedule
+        });
+    }
+
     static async create(email, password, firstname, lastname, avatar, services) {
         const user = await FirebaseAdmin.auth().createUser({
             email: email.toLowerCase(),

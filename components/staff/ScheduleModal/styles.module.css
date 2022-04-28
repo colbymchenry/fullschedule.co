@@ -1,5 +1,5 @@
 .slider {
-    height: 100%;
+    height: calc(100% - 2rem);
     margin-top: 2rem;
     display: flex;
     flex-direction: column;
@@ -19,7 +19,6 @@
     display: flex;
     width: 100%;
     justify-content: space-evenly;
-    height: 1400px;
 }
 
 .active {
@@ -34,4 +33,38 @@
 
 .body .slider > div {
     width: 25%;
+}
+
+.handle {
+    margin-left: -3rem;
+    margin-bottom: -0.7rem;
+}
+
+.handle::before {
+    margin-left: 2.65rem;
+    margin-top: 0.25rem !important;
+}
+
+.slider div[data-key="end"]:after {
+    content: "end";
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 0.2rem 0.5rem;
+}
+
+.slider div[data-key="start"]:after {
+    content: "start";
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 0.2rem 0.5rem;
+}
+
+.inner {
+    overflow-y: auto;
+    height: 100%;
+    width: 200px !important;
+    padding-left: 5rem;
+    padding-top: 1rem;
+}
+
+.inner > div {
+    height: 1200px;
 }

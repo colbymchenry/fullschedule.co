@@ -1,0 +1,35 @@
+.table {
+    height: 80vh;
+}
+
+.center > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bigger > div {
+    display: flex;
+    align-items: center;
+    font-size: clamp(12px, 2vw, 24px) !important;
+}
+
+.infoCell > div {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.controlsCell {
+    display: flex;
+    align-items: center;
+    width: calc(100vw - 320px - 100px - 350px) !important;
+}
+
+.controlsCell > div {
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+}

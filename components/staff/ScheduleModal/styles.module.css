@@ -1,0 +1,27 @@
+.slider {
+    height: 100%;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.slider > span:first-of-type {
+    font-weight: bold;
+}
+.slider > span:last-of-type {
+    font-weight: bold;
+}
+
+
+.body {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    height: 1400px;
+}
+
+.active {
+    color: white !important;
+    /*border-bottom: 1px solid white;*/
+}

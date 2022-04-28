@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.header {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 14vh;
+    font-size: clamp(24px, 7vw, 48px);
+}
+

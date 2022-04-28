@@ -1,0 +1,21 @@
+import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
+
+export default async function handler(req, res) {
+
+    try {
+        const tokenData = await FirebaseAdmin.auth().verifyIdToken(req.headers["authorization"]);
+
+        await FirebaseAdmin.auth().updateUser(req.body.uid, {
+            photoURL: req.body.photoURL
+        })
+
+        return res.json({});
+    } catch (error) {
+        if (error?.code ) {
+            return res.status(400).json({ code: error.code, message: error.message })
+        } else {
+            console.error(error);
+        }
+    }
+
+}

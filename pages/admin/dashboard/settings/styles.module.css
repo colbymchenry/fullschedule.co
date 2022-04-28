@@ -1,0 +1,46 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 2rem;
+}
+
+.heading {
+    border-bottom: 1px solid gray;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+.section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.section > div {
+    flex: 1;
+    flex-basis: calc(50% - 0.5rem);
+    max-width: calc(50% - 0.5rem) !important;
+}
+
+.section > div > div {
+    width: 100% !important;
+}
+
+.section > div > div > input {
+    width: 100% !important;
+}
+
+.section > div > div > div {
+    width: 100% !important;
+}
+
+.section h4 {
+    flex-basis: 100%;
+    /*text-align: center;*/
+}
+
+.form div:global(.rs-panel-header) {
+    padding: unset !important;
+}

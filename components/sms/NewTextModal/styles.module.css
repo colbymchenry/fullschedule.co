@@ -1,0 +1,15 @@
+.form > div {
+    width: 100%;
+}
+
+.form > div > div {
+    width: 100%;
+}
+
+.form > div > div > input {
+    width: 100% !important;
+}
+
+.form > div > div > textarea {
+    width: 100% !important;
+}

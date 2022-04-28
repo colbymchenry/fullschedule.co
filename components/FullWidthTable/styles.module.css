@@ -1,0 +1,15 @@
+.table {
+    width: 100%;
+}
+
+.table div:global(.rs-table-row-header) {
+    min-width: unset !important;
+}
+
+.table div:global(.rs-table-row) {
+    background-color: var(--rs-bg-card);
+}
+
+.table div:global(.rs-table-body-wheel-area) {
+    background-color: var(--rs-bg-card);
+}

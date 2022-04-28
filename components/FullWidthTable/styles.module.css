@@ -1,9 +1,10 @@
 .table {
-    width: 100%;
+    /*width: 100%;*/
+    background-color: var(--rs-bg-card);
 }
 
 .table div:global(.rs-table-row-header) {
-    min-width: unset !important;
+    /*min-width: unset !important;*/
 }
 
 .table div:global(.rs-table-row) {
@@ -11,5 +12,9 @@
 }
 
 .table div:global(.rs-table-body-wheel-area) {
+    background-color: var(--rs-bg-card);
+}
+
+.table div:global(.rs-table-body-row-wrapper) {
     background-color: var(--rs-bg-card);
 }

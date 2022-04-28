@@ -42,7 +42,7 @@ export default function DashboardStaff(props) {
 
     const refreshStaff = async () => {
         try {
-            const res = await (await APIConnector.create(2000, currentUser)).get(`/staff/get`);
+            const res = await (await APIConnector.create(5000, currentUser)).get(`/staff/get`);
             setStaff(res.data);
         } catch (error) {
             toaster.push(<Notification type={"error"} header={"Failed to get staff accounts."}/>, {

@@ -55,7 +55,7 @@ export default function ScheduleModal(props) {
             <Modal.Body>
                 <div className={styles.body}>
                     <div className={styles.slider}>
-                        <span>Day End</span>
+                        <span className={styles.header}>Day End</span>
                         <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.day || [22, 22]} defaultValue={[22, 22]} graduated
                                      progress vertical tooltip={false} renderMark={mark => {
                             const timestamp24 = mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
@@ -71,10 +71,10 @@ export default function ScheduleModal(props) {
                             setValues(values);
                             setTriggerRender(!triggerRender)
                         }}/>
-                        <span>Day Start</span>
+                        <span className={styles.header}>Day Start</span>
                     </div>
                     <div className={styles.slider}>
-                        <span>Lunch End</span>
+                        <span className={styles.header}>Lunch End</span>
                         <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.lunch || [22, 22]} defaultValue={[22, 22]} graduated
                                      progress vertical tooltip={false} renderMark={mark => {
                             const timestamp24 = mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
@@ -90,7 +90,7 @@ export default function ScheduleModal(props) {
                             setValues(values);
                             setTriggerRender(!triggerRender)
                         }}/>
-                        <span>Lunch Start</span>
+                        <span className={styles.header}>Lunch Start</span>
                     </div>
                 </div>
             </Modal.Body>

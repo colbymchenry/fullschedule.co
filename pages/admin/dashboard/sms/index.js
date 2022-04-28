@@ -29,7 +29,7 @@ export default function DashboardSMS(props) {
 
         value.forEach((txt) => {
             if (!added.includes(txt.receiver)) {
-                texts.push(txt)
+                texts.push({...txt, sent_at: txt.sent_at.toDate()})
                 added.push(txt.receiver)
             }
         });
@@ -71,6 +71,11 @@ export default function DashboardSMS(props) {
         </Table.Cell>
     );
 
+    const DateCell = ({rowData, dataKey, ...props}) => (
+        <Table.Cell {...props}>
+            <span>{rowData["sent_at"].toLocaleString().replace(", ", " @ ")}</span>
+        </Table.Cell>
+    );
 
     return (
         <div style={{height: '80vh'}}>
@@ -84,9 +89,13 @@ export default function DashboardSMS(props) {
                     <RecipientCell dataKey="receiver"/>
                 </Table.Column>
 
-                <Table.Column width={800}>
+                <Table.Column width={500} resizable>
                     <Table.HeaderCell>Message</Table.HeaderCell>
                     <Table.Cell dataKey="message"/>
+                </Table.Column>
+                <Table.Column width={200}>
+                    <Table.HeaderCell>Date/Time</Table.HeaderCell>
+                    <DateCell />
                 </Table.Column>
             </FullWidthTable>
             <Button appearance="primary" onClick={() => toaster.push(<AuthProvider><NewTextModal/></AuthProvider>)} className={'save-button'}>New Text</Button>

@@ -4,3 +4,24 @@
     left: 1rem;
     width: calc(100% - 2rem);
 }
+
+.todo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--rs-state-error);
+    margin: 1rem;
+    height: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    border-bottom: 4px solid #b40000;
+    transition: all 0.1s ease;
+}
+
+.todo:active {
+    border-bottom: 1px solid #b40000 !important;
+    transition: all 0.1s ease;
+}

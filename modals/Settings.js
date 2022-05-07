@@ -1,5 +1,4 @@
 import {FirebaseAdmin} from "../utils/firebase/FirebaseAdmin";
-import {FirebaseClient} from "../utils/firebase/FirebaseClient";
 
 export class Settings {
 
@@ -7,13 +6,9 @@ export class Settings {
         this.values = {};
     }
 
-    static async getInstance(server) {
+    static async getInstance() {
         const settings = new Settings();
-        if (server) {
-            settings.values = (await FirebaseAdmin.firestore().collection("settings").doc("main").get()).data();
-        } else {
-            settings.values = await FirebaseClient.doc("settings", "main");
-        }
+        settings.values = (await FirebaseAdmin.firestore().collection("settings").doc("main").get()).data();
         return settings;
     }
 

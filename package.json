@@ -17,10 +17,12 @@
     "axios": "^0.27.2",
     "firebase": "^9.6.11",
     "firebase-admin": "^10.1.0",
+    "googleapis": "^100.0.0",
     "next": "12.1.5",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-firebase-hooks": "^5.0.3",
+    "react-google-login": "^5.2.2",
     "react-input-mask": "^2.0.4",
     "rsuite": "^5.9.0",
     "twilio": "^3.76.1"

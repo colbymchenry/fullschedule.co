@@ -12,9 +12,11 @@ import {
 } from "rsuite";
 import styles from './styles.module.css'
 import states from "../../../../public/states.json"
+import timezones from "../../../../public/timezones.json"
 import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
 import {MaskedInput} from "../../../../components/inputs/MaskedInput";
 import {Field} from "../../../../components/inputs/Field";
+import {useAuth} from "../../../../context/AuthContext";
 
 const {StringType} = Schema.Types;
 
@@ -44,6 +46,7 @@ export default function DashboardSettings(props) {
     const [submitted, setSubmitted] = useState(false);
     const [formValue, setFormValue] = useState({});
     const [formError, setFormError] = useState({});
+    const { quickRefresh } = useAuth();
 
     const model = Schema.Model({
         password: StringType().isRequired('This field is required.'),
@@ -62,6 +65,7 @@ export default function DashboardSettings(props) {
                 await FirebaseClient.update("settings", "main", formValue);
             }
 
+            quickRefresh();
             toaster.push(<Notification type={"success"} header={"Settings saved!"}/>, {
                 placement: 'topEnd'
             });
@@ -144,13 +148,19 @@ export default function DashboardSettings(props) {
                         accepter={MaskedInput}
                         error={formError["phone"]}
                     />
+                    <Field
+                        name="time_zone"
+                        label="Time Zone"
+                        accepter={SelectPicker}
+                        data={timezones}
+                        error={formError["time_zone"]}
+                    />
                 </div>
 
                 <br/>
                 <br/>
                 <Header title={"Features"} label={"Enable/Disable portal features."}/>
                 <div className={`d-flex flex-column w-100`} style={{gap: '1rem'}}>
-
 
                     <FeatureField title={"Officer Manager Email"}
                                   hint={"Send an email of new appointments to the office manager."}>
@@ -226,7 +236,6 @@ export default function DashboardSettings(props) {
                     <Header key="head" title={"API Keys"}
                             label={"This is used for third-party implementations. (Have an admin set this up)"}/>
                 ]} collapsible>
-
                     <div className={styles.section}>
                         <h4>Twilio SMS</h4>
                         <Field

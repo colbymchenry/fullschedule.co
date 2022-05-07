@@ -9,14 +9,12 @@ export default function ConfirmModal(props) {
     const submitForm = async () => {
         setSubmitted(true);
 
-        if (props.onConfirm) {
-            try {
-                await props.onConfirm();
-                setVisible(false);
-            } catch (error) {
-                console.error(error);
-                setSubmitted(false);
-            }
+        try {
+            if (props.onConfirm) await props.onConfirm();
+            setVisible(false);
+        } catch (error) {
+            console.error(error);
+            setSubmitted(false);
         }
     }
 
@@ -32,9 +30,11 @@ export default function ConfirmModal(props) {
                 <Button onClick={submitForm} appearance="primary" loading={submitted}>
                     {props.confirmText || "Ok"}
                 </Button>
-                <Button onClick={() => setVisible(false)} appearance="subtle">
-                    {props.cancelText || "Cancel"}
-                </Button>
+                {!props.hideCancel &&
+                    <Button onClick={() => setVisible(false)} appearance="subtle">
+                        {props.cancelText || "Cancel"}
+                    </Button>
+                }
             </Modal.Footer>
         </Modal>
     )

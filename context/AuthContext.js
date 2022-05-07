@@ -13,6 +13,13 @@ export function AuthProvider({ children }) {
     const router = useRouter();
     const [currentUser, setCurrentUser] = useState(undefined);
     const [loading, setLoading] = useState(true);
+    const [refresh, setRefresh] = useState(false);
+
+    useEffect(() => {
+
+    }, [refresh]);
+
+    const quickRefresh = () => setRefresh(!refresh);
 
     async function login(email, password) {
         return await FirebaseClient.signIn(email, password);
@@ -42,7 +49,9 @@ export function AuthProvider({ children }) {
     const value = {
         currentUser,
         login,
-        logout
+        logout,
+        refresh,
+        quickRefresh
     }
 
     return (

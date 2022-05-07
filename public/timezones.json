@@ -1,0 +1,30 @@
+[
+  {
+    "label": "Atlantic",
+    "value": "America/Puerto_Rico"
+  },
+  {
+    "label": "Eastern",
+    "value": "US/Eastern"
+  },
+  {
+    "label": "Central",
+    "value": "US/Central"
+  },
+  {
+    "label": "Mountain",
+    "value": "US/Mountain"
+  },
+  {
+    "label": "Pacific",
+    "value": "US/Pacific"
+  },
+  {
+    "label": "Alaska",
+    "value": "US/Alaska"
+  },
+  {
+    "label": "Hawaii",
+    "value": "US/Hawaii"
+  }
+]

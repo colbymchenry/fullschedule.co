@@ -1,3 +1,16 @@
+When adding new clients
+- Create Vercel Project with Sub-Domain
+- Setup Environment Variables
+- Create their service account APIs & Services >> Create Credentials [service account]
+- Fill out the Name and Account ID >> Give it Owner permissions >> Create
+- Go inside the service account and obtain a Key in JSON
+- Inside env set `NEXT_GOOGLEAPI_SERVICE_ACCOUNT_EMAIL` and `NEXT_ADMIN_GOOGLEAPI_SERVICE_ACCOUNT_PRIVATE_KEY` to what's inside the key file
+- Go create a new Calendar for the branch
+- Add the service account email to specific people
+- Go down to Integrate Calendar and copy the ID and save it env `NEXT_GOOGLE_CALENDAR_ID`
+- 
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

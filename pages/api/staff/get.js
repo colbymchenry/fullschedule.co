@@ -3,21 +3,12 @@ import {Staff} from "../../../modals/Staff";
 import GoogleCalendarAPI from "../../../utils/googleapis/GoogleCalendarAPI";
 
 export default async function handler(req, res) {
-
     try {
-        const calendarApi = new GoogleCalendarAPI();
-
-        await calendarApi.getEvents();
-
-        let time1 = new Date();
-        let time2 = new Date();
-        time2.setHours(time2.getHours() + 2);
-
-        await calendarApi.postEvent("test event", "30326", "Testing events", time1, time2);
+        const calendarApi = await GoogleCalendarAPI.getInstance();
+        console.log(await calendarApi.getCalendars());
     } catch (error) {
         console.error(error)
     }
-
     try {
         const staff = await Staff.get();
 

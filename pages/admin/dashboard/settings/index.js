@@ -16,7 +16,11 @@ import timezones from "../../../../public/timezones.json"
 import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
 import {MaskedInput} from "../../../../components/inputs/MaskedInput";
 import {Field} from "../../../../components/inputs/Field";
-import {useAuth} from "../../../../context/AuthContext";
+import {AuthProvider, useAuth} from "../../../../context/AuthContext";
+import GoogleLogin from "react-google-login";
+import axios from "axios";
+import {APIConnector} from "../../../../components/APIConnector";
+import GoogleCalendarListModal from "../../../../components/modals/GoogleCalendarListModal/GoogleCalendarListModal";
 
 const {StringType} = Schema.Types;
 
@@ -46,7 +50,7 @@ export default function DashboardSettings(props) {
     const [submitted, setSubmitted] = useState(false);
     const [formValue, setFormValue] = useState({});
     const [formError, setFormError] = useState({});
-    const { quickRefresh } = useAuth();
+    const { currentUser } = useAuth();
 
     const model = Schema.Model({
         password: StringType().isRequired('This field is required.'),
@@ -65,7 +69,6 @@ export default function DashboardSettings(props) {
                 await FirebaseClient.update("settings", "main", formValue);
             }
 
-            quickRefresh();
             toaster.push(<Notification type={"success"} header={"Settings saved!"}/>, {
                 placement: 'topEnd'
             });
@@ -77,6 +80,20 @@ export default function DashboardSettings(props) {
         }
 
         setSubmitted(false);
+    }
+
+    const googleOauth = async (success, data) => {
+        try {
+            await (await APIConnector.create(2000, currentUser)).post(`/google/oauth2token`, {
+                code: data.code
+            });
+            toaster.push(<Notification type={"success"} header={"Successfully connected Google account!"}/>, {
+                placement: 'topEnd'
+            });
+            toaster.push(<GoogleCalendarListModal currentUser={currentUser} />);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {
@@ -162,6 +179,24 @@ export default function DashboardSettings(props) {
                 <Header title={"Features"} label={"Enable/Disable portal features."}/>
                 <div className={`d-flex flex-column w-100`} style={{gap: '1rem'}}>
 
+                    <FeatureField title={"Google Calendar API"}
+                                  hint={"Login with the company's administrative Google account and select the calendar used for Full Schedule."}>
+
+                        <GoogleLogin
+                            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                            buttonText="Login with Google"
+                            onSuccess={(data) => googleOauth(true, data)}
+                            onFailure={() => googleOauth(false)}
+                            cookiePolicy="single_host_origin"
+                            accessType="offline"
+                            responseType="code"
+                            approvalPrompt="force"
+                            prompt='consent'
+                            scope={"https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events"}
+                            redirectUri={"http://localhost:3000/admin/dashboard/settings"}
+                        />
+                    </FeatureField>
+
                     <FeatureField title={"Officer Manager Email"}
                                   hint={"Send an email of new appointments to the office manager."}>
                         <Field
@@ -236,6 +271,7 @@ export default function DashboardSettings(props) {
                     <Header key="head" title={"API Keys"}
                             label={"This is used for third-party implementations. (Have an admin set this up)"}/>
                 ]} collapsible>
+
                     <div className={styles.section}>
                         <h4>Twilio SMS</h4>
                         <Field

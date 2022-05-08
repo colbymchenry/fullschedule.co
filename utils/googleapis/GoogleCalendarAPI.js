@@ -4,21 +4,23 @@ import {Settings} from "../../modals/Settings";
 export default class GoogleCalendarAPI {
 
     constructor() {
-        this.jwtClient = new google.auth.JWT(
-            process.env.NEXT_GOOGLEAPI_SERVICE_ACCOUNT_EMAIL,
-            null,
-            process.env.NEXT_ADMIN_GOOGLEAPI_SERVICE_ACCOUNT_PRIVATE_KEY.replace( /\\n/g, '\n'),
-            `https://www.googleapis.com/auth/calendar`
+        this.oauth2Client = new google.auth.OAuth2(
+            process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+            process.env.NEXT_GOOGLE_CLIENT_SECRET,
+            'postmessage'
         );
-        this.auth = new google.auth.GoogleAuth({
-            credentials: {
-                client_email: process.env.NEXT_GOOGLEAPI_SERVICE_ACCOUNT_EMAIL,
-                private_key: process.env.NEXT_ADMIN_GOOGLEAPI_SERVICE_ACCOUNT_PRIVATE_KEY.replace( /\\n/g, '\n')
-            },
-            scopes: `https://www.googleapis.com/auth/calendar`,
-        })
+        this.calendar = null;
+        this.calendarId = null;
+    }
 
-        this.calendar = google.calendar({version: 'v3', auth: this.jwtClient});
+    static async getInstance() {
+        const calendarApi = new GoogleCalendarAPI();
+        const settings = await Settings.getInstance();
+        const tokens = await settings.get("google_tokens");
+        await calendarApi.oauth2Client.setCredentials(tokens);
+        calendarApi.calendar = google.calendar({version: 'v3', auth: calendarApi.oauth2Client});
+        calendarApi.calendarId = settings.google_calendar_id;
+        return calendarApi;
     }
 
     // timeMin: (new Date()).toISOString(),
@@ -26,17 +28,19 @@ export default class GoogleCalendarAPI {
     // singleEvents: true,
     // orderBy: 'startTime',
     async getEvents(options) {
-        const events = await this.calendar.events.list({...options, calendarId: process.env.NEXT_GOOGLE_CALENDAR_ID });
+        const events = await this.calendar.events.list({...options, calendarId: this.calendarId });
         return events.data.items;
+    }
+
+    async getCalendars() {
+        return (await this.calendar.calendarList.list()).data.items;
     }
 
     async postEvent(summary, location, description, startTime, endTime, attendees) {
         const settings = await Settings.getInstance();
         const timeZone = await settings.get("time_zone");
-        const client = await this.auth.getClient();
         const res = await this.calendar.events.insert({
-            auth: client,
-            calendarId: process.env.NEXT_GOOGLE_CALENDAR_ID,
+            calendarId: this.calendarId,
             resource: {
                 summary, location, description, attendees: attendees || [],
                 start: {
@@ -47,6 +51,7 @@ export default class GoogleCalendarAPI {
                     dateTime: endTime,
                     timeZone,
                 },
+                sendUpdates: "all",
                 reminders: {
                     useDefault: false,
                     overrides: [
@@ -58,6 +63,16 @@ export default class GoogleCalendarAPI {
         })
     }
 
-
+//     try {
+//     const calendarApi = await GoogleCalendarAPI.getInstance();
+//
+//     let time1 = new Date();
+//     let time2 = new Date();
+//     time2.setHours(time2.getHours() + 2);
+//
+//     await calendarApi.postEvent("test event", "30326", "Testing events", time1, time2, [{email: "colbymchenry@gmail.com", responseStatus: "accepted"}]);
+// } catch (error) {
+//     console.error(error)
+// }
 }
 

@@ -27,7 +27,7 @@ export default function ConfirmModal(props) {
                 {props.children}
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={submitForm} appearance="primary" loading={submitted}>
+                <Button onClick={submitForm} appearance="primary" loading={submitted} disabled={props.disableConfirm || false}>
                     {props.confirmText || "Ok"}
                 </Button>
                 {!props.hideCancel &&

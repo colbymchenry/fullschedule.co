@@ -16,4 +16,10 @@ export class Settings {
         return this.values[key];
     }
 
+    async set(key, value) {
+        let obj = {};
+        obj[key] = value;
+        return await FirebaseAdmin.firestore().collection("settings").doc("main").update(obj);
+    }
+
 }

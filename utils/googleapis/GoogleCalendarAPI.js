@@ -9,6 +9,7 @@ export default class GoogleCalendarAPI {
             process.env.NEXT_GOOGLE_CLIENT_SECRET,
             'postmessage'
         );
+        this.settings = null;
         this.calendar = null;
         this.calendarId = null;
     }
@@ -20,6 +21,7 @@ export default class GoogleCalendarAPI {
         await calendarApi.oauth2Client.setCredentials(tokens);
         calendarApi.calendar = google.calendar({version: 'v3', auth: calendarApi.oauth2Client});
         calendarApi.calendarId = settings.google_calendar_id;
+        calendarApi.settings = settings;
         return calendarApi;
     }
 
@@ -34,6 +36,16 @@ export default class GoogleCalendarAPI {
 
     async getCalendars() {
         return (await this.calendar.calendarList.list()).data.items;
+    }
+
+    async createCalendar(name) {
+        const timeZone = await this.settings.get("time_zone");
+        return (await this.calendar.calendars.insert({
+            requestBody: {
+                summary: name || "Full Schedule - MASTER",
+                ...(timeZone && { timeZone })
+            }
+        })).data;
     }
 
     async postEvent(summary, location, description, startTime, endTime, attendees) {

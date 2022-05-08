@@ -4,12 +4,6 @@ import GoogleCalendarAPI from "../../../utils/googleapis/GoogleCalendarAPI";
 
 export default async function handler(req, res) {
     try {
-        const calendarApi = await GoogleCalendarAPI.getInstance();
-        console.log(await calendarApi.getCalendars());
-    } catch (error) {
-        console.error(error)
-    }
-    try {
         const staff = await Staff.get();
 
         await Promise.all(staff.map(async (staff) => {

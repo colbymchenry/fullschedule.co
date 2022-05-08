@@ -8,16 +8,43 @@ export default function GoogleCalendarListModal(props) {
 
     const [calendars, setCalendars] = useState(null);
     const [selectedCalendar, setSelectedCalendar] = useState(null);
+    const [creatingCalendar, setCreatingCalendar] = useState(false);
+    const [createdCalendar, setCreatedCalendar] = useState(false);
+
+    const createCalendar = async () => {
+        setCreatingCalendar(true);
+
+        try {
+            const res = await (await APIConnector.create(2000, props.currentUser)).get(`/google/calendars?create=true`);
+            calendars.push({ label: res.data.summary, value: res.data.id });
+            setCalendars(calendars);
+            setSelectedCalendar(res.data.id);
+            setCreatedCalendar(true);
+        } catch (error) {
+            toaster.push(<Notification type={"error"} header={"Failed to get calendars from Google."}/>, {
+                placement: 'topEnd'
+            });
+        }
+
+        setCreatingCalendar(false);
+    }
 
     useEffect(() => {
         (async () => {
-            const res = await (await APIConnector.create(2000, props.currentUser)).get(`/google/calendars`);
-            setCalendars(res.data.map(({summary, id}) => {
-                return {
-                    label: summary,
-                    value: id
-                }
-            }))
+            try {
+                const res = await (await APIConnector.create(2000, props.currentUser)).get(`/google/calendars`);
+                setCalendars(res.data.map(({summary, id}) => {
+                    return {
+                        label: summary,
+                        value: id
+                    }
+                }))
+            } catch (error) {
+                toaster.push(<Notification type={"error"} header={"Failed to get calendars from Google."}/>, {
+                    placement: 'topEnd'
+                });
+            }
+
         })();
     }, []);
 
@@ -45,7 +72,19 @@ export default function GoogleCalendarListModal(props) {
             }
         }}>
 
-            {!calendars ? <div className={`d-flex align-items-center`} style={{ gap: '1rem' }}>Fetching calendars... <Loader /></div> : <SelectPicker data={calendars} searchable={false} style={{ width: "50%"}} placeholder={"Select Calendar"} onSelect={(value, item, event) => setSelectedCalendar(value)} />}
+            {(!calendars || creatingCalendar) ? <div className={`d-flex align-items-center`} style={{ gap: '1rem' }}>{creatingCalendar ? "Creating calendar..." : "Fetching calendars..."} <Loader /></div> : (
+                <div className={`d-flex flex-column`}>
+                    {!createdCalendar &&
+                        <>
+                        <p style={{width: "420px"}}>If there is no suitable calendar, you can create one by clicking <a
+                            href={"#"} onClick={createCalendar}>here</a>.</p>
+                        <small style={{marginLeft: '0.5rem'}}><i>- Do NOT choose a personal calendar.</i></small>
+                        <br />
+                        </>
+                    }
+                    <SelectPicker data={calendars} searchable={false} style={{ width: "420px" }} placeholder={"Select Calendar"} value={selectedCalendar} onSelect={(value, item, event) => setSelectedCalendar(value)} />
+                </div>
+            )}
         </ConfirmModal>
     )
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export class APIConnector {
-
+    // Cache-Control: public, max-age=120, stale-while-revalidate=60
     static async create(timeout, currentUser) {
         return axios.create({
             baseURL: '/api',

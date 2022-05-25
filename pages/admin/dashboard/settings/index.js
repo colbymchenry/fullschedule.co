@@ -50,7 +50,7 @@ export default function DashboardSettings(props) {
     const [submitted, setSubmitted] = useState(false);
     const [formValue, setFormValue] = useState({});
     const [formError, setFormError] = useState({});
-    const { currentUser } = useAuth();
+    const {currentUser} = useAuth();
 
     const model = Schema.Model({
         password: StringType().isRequired('This field is required.'),
@@ -90,7 +90,7 @@ export default function DashboardSettings(props) {
             toaster.push(<Notification type={"success"} header={"Successfully connected Google account!"}/>, {
                 placement: 'topEnd'
             });
-            toaster.push(<GoogleCalendarListModal currentUser={currentUser} />);
+            toaster.push(<GoogleCalendarListModal currentUser={currentUser}/>);
         } catch (error) {
             console.error(error);
         }
@@ -182,19 +182,22 @@ export default function DashboardSettings(props) {
                     <FeatureField title={"Google Calendar API"}
                                   hint={"Login with the company's administrative Google account and select the calendar used for Full Schedule."}>
 
-                        <GoogleLogin
-                            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                            buttonText="Login with Google"
-                            onSuccess={(data) => googleOauth(true, data)}
-                            onFailure={() => googleOauth(false)}
-                            cookiePolicy="single_host_origin"
-                            accessType="offline"
-                            responseType="code"
-                            approvalPrompt="force"
-                            prompt='consent'
-                            scope={"https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events"}
-                            redirectUri={"http://localhost:3000/admin/dashboard/settings"}
-                        />
+                        {!formValue["google_tokens"] ?
+                            <GoogleLogin
+                                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                                buttonText="Login with Google"
+                                onSuccess={(data) => googleOauth(true, data)}
+                                onFailure={() => googleOauth(false)}
+                                cookiePolicy="single_host_origin"
+                                accessType="offline"
+                                responseType="code"
+                                approvalPrompt="force"
+                                prompt='consent'
+                                scope={"https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events"}
+                                redirectUri={"http://localhost:3000/admin/dashboard/settings"}
+                            />
+                            : <Button onClick={() => toaster.push(<GoogleCalendarListModal currentUser={currentUser}/>)}>{formValue["google_calendar_id"] ? "Change" : "Select"} Calendar</Button>
+                        }
                     </FeatureField>
 
                     <FeatureField title={"Officer Manager Email"}
@@ -326,6 +329,29 @@ export default function DashboardSettings(props) {
                     </div>
                     <br/>
                     <br/>
+                    <div className={styles.section}>
+                        <h4>Clover</h4>
+                        <Field
+                            name="clover_ecomm_private_token"
+                            label="Private Token"
+                            accepter={MaskedInput}
+                            error={formError["clover_ecomm_private_token"]}
+                        />
+                        <Field
+                            name="clover_api_token"
+                            label="API-Key"
+                            accepter={MaskedInput}
+                            error={formError["clover_api_token"]}
+                        />
+                        <Field
+                            name="clover_merchant_id"
+                            label="Merchant ID"
+                            accepter={MaskedInput}
+                            error={formError["clover_merchant_id"]}
+                        />
+                    </div>
+                    <br />
+                    <br />
                     <div className={styles.section}>
                         <h4>Facebook Pixel</h4>
                         <Field

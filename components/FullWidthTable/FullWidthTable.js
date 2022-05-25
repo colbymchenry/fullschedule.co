@@ -4,7 +4,7 @@ import {Table} from "rsuite";
 export default function FullWidthTable(props) {
 
     return (
-        <Table data={props.data} className={props.className + ` ${styles.table}`} style={props.style} loading={props.loading} rowHeight={props.rowHeight} fillHeight={props.fillHeight}>
+        <Table data={props.data} className={props.className + ` ${styles.table}`} style={props.style} loading={props.loading} rowHeight={props.rowHeight} fillHeight={props.fillHeight} bordered>
             {props.children}
         </Table>
     )

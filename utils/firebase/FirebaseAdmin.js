@@ -33,5 +33,14 @@ export class FirebaseAdmin {
         return admin.auth();
     }
 
+    static async getCollectionArray(collection) {
+        const querySnapshot = await FirebaseAdmin.firestore().collection(collection).get();
+        let result = []
+        querySnapshot.forEach((doc) => {
+            result.push({...doc.data(), doc_id: doc.id})
+        });
+        return result;
+    }
+
 }
 

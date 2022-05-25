@@ -42,7 +42,7 @@ export function AuthProvider({ children }) {
     // put user at login page if not authenticated
     useEffect(() => {
         if (!currentUser && router) {
-            router.push("/admin");
+            // router.push("/admin");
         }
     }, router ? [router.pathname] : [])
 

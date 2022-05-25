@@ -68,7 +68,7 @@ export default function AdminLogin(props) {
                     </Form.Group>
                     <Form.Group>
                         <ButtonToolbar>
-                            <Button appearance="primary" loading={submitted}>Login</Button>
+                            <Button appearance="primary" loading={submitted} onClick={submitForm}>Login</Button>
                         </ButtonToolbar>
                     </Form.Group>
                 </Form>

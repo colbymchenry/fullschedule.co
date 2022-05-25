@@ -1,6 +1,6 @@
 .table {
     /*width: 100%;*/
-    background-color: var(--rs-bg-card);
+    /*background-color: var(--rs-bg-card);*/
 }
 
 .table div:global(.rs-table-row-header) {
@@ -9,12 +9,13 @@
 
 .table div:global(.rs-table-row) {
     background-color: var(--rs-bg-card);
+    border-bottom: 1px solid var(--rs-border-secondary) !important;
 }
 
 .table div:global(.rs-table-body-wheel-area) {
-    background-color: var(--rs-bg-card);
+    /*background-color: var(--rs-bg-card);*/
 }
 
 .table div:global(.rs-table-body-row-wrapper) {
-    background-color: var(--rs-bg-card);
+    /*background-color: var(--rs-bg-card);*/
 }

@@ -38,11 +38,11 @@ export default function Navigation(props) {
 
             </div>
             <div style={{width: 240, height: "100vh", position: "fixed"}}>
-                <Sidenav defaultOpenKeys={['3', '4']} activeKey={router.pathname} style={{height: "100%"}}>
+                <Sidenav defaultOpenKeys={['3', '4']} style={{height: "100%"}}>
                     <Sidenav.Body>
                         <div className={`d-flex w-100`} style={{padding: '1rem 0', marginLeft: '1rem'}}><h4>Full
                             Schedule</h4></div>
-                        <Nav>
+                        <Nav activeKey={router.pathname}>
                             <Nav.Item as={NavLink} href="/admin/dashboard" eventKey="/admin/dashboard"
                                       icon={<FontAwesomeIcon icon={faCalendarAlt}/>}>
                                 Appointments

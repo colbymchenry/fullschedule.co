@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {APIConnector} from "../../../../components/APIConnector";
-import {Input, InputGroup, Notification, Table, toaster, Toggle} from "rsuite";
+import {Input, InputGroup, Notification, Table, toaster} from "rsuite";
 import {useAuth} from "../../../../context/AuthContext";
 import styles from "../staff/styles.module.css";
 import FullWidthTable from "../../../../components/FullWidthTable/FullWidthTable";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import {SearchBar} from "rsuite/Picker";
 import {InputSearch} from "../../../../components/inputs/InputSearch";
+import {ToggleCell} from "../../../../components/CustomCells/ToggleCell";
 
 export default function DashboardProducts(props) {
 
@@ -19,7 +17,8 @@ export default function DashboardProducts(props) {
 
     const [inventory, setInventory] = useState(null);
     const [filteredData, setFilteredData] = useState(null);
-    const [searchVal, setSearchVal] = useState("");
+    const [editingPriceId, setEditingPriceId] = useState(null);
+    const [editingNameId, setEditingNameId] = useState(null);
 
     const fetchInventory = async () => {
         try {
@@ -36,6 +35,8 @@ export default function DashboardProducts(props) {
     }
 
     const changeBookable = async (id) => {
+        if (!id) return;
+
         try {
             const res = await (await APIConnector.create(4000, currentUser)).get(`/clover/bookable?id=${id}`);
             const newInventory = inventory.map((item) => {
@@ -56,6 +57,77 @@ export default function DashboardProducts(props) {
 
             setInventory(newInventory);
             setFilteredData(newFilteredData);
+            return true;
+        } catch (error) {
+            toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
+                placement: 'topEnd'
+            });
+        }
+
+        return false;
+    }
+
+    const updatePrice = async (id, value) => {
+        if (!id || !value) return;
+
+        try {
+            await (await APIConnector.create(4000, currentUser)).post(`/clover/price?id=${id}`, {
+                price: parseFloat(value) * 100
+            });
+
+            const newInventory = inventory.map((item) => {
+                if (item.doc_id === id) {
+                    item["price"] = parseFloat(value) * 100;
+                }
+
+                return item;
+            });
+
+            const newFilteredData = filteredData.map((item) => {
+                if (item.doc_id === id) {
+                    item["price"] = parseFloat(value) * 100;
+                }
+
+                return item;
+            });
+
+            setInventory(newInventory);
+            setFilteredData(newFilteredData);
+            setEditingPriceId(null);
+        } catch (error) {
+            toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
+                placement: 'topEnd'
+            });
+        }
+    }
+
+    const updateName = async (id, value) => {
+        if (!id || !value) return;
+
+        try {
+            await (await APIConnector.create(4000, currentUser)).post(`/clover/name?id=${id}`, {
+                name: value
+            });
+
+            const newInventory = inventory.map((item) => {
+                if (item.doc_id === id) {
+                    item["name"] = value;
+                }
+
+                return item;
+            });
+
+            const newFilteredData = filteredData.map((item) => {
+                if (item.doc_id === id) {
+                    item["name"] = value;
+                }
+
+                return item;
+            });
+
+            setInventory(newInventory);
+            setFilteredData(newFilteredData);
+            setEditingNameId(null);
         } catch (error) {
             toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
                 placement: 'topEnd'
@@ -72,7 +144,16 @@ export default function DashboardProducts(props) {
 
     const NameCell = ({rowData, dataKey, ...props}) => (
         <Table.Cell {...props}>
-            <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}}>{rowData['name']}</p>
+            {editingNameId === rowData["doc_id"] ? (
+                <NameInput value={rowData["name"]} id={rowData["doc_id"]} updateName={updateName} />
+            ) : (
+                <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}} onClick={() => {
+                    if (rowData['available']) {
+                        setEditingNameId(rowData["doc_id"]);
+                    }
+                }}>{rowData['name']}</p>
+            )}
+
         </Table.Cell>
     );
 
@@ -91,17 +172,18 @@ export default function DashboardProducts(props) {
     const PriceCell = ({rowData, dataKey, ...props}) => (
         <Table.Cell {...props}>
             {rowData["price"] ?
-                (
-                    <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}}>{moneyFormatter.format(parseInt(rowData["price"]) / 100)}</p>
+                editingPriceId === rowData["doc_id"] ? (
+                       <PriceInput value={parseInt(rowData["price"]) / 100} id={rowData["doc_id"]} updatePrice={updatePrice} />
+                    )
+                    : (
+                    <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}} onClick={() => {
+                        if (rowData['available']) {
+                            setEditingPriceId(rowData["doc_id"]);
+                        }
+                    }}>{moneyFormatter.format(parseInt(rowData["price"]) / 100)}</p>
                 )
                 : <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}}>N/A</p>
             }
-        </Table.Cell>
-    );
-
-    const BookableCell = ({rowData, dataKey, ...props}) => (
-        <Table.Cell {...props}>
-            <Toggle checked={rowData['bookable']} disabled={!rowData['available']} onChange={() => changeBookable(rowData["doc_id"])} />
         </Table.Cell>
     );
 
@@ -134,10 +216,43 @@ export default function DashboardProducts(props) {
                 </Table.Column>
                 <Table.Column width={100} align={"center"}>
                     <Table.HeaderCell>{"Bookable"}</Table.HeaderCell>
-                    <BookableCell />
+                    <ToggleCell cellKey={"bookable"} disabledKey={"available"} onChange={(rowData)=> {
+                        changeBookable(rowData["doc_id"]);
+                    }} />
                 </Table.Column>
             </FullWidthTable>
         </div>
     )
 
+}
+
+const NameInput = (props) => {
+    const [value, setValue] = useState(props.value);
+    const [disabled, setDisabled] = useState(false);
+
+    return (
+        <InputGroup inside style={{ marginTop: "-0.5rem" }}>
+            <Input type={"text"} value={value} disabled={disabled} onChange={(val) => setValue(val)} onBlur={async () => {
+                setDisabled(true);
+                await props.updateName(props.id, value)
+                setDisabled(false);
+            }} />
+        </InputGroup>
+    )
+}
+
+const PriceInput = (props) => {
+    const [value, setValue] = useState(props.value);
+    const [disabled, setDisabled] = useState(false);
+
+    return (
+        <InputGroup inside style={{ marginTop: "-0.5rem" }}>
+            <InputGroup.Addon>$</InputGroup.Addon>
+            <Input type={"tel"} value={value} disabled={disabled} onChange={(val) => setValue(val)} onBlur={async () => {
+                setDisabled(true);
+                await props.updatePrice(props.id, value)
+                setDisabled(false);
+            }} />
+        </InputGroup>
+    )
 }

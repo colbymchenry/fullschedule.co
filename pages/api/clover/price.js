@@ -13,11 +13,16 @@ export default async function handler(req, res) {
             return res.status(400).json({code: 400, message: "Product not found."});
         }
 
-        await FirebaseAdmin.firestore().collection("clover_inventory").doc(req.query.id).update({
-            bookable: !document.data().bookable
+        const cloverApi = await CloverAPI.getInstance();
+        await cloverApi.updateInventoryItem(document.data().id, {
+            price: ("" + req.body.price).replace(".", "")
         })
 
-        return res.json({bookable: !document.data().bookable})
+        await FirebaseAdmin.firestore().collection("clover_inventory").doc(req.query.id).update({
+            price: parseInt(("" + req.body.price).replace(".", ""))
+        })
+
+        return res.json({})
     } catch (error) {
         console.error(error)
         if (error?.code) {

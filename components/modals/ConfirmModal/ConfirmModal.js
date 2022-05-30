@@ -10,7 +10,12 @@ export default function ConfirmModal(props) {
         setSubmitted(true);
 
         try {
-            if (props.onConfirm) await props.onConfirm();
+            if (props.onConfirm) {
+                if (!await props.onConfirm()) {
+                    setSubmitted(false);
+                    return;
+                }
+            }
             setVisible(false);
         } catch (error) {
             console.error(error);
@@ -19,7 +24,7 @@ export default function ConfirmModal(props) {
     }
 
     return (
-        <Modal open={visible} onClose={() => setVisible(false)} backdrop={"static"}>
+        <Modal open={"open" in props ? props.open : visible} onClose={() => setVisible(false)} backdrop={"static"}>
             <Modal.Header>
                 <Modal.Title>{props.title}</Modal.Title>
             </Modal.Header>

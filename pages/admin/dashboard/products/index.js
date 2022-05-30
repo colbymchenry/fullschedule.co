@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {APIConnector} from "../../../../components/APIConnector";
-import {Input, InputGroup, Notification, Table, toaster} from "rsuite";
-import {useAuth} from "../../../../context/AuthContext";
+import {Button, Input, InputGroup, Notification, Table, toaster} from "rsuite";
+import {AuthProvider, useAuth} from "../../../../context/AuthContext";
 import styles from "../staff/styles.module.css";
 import FullWidthTable from "../../../../components/FullWidthTable/FullWidthTable";
 import {InputSearch} from "../../../../components/inputs/InputSearch";
 import {ToggleCell} from "../../../../components/CustomCells/ToggleCell";
+import StaffModal from "../../../../components/staff/StaffModal/StaffModal";
+import NewProductModal from "../../../../components/modals/NewProductModal/NewProductModal";
 
 export default function DashboardProducts(props) {
 
@@ -21,6 +23,8 @@ export default function DashboardProducts(props) {
     const [editingNameId, setEditingNameId] = useState(null);
 
     const fetchInventory = async () => {
+        setInventory(null);
+        setFilteredData(null);
         try {
             const res = await (await APIConnector.create(10000, currentUser)).get(`/clover/inventory`);
             if (res.data["products"] && res.data["products"].length) {
@@ -221,6 +225,8 @@ export default function DashboardProducts(props) {
                     }} />
                 </Table.Column>
             </FullWidthTable>
+            <Button appearance="primary" onClick={() => toaster.push(<AuthProvider><NewProductModal
+                fetchInventory={fetchInventory}/></AuthProvider>)} className={'save-button'}>New Product</Button>
         </div>
     )
 

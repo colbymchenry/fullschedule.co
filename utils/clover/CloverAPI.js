@@ -99,27 +99,53 @@ export class CloverAPI {
         return await this.run(`/v3/merchants/{mId}/items/${itemId}`, body);
     }
 
-    async createInventoryItem(hidden, available, autoManage, isRevenue, itemStock, name, price, priceType, unitName, cost) {
-        const cloverItem = await this.run('inventory.CreateItem', {
-            hidden,
-            available,
-            autoManage,
-            defaultTaxRates: 'true',
-            isRevenue,
+    async createInventoryItem(name, price, hidden, available, autoManage, isRevenue, itemStock, priceType, unitName, cost) {
+
+        console.log({
             name,
             price: parseInt(price) * 100,
-            priceType,
-            unitName,
-            cost: parseInt(cost) * 100
+            ...(hidden && { hidden } ),
+            ...(available && { available }),
+            ...(autoManage && { autoManage }),
+            defaultTaxRates: 'true',
+            ...(isRevenue && { isRevenue }),
+            ...(priceType && { priceType }),
+            ...(unitName && { unitName }),
+            ...(cost  && { cost: parseInt(cost) * 100 })
+        })
+
+        const cloverItem = await this.run('/v3/merchants/{mId}/items', {
+            name,
+            price: parseInt(price) * 100,
+            ...(hidden && { hidden } ),
+            ...(available && { available }),
+            ...(autoManage && { autoManage }),
+            defaultTaxRates: 'true',
+            ...(isRevenue && { isRevenue }),
+            ...(priceType && { priceType }),
+            ...(unitName && { unitName }),
+            ...(cost  && { cost: parseInt(cost) * 100 })
         });
 
-        await this.run('inventory.UpdateItemStock', {
-            stockCount: parseInt(itemStock),
-            quantity: parseInt(itemStock)
-        }, {itemId: cloverItem["id"]});
+        if (itemStock && autoManage) {
+            await this.run(`/v3/merchants/{mId}/item_stocks/${cloverItem["id"]}`, {
+                stockCount: parseInt(itemStock),
+                quantity: parseInt(itemStock)
+            });
+        }
 
 
         return cloverItem;
+    }
+
+    async createPromotion(name, amount, percentage) {
+        const discount = await this.run('inventory.CreateDiscount', {
+            name,
+            ...(amount && { amount }),
+            ...(percentage && { percentage })
+        });
+
+        console.log(discount);
     }
 
 }

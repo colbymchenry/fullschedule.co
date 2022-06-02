@@ -78,6 +78,11 @@ export default function Navigation(props) {
                                       icon={<FontAwesomeIcon icon={faTabletAlt}/>}>
                                 Clover Devices
                             </Nav.Item>
+                            <Nav.Item as={NavLink} href="/admin/dashboard/settings/booking"
+                                      eventKey="/admin/dashboard/settings/booking"
+                                      icon={<FontAwesomeIcon icon={faTabletAlt}/>}>
+                                Booking Setup
+                            </Nav.Item>
                             <Nav.Item as={NavLink} href="/admin/dashboard/settings" eventKey="/admin/dashboard/settings"
                                       icon={<FontAwesomeIcon icon={faCog}/>}>
                                 Settings

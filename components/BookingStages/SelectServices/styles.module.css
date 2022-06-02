@@ -13,9 +13,8 @@
 
 .loginButtons button:first-child {
     background-color: #f6f6f6;
-    background-image: linear-gradient(#f6f6f6 0%, #e9e9e9 100%);
+    background-image: linear-gradient(315deg, #f6f6f6 0%, #e9e9e9 74%);
     font-weight: bold;
-    border: 1px solid #e9e9e9;
 }
 
 .loginButtons button:nth-child(2) {

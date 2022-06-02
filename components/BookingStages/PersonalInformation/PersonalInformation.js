@@ -6,6 +6,8 @@ import {Field} from "../../inputs/Field";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
 import {APIConnector} from "../../APIConnector";
 import {FirebaseClient} from "../../../utils/firebase/FirebaseClient";
+import {FacebookSVG, GoogleSVG} from "../../SVG";
+import axios from "axios";
 
 const {StringType} = Schema.Types;
 
@@ -14,6 +16,7 @@ export default function PersonalInformation(props) {
     const [formValue, setFormValue] = useState({});
     const [formError, setFormError] = useState({});
     const [triggerRender, setTriggerRender] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
     const googleProvider = new GoogleAuthProvider();
     const facebookProvider = new FacebookAuthProvider();
 
@@ -41,27 +44,49 @@ export default function PersonalInformation(props) {
             })
             .catch((error) => {
                 console.log(error);
+                toaster.push(<Notification type={"error"} header={"Failed to sign in with Google."}/>, {
+                    placement: 'topEnd'
+                });
             });
     };
 
     const signInWithFacebook = () => {
         signInWithPopup(FirebaseClient.auth(), facebookProvider)
             .then((result) => {
-                console.log(result);
-                // if (result?.user?.displayName) {
-                //     formValue["name"] = result.user.displayName;
-                // }
-                // if (result?.user?.email) {
-                //     formValue["email"] = result.user.email;
-                // }
-                //
-                // setFormValue(formValue);
-                // setTriggerRender(!triggerRender);
+                if (result?.user?.displayName) {
+                    formValue["name"] = result.user.displayName;
+                }
+                if (result?.user?.email) {
+                    formValue["email"] = result.user.email;
+                }
+
+                if (result?.user?.phoneNumber) {
+                    formValue["phone"] = result.user.phoneNumber;
+                }
+
+                setFormValue(formValue);
+                setTriggerRender(!triggerRender);
             })
             .catch((error) => {
                 console.log(error);
+                toaster.push(<Notification type={"error"} header={"Failed to sign in with Facebook."}/>, {
+                    placement: 'topEnd'
+                });
             });
     };
+
+    const submitForm = async () => {
+        setSubmitted(true);
+        try {
+            const leadCreate = await axios.post("/api/booking/create-lead", formValue);
+            props.appendFormValues({ "lead": leadCreate.data })
+        } catch (error) {
+            toaster.push(<Notification type={"error"} header={"Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
+                placement: 'topEnd'
+            });
+        }
+        setSubmitted(false);
+    }
 
     return (
         <Form formValue={formValue} onChange={formValue => {
@@ -92,10 +117,11 @@ export default function PersonalInformation(props) {
                 error={formError["phone"]}
             />
 
-            <Button appearance="primary" type="button" onClick={signInWithGoogle}>Login with Google</Button>
-            <Button appearance="primary" type="button" onClick={signInWithFacebook}>Login with Facebook</Button>
-
-            <Button appearance="primary" type="submit" onClick={() => props.appendFormValues(formValue)} loading={props.submitted}>Next</Button>
+            <div className={styles.loginButtons}>
+                <Button appearance="subtle" type="button" onClick={signInWithGoogle}><GoogleSVG />Sign in with Google</Button>
+                <Button appearance="subtle" type="button" onClick={signInWithFacebook}><FacebookSVG />Sign in with Facebook</Button>
+                <Button appearance="primary" type="submit" onClick={submitForm} loading={submitted} disabled={!(formValue["name"] && formValue["email"] && formValue["phone"])}>Next</Button>
+            </div>
         </Form>
     )
 

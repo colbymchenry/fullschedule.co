@@ -101,19 +101,6 @@ export class CloverAPI {
 
     async createInventoryItem(name, price, hidden, available, autoManage, isRevenue, itemStock, priceType, unitName, cost) {
 
-        console.log({
-            name,
-            price: parseInt(price) * 100,
-            ...(hidden && { hidden } ),
-            ...(available && { available }),
-            ...(autoManage && { autoManage }),
-            defaultTaxRates: 'true',
-            ...(isRevenue && { isRevenue }),
-            ...(priceType && { priceType }),
-            ...(unitName && { unitName }),
-            ...(cost  && { cost: parseInt(cost) * 100 })
-        })
-
         const cloverItem = await this.run('/v3/merchants/{mId}/items', {
             name,
             price: parseInt(price) * 100,

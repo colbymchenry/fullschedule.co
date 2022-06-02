@@ -2,7 +2,7 @@ import styles from "./styles.module.css"
 import React, {useRef, useState} from "react";
 import {useAuth} from "../../../context/AuthContext";
 import {
-    Button,
+    Button, Checkbox,
     Form,
     Loader,
     Message,
@@ -27,6 +27,7 @@ export default function StaffModal(props) {
     const [submitted, setSubmitted] = useState(false);
     const [formValue, setFormValue] = useState(props.staff || {});
     const [formError, setFormError] = useState({});
+    const [triggerRender, setTriggerRender] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [fileInfo, setFileInfo] = useState(props.staff && props.staff.avatar ? props.staff.avatar : null);
     const submitRef = useRef();
@@ -161,6 +162,19 @@ export default function StaffModal(props) {
                             accepter={MaskedInput}
                             error={formError["email"]}
                         />
+
+                        <div className="rs-form-group" role="group">
+                            <label
+                            className="rs-form-control-label">Optional</label>
+                            <div className="rs-form-control rs-form-control-wrapper">
+                                <Checkbox checked={formValue["bookable"]} onChange={(value, checked, event) => {
+                                    formValue["bookable"] = checked;
+                                    setFormValue(formValue);
+                                    setTriggerRender(!triggerRender);
+                                }}> Bookable</Checkbox>
+                            </div>
+                        </div>
+
 
                         {!props.staff && <Field
                             name="password"

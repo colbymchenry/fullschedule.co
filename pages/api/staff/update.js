@@ -12,7 +12,8 @@ export default async function handler(req, res) {
 
         await FirebaseAdmin.firestore().collection("staff").doc(req.body.id).update({
             firstname: req.body.firstname,
-            lastname: req.body.lastname
+            lastname: req.body.lastname,
+            bookable: req.body.bookable
         })
 
         return res.json({});

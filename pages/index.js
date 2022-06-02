@@ -6,6 +6,7 @@ export default function Home() {
 
     const [formValues, setFormValues] = useState({});
     const [submitted, setSubmitted] = useState(false);
+    const [stage, setStage] = useState(1);
 
     const appendFormValues = (values) => {
         setSubmitted(true);
@@ -17,9 +18,15 @@ export default function Home() {
         formValues, setFormValues, appendFormValues, submitted, setSubmitted
     }
 
+    const renderStage = () => {
+        switch (stage) {
+            case 1: return <PersonalInformation {...PROPS} />
+        }
+    }
+
     return (
         <div className={styles.container}>
-            <PersonalInformation {...PROPS} />
+            {renderStage()}
         </div>
     )
 }

@@ -54,7 +54,7 @@ if (typeof window !== 'undefined') {
     firebaseAuth = getAuth();
 }
 
-export class FirebaseClient {
+export class FirebaseClient { 
 
     static db() {
         return firebaseDb;

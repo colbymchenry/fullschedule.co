@@ -2,14 +2,13 @@ import styles from '../styles/Booking.module.css'
 import PersonalInformation from "../components/BookingStages/PersonalInformation/PersonalInformation";
 import React, {useEffect, useState} from "react";
 import SelectServices from "../components/BookingStages/SelectServices/SelectServices";
-import {Notification, toaster} from "rsuite";
 import axios from "axios";
+import Head from "next/head";
 
-export default function Home() {
+function Home({ setupData }) {
 
     const [formValues, setFormValues] = useState({});
     const [stage, setStage] = useState(1);
-    const [setupData, setSetupData] = useState(null);
 
     const appendFormValues = (values) => {
         setFormValues({...formValues, ...values});
@@ -22,31 +21,75 @@ export default function Home() {
 
     const renderStage = () => {
         switch (stage) {
-            case 1: return <PersonalInformation {...PROPS} />;
-            case 2: return <SelectServices {...PROPS} />;
+            case 1:
+                return <PersonalInformation {...PROPS} />;
+            case 2:
+                return <SelectServices {...PROPS} />;
         }
     }
 
     useEffect(() => {
-
-        if (!setupData) {
-            (async () => {
-                try {
-                    const data = await axios.get("/api/booking/setup-data");
-                    setSetupData(data.data);
-                } catch (error) {
-                    toaster.push(<Notification type={"error"} header={"Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
-                        placement: 'topEnd'
-                    });
-                }
-            })();
+        if (typeof document !== "undefined" && setupData) {
+            document.getElementsByTagName("HEAD")[0].insertAdjacentHTML("beforeend", `
+                <style>
+                    body {
+                        ${setupData?.booking_settings?.color?.background && `background: ${setupData.booking_settings.color.background} !important;`}
+                    }
+                    
+                    label,input,button,h1,h2,h3,h4,h5,p,a,small {
+                        ${setupData?.booking_settings?.font && `font-family: ${setupData.booking_settings.font} !important;`}
+                    }
+                    
+                    label,h1,h2,h3,h4,h5,p,a,small {
+                        ${setupData?.booking_settings?.color?.foreground && `color: ${setupData.booking_settings.color.foreground} !important;`}
+                    }
+                    
+                    input {
+                        ${setupData?.booking_settings?.color?.input_background && `background: ${setupData.booking_settings.color.input_background} !important;`}
+                        ${setupData?.booking_settings?.color?.input_color && `color: ${setupData.booking_settings.color.input_color} !important;`}
+                    }
+                    
+                    button[type="submit"] {
+                        ${setupData?.booking_settings?.color?.button_background && `background: ${setupData.booking_settings.color.button_background} !important;`}
+                        ${setupData?.booking_settings?.color?.button_color && `color: ${setupData.booking_settings.color.button_color} !important;`}
+                    }
+                    
+                </style>
+            `);
         }
-
     }, []);
 
+    if (!setupData) {
+        return (
+            <div className={styles.container}>
+                <h5>Error connecting to database. Please email, call, or use our live chat to reach us.</h5>
+            </div>
+        )
+    }
+
     return (
-        <div className={styles.container}>
-            {renderStage()}
-        </div>
+        <>
+            <Head>
+                <title>Test</title>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
+                {setupData?.booking_settings?.font &&
+                    <link href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`} rel="stylesheet"/>}
+            </Head>
+            <div className={styles.container}>
+                {renderStage()}
+            </div>
+        </>
     )
 }
+
+export async function getServerSideProps({req}) {
+    const protocol = req.headers['x-forwarded-proto'] || 'http'
+    const baseUrl = req ? `${protocol}://${req.headers.host}` : ''
+
+    const res = await axios.get(baseUrl + '/api/booking/setup-data')
+    // Pass data to the page via props
+    return {props: {setupData: res.data}}
+}
+
+export default Home;

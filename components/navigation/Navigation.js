@@ -3,7 +3,7 @@ import Link from "next/link";
 import {Button, Nav, Sidenav, toaster} from "rsuite";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
-    faCalendarAlt, faChartBar,
+    faCalendarAlt, faCalendarCheck, faChartBar,
     faCog, faExclamationTriangle, faGift,
     faSms,
     faSyringe, faTabletAlt,
@@ -80,7 +80,7 @@ export default function Navigation(props) {
                             </Nav.Item>
                             <Nav.Item as={NavLink} href="/admin/dashboard/settings/booking"
                                       eventKey="/admin/dashboard/settings/booking"
-                                      icon={<FontAwesomeIcon icon={faTabletAlt}/>}>
+                                      icon={<FontAwesomeIcon icon={faCalendarCheck}/>}>
                                 Booking Setup
                             </Nav.Item>
                             <Nav.Item as={NavLink} href="/admin/dashboard/settings" eventKey="/admin/dashboard/settings"

@@ -16,15 +16,14 @@ import timezones from "../../../../public/timezones.json"
 import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
 import {MaskedInput} from "../../../../components/inputs/MaskedInput";
 import {Field} from "../../../../components/inputs/Field";
-import {AuthProvider, useAuth} from "../../../../context/AuthContext";
+import {useAuth} from "../../../../context/AuthContext";
 import GoogleLogin from "react-google-login";
-import axios from "axios";
 import {APIConnector} from "../../../../components/APIConnector";
 import GoogleCalendarListModal from "../../../../components/modals/GoogleCalendarListModal/GoogleCalendarListModal";
 
 const {StringType} = Schema.Types;
 
-const FeatureField = (props) => {
+export const FeatureField = (props) => {
     return (
         <div className={`d-flex justify-content-between align-items-center w-100`}>
             <div className={`d-flex flex-column`}>
@@ -36,7 +35,7 @@ const FeatureField = (props) => {
     )
 }
 
-const Header = ({title, label}) => {
+export const Header = ({title, label}) => {
     return (
         <div className={`d-flex w-100 flex-column ` + styles.heading}>
             <h4>{title}</h4>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {APIConnector} from "../../../../components/APIConnector";
-import {Button, Input, InputGroup, Notification, Table, toaster} from "rsuite";
+import {Button, Input, InputGroup, Notification, SelectPicker, Table, toaster} from "rsuite";
 import {AuthProvider, useAuth} from "../../../../context/AuthContext";
 import styles from "../staff/styles.module.css";
 import FullWidthTable from "../../../../components/FullWidthTable/FullWidthTable";
@@ -21,6 +21,7 @@ export default function DashboardProducts(props) {
     const [filteredData, setFilteredData] = useState(null);
     const [editingPriceId, setEditingPriceId] = useState(null);
     const [editingNameId, setEditingNameId] = useState(null);
+    const [editingCategoryId, setEditingCategoryId] = useState(null);
 
     const fetchInventory = async () => {
         setInventory(null);
@@ -139,6 +140,73 @@ export default function DashboardProducts(props) {
         }
     }
 
+    const updateCategory = async (id, value) => {
+        if (!id || !value) return;
+        try {
+            await (await APIConnector.create(4000, currentUser)).post(`/clover/category?id=${editingCategoryId}`, {
+                categoryId: id,
+                categoryName: value.label
+            });
+
+            const newInventory = inventory.map((item) => {
+                if (item.doc_id === editingCategoryId) {
+                    if (!item?.categories?.elements) {
+                        item["categories"] = {
+                            elements: [
+                                {
+                                    id: id,
+                                    name: value.label
+                                }
+                            ]
+                        }
+                    } else {
+                        item["categories"]["elements"] = [
+                            {
+                                id: id,
+                                name: value.label
+                            }
+                        ];
+                    }
+                }
+
+                return item;
+            });
+
+            const newFilteredData = filteredData.map((item) => {
+                if (item.doc_id === editingCategoryId) {
+                    if (!item?.categories?.elements) {
+                        item["categories"] = {
+                            elements: [
+                                {
+                                    id: id,
+                                    name: value.label
+                                }
+                            ]
+                        }
+                    } else {
+                        item["categories"]["elements"] = [
+                            {
+                                id: id,
+                                name: value.label
+                            }
+                        ];
+                    }
+                }
+
+                return item;
+            });
+
+            setInventory(newInventory);
+            setFilteredData(newFilteredData);
+            setEditingCategoryId(null);
+        } catch (error) {
+            console.error(error)
+            toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
+                placement: 'topEnd'
+            });
+        }
+    }
+
     useEffect(() => {
         if (!inventory) {
             fetchInventory();
@@ -164,12 +232,23 @@ export default function DashboardProducts(props) {
 
     const CategoryCell = ({rowData, dataKey, ...props}) => (
         <Table.Cell {...props}>
-            {rowData["categories"] && rowData["categories"]["elements"] && rowData["categories"]["elements"].length ?
-                (
-                    <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}}>{rowData["categories"]["elements"][0]["name"]}</p>
-                )
-                : <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}}>N/A</p>
-            }
+            {editingCategoryId === rowData["doc_id"] ? (
+                <CategorySelection inventory={inventory} value={rowData["name"]} id={rowData["doc_id"]} updateCategory={updateCategory} />
+            ) : (
+                rowData["categories"] && rowData["categories"]["elements"] && rowData["categories"]["elements"].length ?
+                    (
+                        <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}} onClick={() => {
+                            if (rowData['available']) {
+                                setEditingCategoryId(rowData["doc_id"]);
+                            }
+                        }}>{rowData["categories"]["elements"][0]["name"]}</p>
+                    )
+                    : <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}} onClick={() => {
+                        if (rowData['available']) {
+                            setEditingCategoryId(rowData["doc_id"]);
+                        }
+                    }}>N/A</p>
+            )}
         </Table.Cell>
     );
 
@@ -203,9 +282,9 @@ export default function DashboardProducts(props) {
     return (
         <div className={styles.table}>
             <div style={{ margin: '1.5rem' }}>
-                <InputSearch onChange={search} disabled={!filteredData} />
+                <InputSearch onChange={search} disabled={!inventory} />
             </div>
-            <FullWidthTable data={filteredData || []} className={`m-4`} loading={!filteredData} fillHeight={true}>
+            <FullWidthTable data={filteredData || []} className={`m-4`} loading={!filteredData} fillHeight={true} pageLimit={true}>
                 <Table.Column width={300} align="left" resizable>
                     <Table.HeaderCell>{"Name"}</Table.HeaderCell>
                     <NameCell />
@@ -261,4 +340,26 @@ const PriceInput = (props) => {
             }} />
         </InputGroup>
     )
+}
+
+const CategorySelection = (props) => {
+    const data = () => {
+        const array = [];
+        props.inventory.forEach((item) => {
+            if (item?.categories?.elements) {
+                item.categories.elements.forEach((categoryElem) => {
+                    if (!(array.filter((cat) => cat.value === categoryElem.id).length)) {
+                        array.push({
+                            value: categoryElem.id,
+                            label: categoryElem.name
+                        })
+                    }
+                })
+            }
+        })
+
+        return array;
+    }
+
+    return <SelectPicker data={data()} style={{ width: 224, marginTop: '-0.5rem' }} onSelect={props.updateCategory}/>
 }

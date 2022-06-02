@@ -22,7 +22,13 @@ export default async function handler(req, res) {
     try {
         const services = await getBookableServices();
         const staff = await getBookableStaff();
-        return res.json({services, staff});
+        let booking_settings = await FirebaseAdmin.firestore().collection("settings").doc("booking").get();
+
+        if (booking_settings) {
+            booking_settings = booking_settings.data();
+        }
+
+        return res.json({services, staff, booking_settings });
     } catch (error) {
         console.error(error)
         if (error?.code) {

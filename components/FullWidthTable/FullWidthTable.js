@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 import {Pagination, Table} from "rsuite";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function FullWidthTable(props) {
 
@@ -12,11 +12,17 @@ export default function FullWidthTable(props) {
         setLimit(dataKey);
     };
 
-    const data = props.data.filter((v, i) => {
+    const data = () => props.data.filter((v, i) => {
         const start = limit * (page - 1);
         const end = start + limit;
         return i >= start && i < end;
     });
+
+    useEffect(() => {
+        if (page !== 1) {
+            setPage(1);
+        }
+    }, [props.data])
 
     return (
         <>

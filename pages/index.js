@@ -4,15 +4,16 @@ import React, {useEffect, useState} from "react";
 import SelectServices from "../components/BookingStages/SelectServices/SelectServices";
 import axios from "axios";
 import Head from "next/head";
+import {Steps} from "rsuite";
 
 function Home({ setupData }) {
 
     const [formValues, setFormValues] = useState({});
-    const [stage, setStage] = useState(1);
+    const [step, setStep] = useState(1);
 
     const appendFormValues = (values) => {
         setFormValues({...formValues, ...values});
-        setStage((prevStage) => prevStage + 1);
+        setStep((prevStep) => prevStep + 1);
     }
 
     const PROPS = {
@@ -20,7 +21,7 @@ function Home({ setupData }) {
     }
 
     const renderStage = () => {
-        switch (stage) {
+        switch (step) {
             case 1:
                 return <PersonalInformation {...PROPS} />;
             case 2:
@@ -77,6 +78,21 @@ function Home({ setupData }) {
                     <link href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`} rel="stylesheet"/>}
             </Head>
             <div className={styles.container}>
+                <Steps current={step - 1} vertical style={{
+                    width: '200px',
+                    display: 'inline-table',
+                    verticalAlign: 'top',
+                    position: 'fixed',
+                    left: '10vw'
+                }}>
+                    <Steps.Item title="Personal Information" />
+                    <Steps.Item title="Services" />
+                    <Steps.Item title="Provider" />
+                    <Steps.Item title="Date & Time" />
+                    <Steps.Item title="Billing Information" />
+                    <Steps.Item title="Completed!" />
+                </Steps>
+
                 {renderStage()}
             </div>
         </>

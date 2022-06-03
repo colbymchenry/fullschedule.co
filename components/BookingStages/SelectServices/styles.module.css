@@ -3,11 +3,37 @@
     flex-direction: row-reverse;
     align-items: center;
     justify-content: flex-end;
+    margin-bottom: 0 !important;
 }
 
 .serviceSelection label {
     margin-bottom: unset;
 }
 
-.serviceSelection div {
+.category {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: clamp(240px, 20vw, 600px);
+    border-radius: 0.25rem;
+}
+
+.category:hover {
+    background: var(--rs-btn-primary-bg);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.category.open {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom: unset;
+}
+
+.categoryContainer {
+    border-radius: 0.25rem;
+    border: 1px solid var(--rs-btn-primary-bg);
+    margin-bottom: 0.5rem;
 }

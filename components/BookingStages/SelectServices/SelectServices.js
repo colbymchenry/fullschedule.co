@@ -1,19 +1,18 @@
 import styles from './styles.module.css'
-import React, {useEffect, useState} from "react";
-import {Button, Form, Notification, Schema, toaster} from "rsuite";
-import {MaskedInput} from "../../inputs/MaskedInput";
+import mainStyles from '../styles.module.css'
+import React, {useState} from "react";
+import {Button, Checkbox, Form, Notification, Radio, Schema, toaster} from "rsuite";
 import {Field} from "../../inputs/Field";
-import {APIConnector} from "../../APIConnector";
-import {FacebookSVG, GoogleSVG} from "../../SVG";
 import axios from "axios";
 
 const {StringType} = Schema.Types;
 
 export default function SelectServices(props) {
 
-    const [formValue, setFormValue] = useState({});
+    const [formValue, setFormValue] = useState({ services: [] });
     const [formError, setFormError] = useState({});
     const [submitted, setSubmitted] = useState(false);
+    const [triggerRender, setTriggerRender] = useState(false);
 
     const submitForm = async () => {
         setSubmitted(true);
@@ -29,19 +28,34 @@ export default function SelectServices(props) {
     }
 
     return (
-        <Form formValue={formValue} onChange={formValue => {
-            setFormValue(formValue);
-            if (Object.keys(formError).length) setFormError({});
-        }} disabled={props.submitted} readOnly={props.submitted}>
-            <Field
-                name="name"
-                label="Full Name"
-                type={"text"}
-                accepter={MaskedInput}
-                error={formError["name"]}
-            />
+        <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted}>
+            {props.setupData.services.map((service) => {
+                return (
+                    <Field
+                        onChange={(value, checked) => {
+                            if (checked) {
+                                formValue["services"].push(service);
+                                setFormValue(formValue)
+                            } else {
+                                const newFormValue = formValue["services"].filter((serviceObj) => serviceObj.id !== service.id);
+                                setFormValue({ "services": newFormValue })
+                            }
 
-            <div className={styles.loginButtons}>
+                            setTriggerRender(!triggerRender);
+                        }}
+                        key={service.id}
+                        className={styles.serviceSelection}
+                        name={service.id}
+                        value={service.id}
+                        label={service.name}
+                        accepter={Checkbox}
+                        error={formError["name"]}
+                    />
+                )
+            })}
+
+
+            <div>
                 <Button appearance="primary" type="submit" onClick={submitForm} loading={props.submitted}>Next</Button>
             </div>
         </Form>

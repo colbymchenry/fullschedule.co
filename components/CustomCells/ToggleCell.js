@@ -3,23 +3,18 @@ import React, {useState} from "react";
 
 export const ToggleCell = ({rowData, dataKey, ...props}) => {
 
-    const [checked, setChecked] = useState(rowData[props["cellKey"]]);
     const [disabled, setDisabled] = useState(false);
 
-
     return (
-        <Table.Cell {...props} onChange={async () => {
-            setDisabled(true);
-            setChecked(!checked);
+        <Table.Cell {...props}>
+            <Toggle checked={rowData[props["cellKey"]] === true} disabled={props["disabledKey"] ? !rowData[props["disabledKey"]] : disabled} onChange={async (checked) => {
+                setDisabled(true);
 
-            if (props["onChange"]) {
-                if (!await props.onChange(rowData)) {
-                    setChecked(!checked);
+                if (props["onChange"]) {
+                    await props.onChange(rowData)
                 }
-            }
-            setDisabled(props["disabled"] || false);
-        }}>
-            <Toggle checked={checked} disabled={props["disabledKey"] ? !rowData[props["disabledKey"]] : disabled} />
+                setDisabled(props["disabled"] || false);
+            }} />
         </Table.Cell>
     );
 }

@@ -21,6 +21,7 @@ export default async function handler(req, res) {
         return res.json({});
     } catch (error) {
         console.error(error);
+        return res.status(500).json({})
     }
 
 }

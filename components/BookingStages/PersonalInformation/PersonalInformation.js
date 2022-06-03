@@ -1,4 +1,4 @@
-import styles from './styles.module.css'
+import styles from '../styles.module.css'
 import React, {useState} from "react";
 import {Button, Form, Notification, Schema, toaster} from "rsuite";
 import {MaskedInput} from "../../inputs/MaskedInput";

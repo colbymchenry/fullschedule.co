@@ -1,34 +1,13 @@
-.loginButtons {
+.serviceSelection {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.loginButtons button {
-    flex: 1;
-    display: flex;
+    flex-direction: row-reverse;
     align-items: center;
-    gap: 1rem;
+    justify-content: flex-end;
 }
 
-.loginButtons button:first-child {
-    background-color: #f6f6f6;
-    background-image: linear-gradient(315deg, #f6f6f6 0%, #e9e9e9 74%);
-    font-weight: bold;
+.serviceSelection label {
+    margin-bottom: unset;
 }
 
-.loginButtons button:nth-child(2) {
-    background-color: #4267B2;
-    color: white;
-    font-weight: bold;
-}
-
-.loginButtons button:last-of-type {
-    display: block;
-    margin-top: 0.5rem;
-}
-
-.loginButtons button svg {
-    height: 1.5rem;
-    width: auto;
+.serviceSelection div {
 }

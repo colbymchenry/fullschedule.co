@@ -284,7 +284,7 @@ export default function DashboardProducts(props) {
             <div style={{ margin: '1.5rem' }}>
                 <InputSearch onChange={search} disabled={!inventory} />
             </div>
-            <FullWidthTable data={filteredData || []} className={`m-4`} loading={!filteredData} fillHeight={true} pageLimit={true}>
+            <FullWidthTable data={filteredData || []} className={`m-4`} loading={!filteredData} fillHeight={true} paginate={true}>
                 <Table.Column width={300} align="left" resizable>
                     <Table.HeaderCell>{"Name"}</Table.HeaderCell>
                     <NameCell />

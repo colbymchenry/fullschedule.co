@@ -15,16 +15,8 @@ export default async function handler(req, res) {
 
         const cloverApi = await CloverAPI.getInstance();
 
-        console.log({
-            name: document.data().name,
-            price: document.data().price,
-            "categories":[{"items":[],"canonical":{},"name":"Polo Shirt"}],
-        })
-        await cloverApi.updateInventoryItem(document.data().id, {
-            name: document.data().name,
-            price: document.data().price,
-            "categories":[{"items":[],"canonical":{},"name":"Polo Shirt"}]
-        })
+        await cloverApi.addCategoryToItem(req.body.categoryId, document.data().id);
+
 
         await FirebaseAdmin.firestore().collection("clover_inventory").doc(req.query.id).update({
             categories: {

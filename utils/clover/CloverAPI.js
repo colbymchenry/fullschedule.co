@@ -135,4 +135,13 @@ export class CloverAPI {
         console.log(discount);
     }
 
+    async getCategories() {
+        const cats = await this.run(`/v3/merchants/{mId}/categories`);
+        return cats?.data?.elements || [];
+    }
+
+    async addCategoryToItem(categoryId, itemId) {
+        await this.run(`/v3/merchants/{mId}/category_items`, {"elements":[{"item":{"id":itemId},"category":{"id":categoryId}}]});
+    }
+
 }

@@ -20,10 +20,10 @@ export default function FullWidthTable(props) {
 
     return (
         <>
-        <Table data={props?.pageLimit ? data : props.data} className={props.className + ` ${styles.table}`} style={props.style} loading={props.loading} rowHeight={props.rowHeight} fillHeight={props.fillHeight} bordered>
+        <Table data={props?.paginate ? data : props.data} className={props.className + ` ${styles.table}`} style={props.style} loading={props.loading} rowHeight={props.rowHeight} fillHeight={props.fillHeight} bordered>
             {props.children}
         </Table>
-            {props?.pageLimit ?
+            {props?.paginate ?
             <div style={{ padding: 20 }}>
                 <Pagination
                     prev

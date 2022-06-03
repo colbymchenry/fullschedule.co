@@ -72,7 +72,7 @@ function Home({ setupData }) {
             <Head>
                 <title>Test</title>
                 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 {setupData?.booking_settings?.font &&
                     <link href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`} rel="stylesheet"/>}
             </Head>

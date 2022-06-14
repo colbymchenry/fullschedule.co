@@ -63,19 +63,13 @@ export default async function handler(req, res) {
             googleEvents.forEach((event) => {
                 const startTime = new Date(event.start.dateTime);
                 const endTime = new Date(event.end.dateTime);
+                startTime.setHours(startTime.getHours() - servicesHours - (servicesMinutes > 0 ? 1 : 0), startTime.getMinutes() + servicesMinutes, startTime.getSeconds());
 
                 timeSlots[staff.doc_id] = timeSlots[staff.doc_id].filter((timeSlot) => {
-                    let slot = parseFloat(timeSlot);
-                    const start = parseFloat((startTime.getHours() - servicesHours) + "." + (startTime.getMinutes() % 60).toFixed(2));
-                    const end = parseFloat(endTime.getHours() + "." + (endTime.getMinutes() % 60).toFixed(2));
-
-                    console.log("------------")
-                    console.log("Slot", slot)
-                    console.log("start", start)
-                    console.log("end", end)
-                    console.log("logic", !(slot >= start && slot <= end))
-
-                    return !(slot > start && slot < end);
+                    const [hour, minute] = TimeHelper.sliderValTo24(timeSlot).split(":");
+                    const slotTime = new Date(event.start.dateTime);
+                    slotTime.setHours(parseInt(hour), parseInt(minute), 0);
+                    return !(slotTime > startTime && slotTime < endTime);
                 })
             });
         }));

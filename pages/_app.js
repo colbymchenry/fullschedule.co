@@ -10,6 +10,11 @@ function MyApp({Component, pageProps}) {
 
     const router = useRouter();
 
+    if(process.env.NEXT_PUBLIC_PRODUCTION === "true" || process.env.NEXT_PUBLIC_PRODUCTION === true) {
+        console.log = function () {};
+        console.error = function () {};
+    }
+
     // if trying to access anything backend must include AuthProvider
     if (router.pathname.includes('/admin')) {
         return (

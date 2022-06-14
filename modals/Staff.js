@@ -50,7 +50,7 @@ export class Staff {
         return await FirebaseAdmin.firestore().collection("staff").doc(id).delete();
     }
 
-    getAvailableTimeSlots(day) {
+    getAvailableTimeSlots(day, step) {
         if (!this.data["schedule"] || !this.data.schedule[day]) return undefined;
 
         const schedule = this.data.schedule[day];
@@ -62,7 +62,7 @@ export class Staff {
         const hours = [];
 
         // get all available time slots accounting for lunch break
-        for (let timeSlot = dayStart; timeSlot <= dayEnd; timeSlot+= (15 / 60)) {
+        for (let timeSlot = dayStart; timeSlot <= dayEnd; timeSlot+= (step / 60)) {
             if (lunchStart && lunchEnd) {
                 if (!(lunchStart <= timeSlot && lunchEnd >= timeSlot)) {
                     hours.push(timeSlot.toFixed(2));

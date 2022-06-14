@@ -75,7 +75,7 @@ export default class GoogleCalendarAPI {
 // ),
 // ),
 // ));
-    async postEvent(location, summary, description, startTime, endTime, attendees) {
+    async postEvent(location, summary, description, startTime, endTime, attendees, extendedProperties) {
         const settings = await Settings.getInstance();
         const timeZone = await settings.get("time_zone");
         const res = await this.calendar.events.insert({
@@ -97,9 +97,38 @@ export default class GoogleCalendarAPI {
                         {method: 'email', minutes: 24 * 60},
                         {method: 'popup', minutes: 10},
                     ],
+                },
+                extendedProperties: {
+                    private: extendedProperties
+                }
+            }
+        });
+
+        console.log("CREATION", {
+            calendarId: this.calendarId,
+            resource: {
+                summary, location, description, attendees: attendees || [],
+                start: {
+                    dateTime: startTime,
+                    timeZone,
+                },
+                end: {
+                    dateTime: endTime,
+                    timeZone,
+                },
+                sendUpdates: "all",
+                reminders: {
+                    useDefault: false,
+                    overrides: [
+                        {method: 'email', minutes: 24 * 60},
+                        {method: 'popup', minutes: 10},
+                    ],
                 }
             },
-        });
+            extendedProperties: {
+                private: extendedProperties
+            }
+        })
 
         return res.data;
     }

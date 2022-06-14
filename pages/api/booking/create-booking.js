@@ -7,7 +7,6 @@ import {Settings} from "../../../modals/Settings";
 
 export default async function handler(req, res) {
     try {
-        const calendarApi = await GoogleCalendarAPI.getInstance();
 
         const lead = await Lead.get(req.query.id);
 
@@ -15,32 +14,57 @@ export default async function handler(req, res) {
             return res.status(400).json({message: "Failed to find Lead data."});
         }
 
+        // getting settings for Google Calendar event creation
         const settings = await Settings.getInstance();
+        // grab staff account from DB
         const staff = await Staff.get(req.body.selectedStaff.doc_id);
+
+        // get services from DB
         const services = await Promise.all(lead.services.map(async ({doc_id}) => {
             const service = await FirebaseAdmin.firestore().collection("clover_inventory").doc(doc_id).get();
             return service.data();
         }));
 
-        const location = `${settings.get("address_street_line1")} ${settings.get("address_street_line2")}, ${settings.get("address_city")}, ${settings.get("address_state")} ${settings.get("address_zip")}`;
-        const summary = `RegenMD Appointment`;
-        const description = `
-        Staff: ${staff.firstname} ${staff.lastname}
-        Services: ${services.map((service) => service.name).join(", ")}
-        `
-
+        // get the start date as the selected time slot and date
         const startDate = new Date(lead.date);
-
-
         const [hour, minute] = TimeHelper.sliderValTo24(req.body.selectedTimeSlot).split(":");
         startDate.setHours(parseInt(hour), parseInt(minute), 0);
 
+        // add up service durations to get accurate endTime
         const endDate = new Date(lead.date);
-        endDate.setHours(parseInt(hour) + 1, parseInt(minute), 0);
-        // get all events for this day
-        const postedEvent = await calendarApi.postEvent(location, summary, description, startDate, endDate);
-        const eventId = postedEvent.id;
-        console.log(postedEvent);
+        let totalMinutes = 0;
+        services.forEach(({duration}) => totalMinutes += parseInt(duration));
+        const addedHours = Math.floor(totalMinutes / 60);
+        const addedMinutes = totalMinutes % 60;
+        endDate.setHours(parseInt(hour) + addedHours, parseInt(minute) + addedMinutes, 0);
+
+        // setup Google Calendar's event variables
+        const location = `${settings.get("address_street_line1")} ${settings.get("address_street_line2")}, ${settings.get("address_city")}, ${settings.get("address_state")} ${settings.get("address_zip")}`;
+        const summary = `RegenMD Appointment`;
+        const description = `
+        Provider: ${staff.firstname} ${staff.lastname}
+        Services: ${services.map((service) => service.name).join(", ")}
+        `;
+
+        // Get a new Google Calendar API instance
+        const calendarApi = await GoogleCalendarAPI.getInstance();
+
+        // post new event to Google Calendar
+        const postedEvent = await calendarApi.postEvent(location, summary, description, startDate, endDate, null, {
+            staff: staff.doc_id
+        });
+
+        // Add appointment to DB
+        await FirebaseAdmin.firestore().collection("appointments").add({
+            lead,
+            staff: staff.doc_id,
+            google_event_id: postedEvent.id,
+            google_event_link: postedEvent.htmlLink,
+            start: postedEvent.start,
+            end: postedEvent.end
+        });
+
+        return res.json({})
     } catch (error) {
         console.error(error)
         if (error?.code) {

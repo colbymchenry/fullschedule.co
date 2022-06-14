@@ -38,7 +38,7 @@ export default function SelectProvider(props) {
         const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
         const date = new Date(props.formValues.lead.date);
         try {
-            const res = await axios.post(`/api/booking/get-available-time-slots`, {
+            const res = await axios.post(`/api/booking/get-available-time-slots?id=${props.formValues.lead.doc_id}`, {
                 date,
                 day: days[date.getDay()]
             });

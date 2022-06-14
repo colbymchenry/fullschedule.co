@@ -55,14 +55,14 @@ export default async function handler(req, res) {
         });
 
         // Add appointment to DB
-        await FirebaseAdmin.firestore().collection("appointments").add({
-            lead,
-            staff: staff.doc_id,
-            google_event_id: postedEvent.id,
-            google_event_link: postedEvent.htmlLink,
-            start: postedEvent.start,
-            end: postedEvent.end
-        });
+        // await FirebaseAdmin.firestore().collection("appointments").add({
+        //     lead,
+        //     staff: staff.doc_id,
+        //     google_event_id: postedEvent.id,
+        //     google_event_link: postedEvent.htmlLink,
+        //     start: postedEvent.start,
+        //     end: postedEvent.end
+        // });
 
         return res.json({})
     } catch (error) {

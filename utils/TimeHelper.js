@@ -1,6 +1,10 @@
 
 export class TimeHelper {
 
+    static sliderValTo24(mark) {
+        return mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
+    }
+
     static convertTime24to12(time24h) {
         let [hours, minutes] = time24h.split(':');
         let AmOrPm = hours >= 12 ? 'PM' : 'AM';

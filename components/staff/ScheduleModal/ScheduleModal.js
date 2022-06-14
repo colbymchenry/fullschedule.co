@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import {useAuth} from "../../../context/AuthContext";
 import {Button, Modal, Notification, RangeSlider, toaster} from "rsuite";
 import {TimeHelper} from "../../../utils/TimeHelper";
+import {APIConnector} from "../../APIConnector";
 
 export default function ScheduleModal(props) {
 
@@ -11,7 +12,7 @@ export default function ScheduleModal(props) {
     const [visible, setVisible] = useState(true);
     const [submitted, setSubmitted] = useState(false);
     const [triggerRender, setTriggerRender] = useState(false);
-    const [values, setValues] = useState({});
+    const [values, setValues] = useState(props?.staff?.schedule || {});
     const [selectedDay, setSelectedDay] = useState("monday");
     const {currentUser} = useAuth();
 
@@ -21,17 +22,7 @@ export default function ScheduleModal(props) {
 
         setSubmitted(true);
         try {
-            // await (await APIConnector.create(2000, currentUser)).post("/staff/change-password", {...formValue, uid: props.staff.uid });
-            Object.keys(values).forEach((day) => {
-                if (values[day]["day"]) {
-                    values[day]["day"][0] = sliderValTo24(values[day]["day"][0]);
-                    values[day]["day"][1] = sliderValTo24(values[day]["day"][1]);
-                }
-                if (values[day]["lunch"]) {
-                    values[day]["lunch"][0] = sliderValTo24(values[day]["lunch"][0]);
-                    values[day]["lunch"][1] = sliderValTo24(values[day]["lunch"][1]);
-                }
-            })
+            await (await APIConnector.create(10000, currentUser)).post(`/staff/set-schedule?id=${props.staff.doc_id}`, values);
 
             toaster.push(<Notification type={"success"} header={"Schedule updated!"}/>, {
                 placement: 'topEnd'
@@ -46,10 +37,6 @@ export default function ScheduleModal(props) {
 
             setSubmitted(false);
         }
-    }
-
-    function sliderValTo24(mark) {
-        return mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
     }
 
     return (
@@ -73,8 +60,7 @@ export default function ScheduleModal(props) {
                             <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.day || [22, 22]}
                                          defaultValue={[22, 22]} handleClassName={styles.handle} graduated
                                          progress vertical tooltip={false} renderMark={mark => {
-                                const timestamp24 = sliderValTo24(mark);
-                                return <span>{TimeHelper.convertTime24to12(timestamp24)}</span>;
+                                return <span>{TimeHelper.convertTime24to12(TimeHelper.sliderValTo24(mark))}</span>;
                             }} onChange={v => {
                                 if (values[selectedDay]) {
                                     values[selectedDay]["day"] = v;
@@ -95,8 +81,7 @@ export default function ScheduleModal(props) {
                             <RangeSlider min={4} max={22} step={0.5} value={values[selectedDay]?.lunch || [22, 22]}
                                          defaultValue={[22, 22]} handleClassName={styles.handle} graduated
                                          progress vertical tooltip={false} renderMark={mark => {
-                                const timestamp24 = mark.toString().includes(".") ? mark.toString().split(".")[0] + ":" + (60 * parseFloat("0." + mark.toString().split(".")[1])) : mark + ":00";
-                                return <span>{TimeHelper.convertTime24to12(timestamp24)}</span>;
+                                return <span>{TimeHelper.convertTime24to12(TimeHelper.sliderValTo24(mark))}</span>;
                             }} onChange={v => {
                                 if (values[selectedDay]) {
                                     values[selectedDay]["lunch"] = v;

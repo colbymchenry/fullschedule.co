@@ -5,8 +5,10 @@ import SelectServices from "../components/BookingStages/SelectServices/SelectSer
 import axios from "axios";
 import Head from "next/head";
 import {Steps} from "rsuite";
+import SelectProvider from "../components/BookingStages/SelectProvider/SelectProvider";
+import SelectDate from "../components/BookingStages/SelectDate/SelectDate";
 
-function Home({ setupData }) {
+function Home({setupData}) {
 
     const [formValues, setFormValues] = useState({});
     const [step, setStep] = useState(1);
@@ -26,6 +28,10 @@ function Home({ setupData }) {
                 return <PersonalInformation {...PROPS} />;
             case 2:
                 return <SelectServices {...PROPS} />;
+            case 3:
+                return <SelectDate {...PROPS} />;
+            case 4:
+                return <SelectProvider {...PROPS} />;
         }
     }
 
@@ -73,9 +79,11 @@ function Home({ setupData }) {
             <Head>
                 <title>Test</title>
                 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
                 {setupData?.booking_settings?.font &&
-                    <link href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`} rel="stylesheet"/>}
+                    <link
+                        href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`}
+                        rel="stylesheet"/>}
             </Head>
             <div className={styles.container}>
                 <Steps current={step - 1} vertical style={{
@@ -85,12 +93,12 @@ function Home({ setupData }) {
                     position: 'fixed',
                     left: '10vw'
                 }}>
-                    <Steps.Item title="Personal Information" />
-                    <Steps.Item title="Services" />
-                    <Steps.Item title="Provider" />
-                    <Steps.Item title="Date & Time" />
-                    <Steps.Item title="Billing Information" />
-                    <Steps.Item title="Completed!" />
+                    <Steps.Item title="Personal Information"/>
+                    <Steps.Item title="Services"/>
+                    <Steps.Item title="Date"/>
+                    <Steps.Item title="Provider"/>
+                    <Steps.Item title="Billing Information"/>
+                    <Steps.Item title="Completed!"/>
                 </Steps>
 
                 {renderStage()}

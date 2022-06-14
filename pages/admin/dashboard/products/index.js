@@ -22,6 +22,7 @@ export default function DashboardProducts(props) {
     const [editingPriceId, setEditingPriceId] = useState(null);
     const [editingNameId, setEditingNameId] = useState(null);
     const [editingCategoryId, setEditingCategoryId] = useState(null);
+    const [editingDurationId, setEditingDurationId] = useState(null);
 
     const fetchInventory = async () => {
         setInventory(null);
@@ -39,29 +40,37 @@ export default function DashboardProducts(props) {
         }
     }
 
+    const updateData = (doc_id, values) => {
+        const newInventory = inventory.map((item) => {
+            if (item.doc_id === doc_id) {
+                for (let key in values) {
+                    item[key] = values[key];
+                }
+            }
+
+            return item;
+        });
+
+        const newFilteredData = filteredData.map((item) => {
+            if (item.doc_id === doc_id) {
+                for (let key in values) {
+                    item[key] = values[key];
+                }
+            }
+
+            return item;
+        });
+
+        setInventory(newInventory);
+        setFilteredData(newFilteredData);
+    }
+
     const changeBookable = async (id) => {
         if (!id) return;
 
         try {
             const res = await (await APIConnector.create(4000, currentUser)).get(`/clover/bookable?id=${id}`);
-            const newInventory = inventory.map((item) => {
-                if (item.doc_id === id) {
-                    item["bookable"] = res.data.bookable;
-                }
-
-                return item;
-            });
-
-            const newFilteredData = filteredData.map((item) => {
-                if (item.doc_id === id) {
-                    item["bookable"] = res.data.bookable;
-                }
-
-                return item;
-            });
-
-            setInventory(newInventory);
-            setFilteredData(newFilteredData);
+            updateData(id, res.data)
             return true;
         } catch (error) {
             toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
@@ -80,25 +89,30 @@ export default function DashboardProducts(props) {
                 price: parseFloat(value) * 100
             });
 
-            const newInventory = inventory.map((item) => {
-                if (item.doc_id === id) {
-                    item["price"] = parseFloat(value) * 100;
-                }
-
-                return item;
-            });
-
-            const newFilteredData = filteredData.map((item) => {
-                if (item.doc_id === id) {
-                    item["price"] = parseFloat(value) * 100;
-                }
-
-                return item;
-            });
-
-            setInventory(newInventory);
-            setFilteredData(newFilteredData);
+            updateData(id, {
+                price: parseFloat(value) * 100
+            })
             setEditingPriceId(null);
+        } catch (error) {
+            toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
+                placement: 'topEnd'
+            });
+        }
+    }
+
+    const updateDuration = async (id, value) => {
+        if (!id || !value) return;
+
+        try {
+            await (await APIConnector.create(4000, currentUser)).post(`/clover/duration?id=${id}`, {
+                duration: parseInt(value)
+            });
+
+            updateData(id, {
+                duration: parseInt(value)
+            })
+
+            setEditingDurationId(null);
         } catch (error) {
             toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
                 placement: 'topEnd'
@@ -114,24 +128,10 @@ export default function DashboardProducts(props) {
                 name: value
             });
 
-            const newInventory = inventory.map((item) => {
-                if (item.doc_id === id) {
-                    item["name"] = value;
-                }
+            updateData(id, {
+                name: value
+            })
 
-                return item;
-            });
-
-            const newFilteredData = filteredData.map((item) => {
-                if (item.doc_id === id) {
-                    item["name"] = value;
-                }
-
-                return item;
-            });
-
-            setInventory(newInventory);
-            setFilteredData(newFilteredData);
             setEditingNameId(null);
         } catch (error) {
             toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
@@ -270,6 +270,24 @@ export default function DashboardProducts(props) {
         </Table.Cell>
     );
 
+    const DurationCell = ({rowData, dataKey, ...props}) => (
+        <Table.Cell {...props}>
+            {rowData["available"] ?
+                editingDurationId === rowData["doc_id"] ? (
+                       <DurationInput value={rowData["duration"]} id={rowData["doc_id"]} updateDuration={updateDuration} />
+                    )
+                    : (
+                    <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}} onClick={() => {
+                        if (rowData['available']) {
+                            setEditingDurationId(rowData["doc_id"]);
+                        }
+                    }}>{rowData["duration"] || "N/A"}</p>
+                )
+                : <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}}>N/A</p>
+            }
+        </Table.Cell>
+    );
+
     const search = (val) => {
         if (!val) {
             setFilteredData(inventory)
@@ -302,6 +320,10 @@ export default function DashboardProducts(props) {
                     <ToggleCell cellKey={"bookable"} disabledKey={"available"} onChange={(rowData)=> {
                         changeBookable(rowData["doc_id"]);
                     }} />
+                </Table.Column>
+                <Table.Column width={100} align="center">
+                    <Table.HeaderCell>{"Duration"}</Table.HeaderCell>
+                    <DurationCell />
                 </Table.Column>
             </FullWidthTable>
             <Button appearance="primary" onClick={() => toaster.push(<AuthProvider><NewProductModal
@@ -362,4 +384,19 @@ const CategorySelection = (props) => {
     }
 
     return <SelectPicker data={data()} style={{ width: 224, marginTop: '-0.5rem' }} onSelect={props.updateCategory}/>
+}
+
+const DurationInput = (props) => {
+    const [value, setValue] = useState(props.value);
+    const [disabled, setDisabled] = useState(false);
+
+    return (
+        <InputGroup inside style={{ marginTop: "-0.5rem" }}>
+            <Input type={"tel"} value={value} disabled={disabled} onChange={(val) => setValue(val)} onBlur={async () => {
+                setDisabled(true);
+                await props.updateDuration(props.id, value)
+                setDisabled(false);
+            }} />
+        </InputGroup>
+    )
 }

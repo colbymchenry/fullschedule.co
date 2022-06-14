@@ -8,7 +8,7 @@ export class Staff {
 
     async setSchedule(schedule) {
         await FirebaseAdmin.firestore().collection("staff").doc(this.data.doc_id).update({
-           schedule
+           "schedule": schedule
         });
     }
 
@@ -35,7 +35,7 @@ export class Staff {
     static async get(id) {
         if (id) {
             const doc = await FirebaseAdmin.firestore().collection("staff").doc(id).get();
-            return doc.data();
+            return {...doc.data(), doc_id: id};
         } else {
             const docs = await FirebaseAdmin.firestore().collection("staff").get();
             let staff = [];
@@ -50,4 +50,28 @@ export class Staff {
         return await FirebaseAdmin.firestore().collection("staff").doc(id).delete();
     }
 
+    getAvailableTimeSlots(day) {
+        if (!this.data["schedule"] || !this.data.schedule[day]) return undefined;
+
+        const schedule = this.data.schedule[day];
+        const dayStart = schedule.day[0];
+        const dayEnd = schedule.day[1];
+        const lunchStart = !schedule["lunch"] ? undefined : schedule?.lunch[0];
+        const lunchEnd = !schedule["lunch"] ? undefined : schedule?.lunch[1];
+
+        const hours = [];
+
+        // get all available time slots accounting for lunch break
+        for (let timeSlot = dayStart; timeSlot <= dayEnd; timeSlot+= (15 / 60)) {
+            if (lunchStart && lunchEnd) {
+                if (!(lunchStart <= timeSlot && lunchEnd >= timeSlot)) {
+                    hours.push(timeSlot.toFixed(2));
+                }
+            } else {
+                hours.push(timeSlot.toFixed(2));
+            }
+        }
+
+        return hours;
+    }
 }

@@ -13,14 +13,11 @@ export default async function handler(req, res) {
             return res.status(400).json({code: 400, message: "Product not found."});
         }
 
-        let duration = document.data()["duration"] || 30;
-
         await FirebaseAdmin.firestore().collection("clover_inventory").doc(req.query.id).update({
-            bookable: !document.data().bookable,
-            duration
+            duration: parseInt(req.body.duration)
         })
 
-        return res.json({bookable: !document.data().bookable, duration})
+        return res.json({})
     } catch (error) {
         console.error(error)
         if (error?.code) {

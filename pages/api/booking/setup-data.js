@@ -12,9 +12,20 @@ export async function getBookableServices() {
 export async function getBookableStaff() {
     const querySnapshot = await FirebaseAdmin.firestore().collection("staff").where("bookable", "==", true).get();
     let result = []
+
     querySnapshot.forEach((doc) => {
         result.push({...doc.data(), doc_id: doc.id})
     });
+
+    await Promise.all(result.map(async (doc) => {
+        const uid = doc.uid;
+        const userAccount = await FirebaseAdmin.auth().getUser(uid);
+
+        if (userAccount?.photoURL) {
+            doc["photoURL"] = userAccount.photoURL;
+        }
+    }));
+
     return result;
 }
 

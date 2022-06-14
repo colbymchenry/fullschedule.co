@@ -6,9 +6,8 @@ export default async function handler(req, res) {
     try {
         const tokenData = await FirebaseAdmin.auth().verifyIdToken(req.headers["authorization"]);
 
-        const staff = new Staff(await Staff.get(req.body.id));
-
-        await staff.setSchedule(req.body.schedule);
+        const staff = new Staff(await Staff.get(req.query.id));
+        await staff.setSchedule(req.body);
 
         return res.json({});
     } catch (error) {

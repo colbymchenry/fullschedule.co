@@ -17,8 +17,16 @@ export default function SelectServices(props) {
     const submitForm = async () => {
         setSubmitted(true);
         try {
-            const leadCreate = await axios.post("/api/booking/create-lead", formValue);
-            props.appendFormValues(leadCreate.data)
+            formValue["services"] = formValue["services"].map((service) => {
+                return {
+                    doc_id: service.doc_id,
+                    name: service.name,
+                    id: service.id
+                }
+            })
+
+            const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, formValue);
+            props.appendFormValues(leadUpdate.data)
         } catch (error) {
             toaster.push(<Notification type={"error"}
                                        header={"Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
@@ -57,7 +65,7 @@ export default function SelectServices(props) {
 
 
             <div>
-                <Button appearance="primary" type="submit" onClick={submitForm} loading={props.submitted}>Next</Button>
+                <Button appearance="primary" type="submit" onClick={submitForm} loading={submitted} disabled={formValue.services.length < 1}>Next</Button>
             </div>
         </Form>
     )

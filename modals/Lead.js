@@ -8,13 +8,13 @@ export class Lead {
 
     static async create(body) {
         const insertResult = await FirebaseAdmin.firestore().collection("leads").add(body);
-        return {...body, id: insertResult.id };
+        return {...body, doc_id: insertResult.id };
     }
 
     static async get(id) {
         if (id) {
             const doc = await FirebaseAdmin.firestore().collection("leads").doc(id).get();
-            return doc.data();
+            return {...doc.data(), doc_id: id};
         } else {
             const docs = await FirebaseAdmin.firestore().collection("leads").get();
             let staff = [];
@@ -27,5 +27,9 @@ export class Lead {
 
     static async delete(id) {
         return await FirebaseAdmin.firestore().collection("leads").doc(id).delete();
+    }
+
+    static async update(id, data){
+        await FirebaseAdmin.firestore().collection("leads").doc(id).update(data);
     }
 }

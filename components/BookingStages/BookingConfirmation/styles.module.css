@@ -1,0 +1,12 @@
+.calendarContainer {
+    width: clamp(300px, 40vw, 1000px);
+    display: flex;
+    flex-direction: column;
+}
+
+.timeSlots {
+    display: flex;
+    flex-wrap: wrap;
+    height: 200px;
+    overflow-y: auto;
+}

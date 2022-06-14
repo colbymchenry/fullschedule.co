@@ -20,7 +20,7 @@ export default class GoogleCalendarAPI {
         const tokens = await settings.get("google_tokens");
         await calendarApi.oauth2Client.setCredentials(tokens);
         calendarApi.calendar = google.calendar({version: 'v3', auth: calendarApi.oauth2Client});
-        calendarApi.calendarId = settings.google_calendar_id;
+        calendarApi.calendarId = settings.get("google_calendar_id");
         calendarApi.settings = settings;
         return calendarApi;
     }
@@ -48,7 +48,34 @@ export default class GoogleCalendarAPI {
         })).data;
     }
 
-    async postEvent(summary, location, description, startTime, endTime, attendees) {
+//     $event = new Google_Service_Calendar_Event(array(
+//         'summary' => 'Google I/O 2015',
+//     'location' => '800 Howard St., San Francisco, CA 94103',
+//     'description' => 'A chance to hear more about Google\'s developer products.',
+//     'start' => array(
+//     'dateTime' => '2015-05-28T09:00:00-07:00',
+//     'timeZone' => 'America/Los_Angeles',
+// ),
+//     'end' => array(
+//     'dateTime' => '2015-05-28T17:00:00-07:00',
+//     'timeZone' => 'America/Los_Angeles',
+// ),
+//     'recurrence' => array(
+//     'RRULE:FREQ=DAILY;COUNT=2'
+// ),
+//     'attendees' => array(
+//         array('email' => 'lpage@example.com'),
+//     array('email' => 'sbrin@example.com'),
+// ),
+//     'reminders' => array(
+//     'useDefault' => FALSE,
+//     'overrides' => array(
+//         array('method' => 'email', 'minutes' => 24 * 60),
+//     array('method' => 'popup', 'minutes' => 10),
+// ),
+// ),
+// ));
+    async postEvent(location, summary, description, startTime, endTime, attendees) {
         const settings = await Settings.getInstance();
         const timeZone = await settings.get("time_zone");
         const res = await this.calendar.events.insert({
@@ -72,7 +99,9 @@ export default class GoogleCalendarAPI {
                     ],
                 }
             },
-        })
+        });
+
+        return res.data;
     }
 
 //     try {

@@ -1,5 +1,5 @@
 import styles from '../styles.module.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Form, Notification, Schema, toaster} from "rsuite";
 import {MaskedInput} from "../../inputs/MaskedInput";
 import {Field} from "../../inputs/Field";
@@ -28,6 +28,16 @@ export default function PersonalInformation(props) {
         phone: StringType()
             .isRequired('This field is required.')
     });
+
+    useEffect(() => {
+        if (props?.formValues?.lead) {
+            if (props?.formValues?.lead?.name) formValue["name"] = props?.formValues?.lead?.name;
+            if (props?.formValues?.lead?.email) formValue["email"] = props?.formValues?.lead?.email;
+            if (props?.formValues?.lead?.phone) formValue["phone"] = props?.formValues?.lead?.phone;
+            setFormValue(formValue);
+            setTriggerRender(!triggerRender);
+        }
+    }, []);
 
     const signInWithGoogle = () => {
         signInWithPopup(FirebaseClient.auth(), googleProvider)

@@ -1,11 +1,8 @@
 import styles from './styles.module.css'
-import mainStyles from '../styles.module.css'
-import React, {forwardRef, useState} from "react";
+import React, {forwardRef, useEffect, useState} from "react";
 import {Button, Checkbox, Form, Notification, Radio, Schema, toaster, Animation} from "rsuite";
 import {Field} from "../../inputs/Field";
 import axios from "axios";
-
-const {StringType} = Schema.Types;
 
 export default function SelectServices(props) {
 
@@ -13,6 +10,14 @@ export default function SelectServices(props) {
     const [formError, setFormError] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [triggerRender, setTriggerRender] = useState(false);
+
+    useEffect(() => {
+        if (props?.formValues?.lead) {
+            if (props?.formValues?.lead?.services) formValue["services"] = props?.formValues?.lead?.services;
+            setFormValue(formValue);
+            setTriggerRender(!triggerRender);
+        }
+    }, []);
 
     const submitForm = async () => {
         setSubmitted(true);
@@ -101,6 +106,7 @@ const Panel = forwardRef(({style, ...props}, ref) => (
                     value={service.id}
                     label={service.name}
                     accepter={Checkbox}
+                    checked={props.formValue.services.filter((s) => s.id === service.id).length > 0}
                 />
             )
         })}

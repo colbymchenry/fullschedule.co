@@ -7,6 +7,7 @@ import Head from "next/head";
 import {Steps} from "rsuite";
 import SelectProvider from "../components/BookingStages/SelectProvider/SelectProvider";
 import SelectDate from "../components/BookingStages/SelectDate/SelectDate";
+import BillingInformation from "../components/BookingStages/BillingInformation/BillingInformation";
 
 function Home({setupData}) {
 
@@ -22,18 +23,28 @@ function Home({setupData}) {
         formValues, setFormValues, appendFormValues, setupData
     }
 
-    const renderStage = () => {
-        switch (step) {
-            case 1:
-                return <PersonalInformation {...PROPS} />;
-            case 2:
-                return <SelectServices {...PROPS} />;
-            case 3:
-                return <SelectDate {...PROPS} />;
-            case 4:
-                return <SelectProvider {...PROPS} />;
+    const steps = [
+        {
+            component: <PersonalInformation {...PROPS} />,
+            title: "Personal Information"
+        },
+        {
+            component: <SelectServices {...PROPS} />,
+            title: "Services"
+        },
+        {
+            component: <SelectDate {...PROPS} />,
+            title: "Date"
+        },
+        {
+            component: <SelectProvider {...PROPS} />,
+            title: "Provider"
+        },
+        {
+            component: <BillingInformation {...PROPS} />,
+            title: "Billing Information"
         }
-    }
+    ]
 
     useEffect(() => {
         if (typeof document !== "undefined" && setupData) {
@@ -77,13 +88,15 @@ function Home({setupData}) {
     return (
         <>
             <Head>
-                <title>Test</title>
+                <title>FullSchedule</title>
                 <link rel="preconnect" href="https://fonts.googleapis.com"/>
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
                 {setupData?.booking_settings?.font &&
                     <link
                         href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`}
                         rel="stylesheet"/>}
+                <script src="https://checkout.clover.com/sdk.js"/>
+                <script src="/setup-clover.js"/>
             </Head>
             <div className={styles.container}>
                 <Steps className={styles.desktopSteps} current={step - 1} vertical style={{
@@ -93,26 +106,16 @@ function Home({setupData}) {
                     position: 'fixed',
                     left: '10vw'
                 }}>
-                    <Steps.Item title="Personal Information"/>
-                    <Steps.Item title="Services"/>
-                    <Steps.Item title="Date"/>
-                    <Steps.Item title="Provider"/>
-                    <Steps.Item title="Billing Information"/>
-                    <Steps.Item title="Completed!"/>
+                    {steps.map((step, index) => <Steps.Item key={step.title} title={step.title} description={[<button key={Math.random()} onClick={() => setStep(index + 1)} />]} />)}
                 </Steps>
 
                 <Steps className={styles.mobileSteps} current={step - 1} small style={{
                     position: 'fixed',
                 }}>
-                    <Steps.Item />
-                    <Steps.Item />
-                    <Steps.Item />
-                    <Steps.Item />
-                    <Steps.Item />
-                    <Steps.Item />
+                    {steps.map((step, index) => <Steps.Item key={step.title} description={[<button key={Math.random()} onClick={() => setStep(index + 1)} />]} />)}
                 </Steps>
 
-                {renderStage()}
+                {steps[step - 1].component}
             </div>
         </>
     )

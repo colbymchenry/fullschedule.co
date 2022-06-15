@@ -23,8 +23,8 @@ export default function SelectProvider(props) {
     const submitForm = async () => {
         // setSubmitted(true);
         try {
-            const leadUpdate = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, formValue);
-            // props.appendFormValues(leadUpdate.data)
+            const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, formValue);
+            props.appendFormValues(leadUpdate.data)
         } catch (error) {
             toaster.push(<Notification type={"error"}
                                        header={"Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
@@ -84,7 +84,7 @@ export default function SelectProvider(props) {
             </div>
             <div style={{marginTop: "4rem"}}>
                 <Button appearance="primary" type="submit" onClick={submitForm} loading={submitted}
-                        disabled={formValue.selectedStaff === null || formValue.selectedTimeSlot === null}>Reserve Appointment</Button>
+                        disabled={formValue.selectedStaff === null || formValue.selectedTimeSlot === null}>Next</Button>
                 {/*<Button appearance="primary" type="button" onClick={fetchTimeSlots}>Fetch Time Slots</Button>*/}
             </div>
         </Form>

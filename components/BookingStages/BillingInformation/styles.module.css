@@ -1,0 +1,23 @@
+.calendarContainer {
+    width: clamp(300px, 90vw, 400px);
+    display: flex;
+    flex-direction: column;
+}
+
+.timeSlots {
+    display: flex;
+    flex-wrap: wrap;
+    height: 200px;
+    overflow-y: auto;
+}
+
+@media screen and (max-width: 400px) {
+    .calendarContainer {
+        margin-top: 1rem;
+    }
+
+    .nextBtn {
+        margin-top: 0 !important;
+        margin-left: 0.5rem;
+    }
+}

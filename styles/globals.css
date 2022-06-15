@@ -101,3 +101,8 @@ div::-webkit-scrollbar-button {
 div::-webkit-scrollbar-corner {
   background-color: transparent;
 }
+
+#iframeapp fieldset {
+  border: none;
+}
+

@@ -1,0 +1,1 @@
+window.clover = window.clover === undefined ? new Clover('dcbd11f4c0a4e6d56b9adbfb71be863c') : window.clover;

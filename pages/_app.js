@@ -5,6 +5,7 @@ import {useRouter} from "next/router";
 import {AuthProvider} from "../context/AuthContext";
 import {CustomProvider} from "rsuite";
 import Navigation from "../components/navigation/Navigation";
+import Head from "next/head";
 
 function MyApp({Component, pageProps}) {
 
@@ -19,6 +20,9 @@ function MyApp({Component, pageProps}) {
     if (router.pathname.includes('/admin')) {
         return (
             <CustomProvider theme={"dark"}>
+                <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+                </Head>
                 <AuthProvider>
                     {router.pathname.includes("/dashboard") && <Navigation />}
                     <div className={"page-root"}>
@@ -28,7 +32,14 @@ function MyApp({Component, pageProps}) {
             </CustomProvider>
         )
     } else {
-        return <Component {...pageProps} />
+        return (
+            <>
+            <Head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            </Head>
+            <Component {...pageProps} />
+            </>
+        )
     }
 }
 

@@ -1,7 +1,7 @@
 import styles from './styles.module.css'
 import mainStyles from '../styles.module.css'
 import React, {forwardRef, useEffect, useState} from "react";
-import {Button, Checkbox, Form, Notification, Radio, Schema, toaster, Animation} from "rsuite";
+import {Button, Checkbox, Form, Notification, Radio, Schema, toaster, Animation, Loader} from "rsuite";
 import {Field} from "../../inputs/Field";
 import axios from "axios";
 import {TimeHelper} from "../../../utils/TimeHelper";
@@ -69,6 +69,7 @@ export default function SelectProvider(props) {
                                   className={"rs-btn rs-btn-active" + (isSelected ? " rs-btn-primary": " rs-btn-subtle")}
                                   onClick={() => setFormValue({selectedStaff: staff, selectedTimeSlot: timeSlot})}>{TimeHelper.convertTime24to12(TimeHelper.sliderValTo24(timeSlot))}</span>
                         })}
+                        {!timeSlots && <Loader content="Loading..." />}
                     </div>
                 </div>
 

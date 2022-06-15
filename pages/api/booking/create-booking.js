@@ -51,7 +51,8 @@ export default async function handler(req, res) {
 
         // post new event to Google Calendar
         const postedEvent = await calendarApi.postEvent(location, summary, description, startDate, endDate, null, {
-            staff: staff.doc_id
+            staff: staff.doc_id,
+            lead: lead.doc_id
         });
 
         // Add appointment to DB

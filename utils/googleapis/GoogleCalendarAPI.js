@@ -104,32 +104,6 @@ export default class GoogleCalendarAPI {
             }
         });
 
-        console.log("CREATION", {
-            calendarId: this.calendarId,
-            resource: {
-                summary, location, description, attendees: attendees || [],
-                start: {
-                    dateTime: startTime,
-                    timeZone,
-                },
-                end: {
-                    dateTime: endTime,
-                    timeZone,
-                },
-                sendUpdates: "all",
-                reminders: {
-                    useDefault: false,
-                    overrides: [
-                        {method: 'email', minutes: 24 * 60},
-                        {method: 'popup', minutes: 10},
-                    ],
-                }
-            },
-            extendedProperties: {
-                private: extendedProperties
-            }
-        })
-
         return res.data;
     }
 

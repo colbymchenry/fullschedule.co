@@ -55,7 +55,7 @@ export default function SelectServices(props) {
     }
 
     return (
-        <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted}>
+        <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted} className={styles.form}>
 
             {categories().map((category) => {
                 return <CategoryCollapse key={category.id} category={category} services={props.setupData.services}

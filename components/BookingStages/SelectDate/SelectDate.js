@@ -33,11 +33,11 @@ export default function SelectDate(props) {
     }
 
     return (
-        <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted}>
+        <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted} >
             <div className={styles.calendarContainer}>
                 <Calendar compact bordered renderCell={renderCell} onChange={(date) => setFormValue({ date })} />
             </div>
-            <div style={{ marginTop: "4rem" }}>
+            <div style={{ marginTop: "4rem" }} className={styles.nextBtn}>
                 <Button appearance="primary" type="submit" onClick={submitForm} loading={submitted} disabled={formValue.date === null}>Next</Button>
             </div>
         </Form>

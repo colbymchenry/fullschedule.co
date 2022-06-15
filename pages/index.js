@@ -86,7 +86,7 @@ function Home({setupData}) {
                         rel="stylesheet"/>}
             </Head>
             <div className={styles.container}>
-                <Steps current={step - 1} vertical style={{
+                <Steps className={styles.desktopSteps} current={step - 1} vertical style={{
                     width: '200px',
                     display: 'inline-table',
                     verticalAlign: 'top',
@@ -99,6 +99,17 @@ function Home({setupData}) {
                     <Steps.Item title="Provider"/>
                     <Steps.Item title="Billing Information"/>
                     <Steps.Item title="Completed!"/>
+                </Steps>
+
+                <Steps className={styles.mobileSteps} current={step - 1} small style={{
+                    position: 'fixed',
+                }}>
+                    <Steps.Item />
+                    <Steps.Item />
+                    <Steps.Item />
+                    <Steps.Item />
+                    <Steps.Item />
+                    <Steps.Item />
                 </Steps>
 
                 {renderStage()}

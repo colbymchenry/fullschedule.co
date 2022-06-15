@@ -6,7 +6,7 @@
 
 .staffMasterBody {
     flex: 1;
-    width: clamp(300px, 30vw, 500px);
+    width: clamp(300px, 90vw, 400px);
     flex-direction: column;
     border: 1px solid var(--rs-text-secondary);
     border-radius: 4px;

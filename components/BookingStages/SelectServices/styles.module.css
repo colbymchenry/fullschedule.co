@@ -16,7 +16,6 @@
     padding: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: clamp(240px, 20vw, 600px);
     border-radius: 0.25rem;
 }
 
@@ -36,4 +35,8 @@
     border-radius: 0.25rem;
     border: 1px solid var(--rs-btn-primary-bg);
     margin-bottom: 0.5rem;
+}
+
+.form {
+    width: clamp(300px, 90vw, 400px);
 }

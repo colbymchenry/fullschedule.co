@@ -121,7 +121,7 @@ export default function DashboardPromotions(props) {
                     </FeatureField>
 
                     <FeatureField title={"Custom Google Font"}
-                                  hint={[<a href={"https://fonts.google.com/"} target={"_blank"}>Google Font Library</a>, " Copy your favorite font name and paste it here."]}>
+                                  hint={[<a key={Math.random()} href={"https://fonts.google.com/"} target={"_blank"} rel={"noreferrer"}>Google Font Library</a>, " Copy your favorite font name and paste it here."]}>
                         <Field
                             name="font"
                             type={"text"}

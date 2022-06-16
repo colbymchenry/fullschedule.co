@@ -48,6 +48,10 @@ export default function SelectProvider(props) {
         }
     }
 
+    const renderTimeSlots = (staff_id) => {
+
+    }
+
     const renderStaff = () => {
         return props.setupData.staff.filter((staff) => staff["schedule"] && staff["photoURL"]).map((staff) => {
             return (
@@ -59,13 +63,20 @@ export default function SelectProvider(props) {
                         <h5>{staff.firstname} {staff.lastname}</h5>
                     </div>
                     <div className={styles.timeSlots}>
-                        {(timeSlots && timeSlots[staff.doc_id]) && timeSlots[staff.doc_id].map((timeSlot) => {
-                            const isSelected = formValue?.selectedStaff?.doc_id === staff?.doc_id && formValue?.selectedTimeSlot === timeSlot;
-                            return <span key={timeSlot}
-                                  className={"rs-btn rs-btn-active" + (isSelected ? " rs-btn-primary": " rs-btn-subtle")}
-                                  onClick={() => setFormValue({selectedStaff: staff, selectedTimeSlot: timeSlot})}>{TimeHelper.convertTime24to12(TimeHelper.sliderValTo24(timeSlot))}</span>
-                        })}
-                        {!timeSlots && <Loader content="Loading..." />}
+                        {(() => {
+                            if (!timeSlots) return <Loader content={"Loading..."} />
+
+                            if (timeSlots[staff.doc_id]) {
+                                return timeSlots[staff.doc_id].map((timeSlot) => {
+                                    const isSelected = formValue?.selectedStaff?.doc_id === staff?.doc_id && formValue?.selectedTimeSlot === timeSlot;
+                                    return <span key={timeSlot}
+                                                 className={"rs-btn rs-btn-active" + (isSelected ? " rs-btn-primary": " rs-btn-subtle")}
+                                                 onClick={() => setFormValue({selectedStaff: staff, selectedTimeSlot: timeSlot})}>{TimeHelper.convertTime24to12(TimeHelper.sliderValTo24(timeSlot))}</span>
+                                })
+                            } else {
+                                return <span>No availability.</span>
+                            }
+                        })()}
                     </div>
                 </div>
 

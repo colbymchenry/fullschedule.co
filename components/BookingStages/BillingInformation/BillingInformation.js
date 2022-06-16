@@ -15,7 +15,8 @@ export default function BillingInformation(props) {
         setSubmitted(true)
         try {
             const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, {clover_source: data.token});
-            props.appendFormValues(leadUpdate.data)
+            const createBooking = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, props.formValues.lead);
+            props.appendFormValues({ ...leadUpdate.data, booking: createBooking.data })
         } catch (err) {
             console.error(err)
 

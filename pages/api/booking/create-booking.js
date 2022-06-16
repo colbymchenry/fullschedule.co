@@ -65,7 +65,12 @@ export default async function handler(req, res) {
         //     end: postedEvent.end
         // });
 
-        return res.json({})
+        return res.json(
+            {
+                start: postedEvent.start,
+                end: postedEvent.end
+            }
+        )
     } catch (error) {
         console.error(error)
         if (error?.code) {

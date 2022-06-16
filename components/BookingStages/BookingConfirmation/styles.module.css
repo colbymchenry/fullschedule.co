@@ -1,12 +1,36 @@
-.calendarContainer {
-    width: clamp(300px, 40vw, 1000px);
+.container {
+    width: auto;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
 }
 
-.timeSlots {
+.container label {
+    font-size: 1.2em;
+    color: var(--rs-text-secondary);
+}
+
+.container span {
+    font-weight: bold;
+}
+
+.container section {
     display: flex;
-    flex-wrap: wrap;
-    height: 200px;
-    overflow-y: auto;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.staff {
+    background: var(--rs-bg-backdrop);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 15%;
+}
+
+.divider {
+    border-top: 1px solid var(--rs-text-primary);
+    margin: 1rem 0;
 }

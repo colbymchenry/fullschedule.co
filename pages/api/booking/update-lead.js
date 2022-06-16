@@ -4,6 +4,7 @@ export default async function handler(req, res) {
     try {
         await Lead.update(req.query.id, req.body);
         const lead = await Lead.get(req.query.id);
+        delete lead["clover_source"];
         return res.json({ lead });
     } catch (error) {
         console.error(error)

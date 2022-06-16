@@ -98,6 +98,12 @@ export default function PersonalInformation(props) {
         setSubmitted(false);
     }
 
+    const invalidData = () => {
+        const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+        const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        return !formValue["name"] || !emailRegex.test(formValue["email"]) || !phoneRegex.test(formValue["phone"]);
+    }
+
     return (
         <Form formValue={formValue} onChange={formValue => {
             setFormValue(formValue);
@@ -133,7 +139,7 @@ export default function PersonalInformation(props) {
                 <Button appearance="subtle" type="button" onClick={signInWithFacebook}><FacebookSVG/>Sign in with
                     Facebook</Button>
                 <Button appearance="primary" type="submit" onClick={submitForm} loading={submitted}
-                        disabled={!props.setupData || !(formValue["name"] && formValue["email"] && formValue["phone"])}>Next</Button>
+                        disabled={!props.setupData || invalidData()}>Next</Button>
             </div>
         </Form>
     )

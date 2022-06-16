@@ -1,6 +1,6 @@
 import styles from './styles.module.css'
 import React, {useState} from "react";
-import {Form, Notification, Schema, toaster} from "rsuite";
+import {Notification, toaster} from "rsuite";
 import axios from "axios";
 import IFrameApp from "../../IFrameApp/IFrameApp";
 
@@ -14,7 +14,7 @@ export default function BillingInformation(props) {
 
         setSubmitted(true)
         try {
-            const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, { clover_source: data.token });
+            const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, {clover_source: data.token});
             props.appendFormValues(leadUpdate.data)
         } catch (err) {
             console.error(err)
@@ -32,28 +32,25 @@ export default function BillingInformation(props) {
         }
     }
 
-    const submitForm = async () => {
-        setSubmitted(true);
-
-        setSubmitted(false);
-    }
-
     return (
         <div className={styles.calendarContainer}>
-            {!window.clover ?
+            {window.clover ?
                 <IFrameApp
                     outputHandler={(data) => []}
                     callback={(data) => processPayment(data)}
                     backHandler={() => []}
-                    amount={`1`}
+                    amount={`0`}
                     processing={submitted}
                     label={"Secure Appointment"}
                     btnStyle={{backgroundColor: "#0051ff", color: "white", padding: '0.5rem 0'}}
                     noBlack={true}
-                    info={"* 100% goes towards cost of appointment"}
+                    info={"* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a $75 no show fee."}
                 />
                 :
-                <h5 style={{ textAlign: 'center' }}>Error loading payment processor.<br /><br />Please call us to schedule an appointment.</h5>
+                <h5 style={{textAlign: 'center'}}>Error loading payment
+                    processor.<br/><br/>Please {props?.setupData?.phone ?
+                        <a href={`tel:${props.setupData.phone.replace(/-/g, '')}`}>call us</a> : "call us"} to schedule
+                    an appointment.</h5>
             }
 
             {/*{error && <span style={{ color: 'darkred', marginTop: '1rem' }}><b>Payment failed.</b></span>}*/}

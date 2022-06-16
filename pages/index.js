@@ -73,7 +73,7 @@ function Home() {
         },
         {
             component: <BookingConfirmation {...PROPS} />,
-            title: ["Confirmation ", <FontAwesomeIcon key={Math.random()} icon={faCheck} />]
+            title: ["Confirmation ", <FontAwesomeIcon key={Math.random()} icon={faCheck} height={"16px"}/>]
         }
     ]
 
@@ -151,20 +151,29 @@ function Home() {
                 <script src="/setup-clover.js"/>
             </Head>
             <div className={styles.container} id={"booking-container"}>
-                <Steps className={styles.desktopSteps} current={step - 1} vertical style={{
+                <Steps className={styles.desktopSteps + (step === steps.length ? " fadeAway" : "")} current={step - 1}
+                       vertical style={{
                     width: '200px',
                     display: 'inline-table',
                     verticalAlign: 'top',
                     position: 'fixed',
                     left: '10vw'
                 }}>
-                    {steps.map((step, index) => <Steps.Item key={step.title} title={[<label key={Math.random()} style={index + 1 > stepsCompleted ? { cursor: 'not-allowed' } : {cursor: 'pointer'}} onClick={() => changeStep(index + 1)}>{step.title}</label>]} description={[<button key={Math.random()} style={index + 1 > stepsCompleted ? { cursor: 'not-allowed' } : {}} onClick={() => changeStep(index + 1)} />]} />)}
+                    {steps.map((step, index) => <Steps.Item key={step.title} title={[<label key={Math.random()}
+                                                                                            style={index + 1 > stepsCompleted ? {cursor: 'not-allowed'} : {cursor: 'pointer'}}
+                                                                                            onClick={() => changeStep(index + 1)}>{step.title}</label>]}
+                                                            description={[<button key={Math.random()}
+                                                                                  style={index + 1 > stepsCompleted ? {cursor: 'not-allowed'} : {}}
+                                                                                  onClick={() => changeStep(index + 1)}/>]}/>)}
                 </Steps>
 
-                <Steps className={styles.mobileSteps} current={step - 1} small style={{
+                <Steps className={styles.mobileSteps + (step === steps.length ? " fadeAway" : "")} current={step - 1}
+                       small style={{
                     position: 'fixed',
                 }}>
-                    {steps.map((step, index) => <Steps.Item key={step.title} description={[<button key={Math.random()} onClick={() => changeStep(index + 1)} />]} />)}
+                    {steps.map((step, index) => <Steps.Item key={step.title}
+                                                            description={[<button key={Math.random()}
+                                                                                  onClick={() => changeStep(index + 1)}/>]}/>)}
                 </Steps>
 
                 {steps[step - 1].component}

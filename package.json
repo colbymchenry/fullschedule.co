@@ -23,10 +23,12 @@
     "next": "12.1.5",
     "react": "18.1.0",
     "react-color": "^2.19.3",
+    "react-confetti": "^6.1.0",
     "react-dom": "18.1.0",
     "react-firebase-hooks": "^5.0.3",
     "react-google-login": "^5.2.2",
     "react-input-mask": "^2.0.4",
+    "react-use": "^17.4.0",
     "rsuite": "^5.9.0",
     "twilio": "^3.76.1"
   },

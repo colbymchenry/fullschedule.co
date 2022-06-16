@@ -25,8 +25,7 @@ export default function SelectServices(props) {
             formValue["services"] = formValue["services"].map((service) => {
                 return {
                     doc_id: service.doc_id,
-                    name: service.name,
-                    id: service.id
+                    name: service.name
                 }
             })
 
@@ -94,19 +93,19 @@ const Panel = forwardRef(({style, ...props}, ref) => (
                             props.formValue["services"].push(service);
                             props.setFormValue(props.formValue)
                         } else {
-                            const newFormValue = props.formValue["services"].filter((serviceObj) => serviceObj.id !== service.id);
+                            const newFormValue = props.formValue["services"].filter((serviceObj) => serviceObj.doc_id !== service.doc_id);
                             props.setFormValue({"services": newFormValue})
                         }
 
                         props.setTriggerRender(!props.triggerRender);
                     }}
-                    key={service.id}
+                    key={service.doc_id}
                     className={styles.serviceSelection}
-                    name={service.id}
-                    value={service.id}
+                    name={service.doc_id}
+                    value={service.doc_id}
                     label={service.name}
                     accepter={Checkbox}
-                    checked={props.formValue.services.filter((s) => s.id === service.id).length > 0}
+                    checked={props.formValue.services.filter((s) => s.doc_id === service.doc_id).length > 0}
                 />
             )
         })}

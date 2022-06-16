@@ -1,6 +1,6 @@
 import styles from './styles.module.css'
 import React, {forwardRef, useEffect, useState} from "react";
-import {Button, Checkbox, Form, Notification, Radio, Schema, toaster, Animation} from "rsuite";
+import {Animation, Button, Checkbox, Form, Notification, toaster} from "rsuite";
 import {Field} from "../../inputs/Field";
 import axios from "axios";
 

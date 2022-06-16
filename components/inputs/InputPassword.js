@@ -1,7 +1,7 @@
 import {Input, InputGroup} from "rsuite";
 import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import React, {useEffect, useState} from "react";
+import React from "react";
 
 export const InputPassword = React.forwardRef(({onChange, ...rest}, ref) => {
     const [visible, setVisible] = React.useState(false);

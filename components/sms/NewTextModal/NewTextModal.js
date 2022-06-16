@@ -3,7 +3,6 @@ import {Button, Form, Input, InputGroup, Modal, Notification, Schema, toaster} f
 import React, {useRef, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import {useAuth} from "../../../context/AuthContext";
 import {APIConnector} from "../../APIConnector";
 import {MaskedInput} from "../../inputs/MaskedInput";

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Button, Notification, Table, toaster} from "rsuite";
 import NewTextModal from "../../../../components/sms/NewTextModal/NewTextModal";
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
-import {collection, query, orderBy, where} from "firebase/firestore";
+import {collection, orderBy, query, where} from "firebase/firestore";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faExclamationTriangle, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import styles from "./styles.module.css";

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Form, Modal} from "rsuite";
+import {Button, Modal} from "rsuite";
 
 export default function ConfirmModal(props) {
 

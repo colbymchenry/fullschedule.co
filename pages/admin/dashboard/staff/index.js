@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import FullWidthTable from "../../../../components/FullWidthTable/FullWidthTable";
-import {Button, ButtonGroup, Notification, Popover, Table, toaster, Whisper, Dropdown, IconButton} from "rsuite";
+import {Button, ButtonGroup, Dropdown, IconButton, Notification, Popover, Table, toaster, Whisper} from "rsuite";
 import {AuthProvider, useAuth} from "../../../../context/AuthContext";
 import StaffModal from "../../../../components/staff/StaffModal/StaffModal";
 import Image from "next/image";

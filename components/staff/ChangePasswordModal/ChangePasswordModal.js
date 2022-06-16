@@ -1,4 +1,3 @@
-import ConfirmModal from "../../modals/ConfirmModal/ConfirmModal";
 import React, {useEffect, useRef, useState} from "react";
 import styles from "./styles.module.css";
 import {Button, Form, Modal, Notification, Schema, toaster} from "rsuite";
@@ -6,6 +5,7 @@ import {APIConnector} from "../../APIConnector";
 import {useAuth} from "../../../context/AuthContext";
 import {InputPassword} from "../../inputs/InputPassword";
 import {Field} from "../../inputs/Field";
+
 const {StringType} = Schema.Types;
 
 export default function ChangePasswordModal(props) {

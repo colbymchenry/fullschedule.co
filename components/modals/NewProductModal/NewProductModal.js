@@ -1,8 +1,6 @@
 import styles from './styles.module.css';
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
-import {Form, Loader, Message, Notification, Schema, toaster, Uploader} from "rsuite";
-import {previewFile} from "rsuite/utils";
-import {AvatarSVG} from "../../SVG";
+import {Form, Notification, Schema, toaster} from "rsuite";
 import {Field} from "../../inputs/Field";
 import {MaskedInput} from "../../inputs/MaskedInput";
 import React, {useRef, useState} from "react";

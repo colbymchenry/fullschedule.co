@@ -1,15 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {
-    Button,
-    Form,
-    InputNumber,
-    Notification,
-    Panel,
-    Schema,
-    SelectPicker,
-    toaster,
-    Toggle
-} from "rsuite";
+import {Button, Form, InputNumber, Notification, Panel, Schema, SelectPicker, toaster, Toggle} from "rsuite";
 import styles from './styles.module.css'
 import states from "../../../../public/states.json"
 import timezones from "../../../../public/timezones.json"

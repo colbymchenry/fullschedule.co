@@ -1,6 +1,5 @@
 import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
 import {Staff} from "../../../modals/Staff";
-import GoogleCalendarAPI from "../../../utils/googleapis/GoogleCalendarAPI";
 
 export default async function handler(req, res) {
     try {

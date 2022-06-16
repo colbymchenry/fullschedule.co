@@ -1,12 +1,8 @@
 import styles from './styles.module.css'
-import mainStyles from '../styles.module.css'
-import React, {forwardRef, useEffect, useState} from "react";
-import {Button, Checkbox, Form, Notification, Radio, Schema, toaster, Animation, Loader} from "rsuite";
-import {Field} from "../../inputs/Field";
+import React, {useEffect, useState} from "react";
+import {Button, Form, Notification, toaster, Loader} from "rsuite";
 import axios from "axios";
 import {TimeHelper} from "../../../utils/TimeHelper";
-
-const {StringType} = Schema.Types;
 
 export default function SelectProvider(props) {
 

@@ -1,16 +1,21 @@
 import styles from './styles.module.css'
-import mainStyles from '../styles.module.css'
-import React, {forwardRef, useState} from "react";
-import {Button, Checkbox, Form, Notification, Radio, Schema, toaster, Animation, Calendar} from "rsuite";
-import {Field} from "../../inputs/Field";
+import React, {useEffect, useState} from "react";
+import {Button, Calendar, Form, Notification, Schema, toaster} from "rsuite";
 import axios from "axios";
-
-const {StringType} = Schema.Types;
 
 export default function SelectDate(props) {
 
     const [submitted, setSubmitted] = useState(false);
     const [formValue, setFormValue] = useState({ date: null });
+    const [triggerRender, setTriggerRender] = useState(false);
+
+    useEffect(() => {
+        if (props?.formValues?.lead?.date) {
+            formValue["date"] = props?.formValues?.lead?.date;
+            setFormValue(formValue);
+            setTriggerRender(!triggerRender);
+        }
+    }, [])
 
     const submitForm = async () => {
         setSubmitted(true);
@@ -26,16 +31,12 @@ export default function SelectDate(props) {
         setSubmitted(false);
     }
 
-    function renderCell(date) {
-            // return <Badge className="calendar-todo-item-badge" />;
-
-        return null;
-    }
+    const date = props?.formValues?.lead?.date ? new Date(props?.formValues?.lead?.date) : undefined;
 
     return (
         <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted} >
             <div className={styles.calendarContainer}>
-                <Calendar compact bordered renderCell={renderCell} onChange={(date) => setFormValue({ date })} />
+                <Calendar compact bordered defaultValue={date} onChange={(date) => setFormValue({ date })} />
             </div>
             <div style={{ marginTop: "4rem" }} className={styles.nextBtn}>
                 <Button appearance="primary" type="submit" onClick={submitForm} loading={submitted} disabled={formValue.date === null}>Next</Button>

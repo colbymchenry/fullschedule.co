@@ -1,19 +1,22 @@
 import React from "react";
 import Link from "next/link";
-import {Button, Nav, Sidenav, toaster} from "rsuite";
+import {Button, Nav, Sidenav} from "rsuite";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
-    faCalendarAlt, faCalendarCheck, faChartBar,
-    faCog, faExclamationTriangle, faGift,
+    faCalendarAlt,
+    faCalendarCheck,
+    faChartBar,
+    faCog,
+    faGift,
     faSms,
-    faSyringe, faTabletAlt,
+    faSyringe,
+    faTabletAlt,
     faUserMd,
     faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import {useRouter} from "next/router";
 import styles from './styles.module.css';
 import {useAuth} from "../../context/AuthContext";
-import ConfirmModal from "../modals/ConfirmModal/ConfirmModal";
 import {ActionItems} from "./ActionItems";
 
 export default function Navigation(props) {

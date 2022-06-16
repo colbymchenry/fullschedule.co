@@ -1,11 +1,10 @@
 import styles from "./styles.module.css";
 import {useCollectionData} from 'react-firebase-hooks/firestore';
-import {collection, query, orderBy, where} from "firebase/firestore";
+import {collection, query, where} from "firebase/firestore";
 import {FirebaseClient} from "../../../utils/firebase/FirebaseClient";
 import React, {useEffect, useRef, useState} from "react";
 import {Button, Form, Input, Loader, Modal, Notification, Schema, toaster} from "rsuite";
 import {useAuth} from "../../../context/AuthContext";
-import axios from "axios";
 import {APIConnector} from "../../APIConnector";
 import {Field} from "../../inputs/Field";
 

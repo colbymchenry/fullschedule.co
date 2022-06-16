@@ -1,6 +1,4 @@
 import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
-import {CloverAPI} from "../../../utils/clover/CloverAPI";
-import {doc} from "firebase/firestore";
 
 export default async function handler(req, res) {
     try {

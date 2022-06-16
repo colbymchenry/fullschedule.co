@@ -2,11 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import styles from "./styles.module.css";
 import {Field} from "../../../../../components/inputs/Field";
 import {MaskedInput} from "../../../../../components/inputs/MaskedInput";
-import {Button, Form, Notification, toaster, Toggle} from "rsuite";
+import {Button, Form, Notification, toaster} from "rsuite";
 import {FeatureField, Header} from "../index";
 import {FirebaseClient} from "../../../../../utils/firebase/FirebaseClient";
-import {SketchPicker, TwitterPicker} from "react-color";
-import {Compact} from "react-color/lib/components/compact/Compact";
+import {SketchPicker} from "react-color";
 import CompactColor from "react-color/lib/components/compact/CompactColor";
 import {useOutsideAlerter} from "../../../../../components/OutsideAlerter";
 

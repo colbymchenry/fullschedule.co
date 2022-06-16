@@ -6,7 +6,6 @@ import styles from "../staff/styles.module.css";
 import FullWidthTable from "../../../../components/FullWidthTable/FullWidthTable";
 import {InputSearch} from "../../../../components/inputs/InputSearch";
 import {ToggleCell} from "../../../../components/CustomCells/ToggleCell";
-import StaffModal from "../../../../components/staff/StaffModal/StaffModal";
 import NewProductModal from "../../../../components/modals/NewProductModal/NewProductModal";
 
 export default function DashboardProducts(props) {

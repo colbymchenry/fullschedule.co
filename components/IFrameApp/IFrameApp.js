@@ -68,6 +68,7 @@ class IFrameApp extends React.Component {
         try {
             this.cardNumber.addEventListener('change', (event) => {
                 displayError.textContent = event.error ? event.error.message : '';
+                if (this.props?.onChange) this.props.onChange()
             });
         } catch (e) {
 
@@ -75,6 +76,7 @@ class IFrameApp extends React.Component {
         try {
             this.cardDate.addEventListener('change', (event) => {
                 displayError.textContent = event.error ? event.error.message : '';
+                if (this.props?.onChange) this.props.onChange()
             });
         } catch (e) {
 
@@ -82,6 +84,7 @@ class IFrameApp extends React.Component {
         try {
             this.cardCvv.addEventListener('change', (event) => {
                 displayError.textContent = event.error ? event.error.message : '';
+                if (this.props?.onChange) this.props.onChange()
             });
         } catch (e) {
 
@@ -89,6 +92,7 @@ class IFrameApp extends React.Component {
         try {
             this.cardPostalCode.addEventListener('change', (event) => {
                 displayError.textContent = event.error ? event.error.message : '';
+                if (this.props?.onChange) this.props.onChange()
             });
         } catch (e) {
 
@@ -147,7 +151,6 @@ class IFrameApp extends React.Component {
         return (
             <>
                 <div className="App" id="iframeapp">
-                    <div id="card-errors" role="alert"/>
                     <div className="d-flex justify-content-center mt-16 flex-column">
                         <form id="payment-form" noValidate autoComplete="off">
                             <fieldset className="FormGroup">
@@ -167,6 +170,7 @@ class IFrameApp extends React.Component {
                             {/*<button type="button" className={`btn btn-secondary`} onClick={() => this.props.backHandler()}>*/}
                             {/*    Back*/}
                             {/*</button>*/}
+                            <small style={{ textAlign: 'center', color: "red" }} id="card-errors" role="alert"/>
                             {this.props?.info && <small style={{ textAlign: 'center' }}>{this.props.info}</small>}
                             <Button appearance="primary" type="button" onClick={this.handleFormSubmit} loading={this.props.processing || this.state.processing}>{this.props?.label ? this.props.label : `Pay $${this.props.amount}`}</Button>
                         </div>

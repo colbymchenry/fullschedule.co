@@ -1,37 +1,42 @@
 import styles from './styles.module.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Notification, toaster} from "rsuite";
 import axios from "axios";
 import IFrameApp from "../../IFrameApp/IFrameApp";
 
 export default function BillingInformation(props) {
-
     const [submitted, setSubmitted] = useState(false);
+    const [cardError, setCardError] = useState(false);
 
     const processPayment = async (data) => {
-
         if (submitted) return;
+        setSubmitted(true);
 
-        setSubmitted(true)
+        try {
+            await axios.post(`/api/clover/charge?id=${props.formValues.lead.doc_id}`, {
+                source: data.token
+            });
+        } catch (error) {
+            setCardError(true);
+            setSubmitted(false);
+            return;
+        }
+
         try {
             const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, {clover_source: data.token});
             const createBooking = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, props.formValues.lead);
             props.appendFormValues({ ...leadUpdate.data, booking: createBooking.data })
         } catch (err) {
-            console.error(err)
-
-            if (err?.response?.status === 401) {
-                // setError(true)
-            }
-
             toaster.push(<Notification type={"error"}
-                                       header={"Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
+                                       header={err?.response?.data?.message || "Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
                 placement: 'topEnd'
             });
 
             setSubmitted(false)
         }
     }
+
+    const errorArray = cardError ? [<span key={Math.random()} style={{ color: "red" }}>Failed to process payment. Try again.</span>, <br key={Math.random()} />, <br key={Math.random()} />] : [];
 
     return (
         <div className={styles.calendarContainer}>
@@ -45,7 +50,8 @@ export default function BillingInformation(props) {
                     label={"Secure Appointment"}
                     btnStyle={{backgroundColor: "#0051ff", color: "white", padding: '0.5rem 0'}}
                     noBlack={true}
-                    info={"* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a $75 no show fee."}
+                    onChange={() => setCardError(false)}
+                    info={[...errorArray, "* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a $75 no show fee. A $0.01 charge will show up on your account to secure your appointment."]}
                 />
                 :
                 <h5 style={{textAlign: 'center'}}>Error loading payment

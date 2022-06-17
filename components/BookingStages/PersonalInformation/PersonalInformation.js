@@ -115,6 +115,7 @@ export default function PersonalInformation(props) {
                 type={"text"}
                 accepter={MaskedInput}
                 error={formError["name"]}
+                onChange={() => setTriggerRender(!triggerRender)}
             />
             <Field
                 name="email"
@@ -122,6 +123,7 @@ export default function PersonalInformation(props) {
                 type={"email"}
                 accepter={MaskedInput}
                 error={formError["email"]}
+                onChange={() => setTriggerRender(!triggerRender)}
             />
             <Field
                 name="phone"
@@ -131,6 +133,7 @@ export default function PersonalInformation(props) {
                 maskChar={""}
                 accepter={MaskedInput}
                 error={formError["phone"]}
+                onChange={() => setTriggerRender(!triggerRender)}
             />
 
             <div className={styles.loginButtons}>

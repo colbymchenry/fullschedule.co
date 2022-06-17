@@ -4,6 +4,7 @@ import {Staff} from "../../../modals/Staff";
 import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
 import {TimeHelper} from "../../../utils/TimeHelper";
 import {Settings} from "../../../modals/Settings";
+import {TwilioAdmin} from "../../../utils/twilio/TwilioAdmin";
 
 export default async function handler(req, res) {
     try {
@@ -18,6 +19,8 @@ export default async function handler(req, res) {
         const settings = await Settings.getInstance();
         // grab staff account from DB
         const staff = await Staff.get(req.body.selectedStaff.doc_id);
+        // grab staff user account from Firebase
+        const staffUserAccount = await FirebaseAdmin.auth().getUser(staff.uid);
 
         // get services from DB
         const services = await Promise.all(lead.services.map(async ({doc_id}) => {
@@ -40,7 +43,7 @@ export default async function handler(req, res) {
 
         // setup Google Calendar's event variables
         const location = `${settings.get("address_street_line1")} ${settings.get("address_street_line2")}, ${settings.get("address_city")}, ${settings.get("address_state")} ${settings.get("address_zip")}`;
-        const summary = `RegenMD Appointment`;
+        const summary = `${settings.get("company_name")} Appointment`;
         const description = `
         Provider: ${staff.firstname} ${staff.lastname}
         Services: ${services.map((service) => service.name).join(", ")}
@@ -50,10 +53,24 @@ export default async function handler(req, res) {
         const calendarApi = await GoogleCalendarAPI.getInstance();
 
         // post new event to Google Calendar
-        const postedEvent = await calendarApi.postEvent(location, summary, description, startDate, endDate, null, {
+        const postedEvent = await calendarApi.postEvent(location, summary, description, startDate, endDate, [
+            {
+                email: staffUserAccount.email
+            },
+            {
+                email: lead.email
+            }
+        ], {
             staff: staff.doc_id,
             lead: lead.doc_id
         });
+
+        try {
+            sendSMSConfirmation(settings, new Date(postedEvent.start.dateTime), staff, lead.phone);
+        } catch (err) {
+            console.error(err);
+            console.error("Failed to send SMS confirmation.");
+        }
 
         // Add appointment to DB
         // await FirebaseAdmin.firestore().collection("appointments").add({
@@ -80,4 +97,20 @@ export default async function handler(req, res) {
         }
     }
 
+}
+
+async function sendSMSConfirmation(settings, startDate, staff, toPhone) {
+    const dateHuman = startDate.toLocaleTimeString([], {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        ...(settings?.time_zone && { timeZone: settings.time_zone })
+    });
+    const textBody = `${settings.get("company_name")}\n\nYour appointment on\n\n${dateHuman} with ${staff?.firstname ? staff.firstname : ""} ${staff?.lastname ? staff.lastname : ""} is scheduled.\n\nAddress:\n${settings.get("address_street_line1") && settings.get("address_street_line1") + "\n"}${settings.get("address_street_line2") && settings.get("address_street_line2") + "\n"}${settings.get("address_city") && settings.get("address_city") + ", "}${settings.get("address_state") && settings.get("address_state")} ${settings.get("address_zip") && settings.get("address_zip")}\n\nThanks for choosing ${settings.get("company_name")}! We look forward to seeing you!`;
+    await TwilioAdmin.sendText(toPhone, textBody);
+    const reminderDate = startDate;
+    reminderDate.setHours(8, 0, 0, 0);
+    await TwilioAdmin.scheduleText(toPhone, textBody, reminderDate);
 }

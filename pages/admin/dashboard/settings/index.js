@@ -107,6 +107,18 @@ export default function DashboardSettings(props) {
                 if (Object.keys(formError).length) setFormError({});
             }} model={model} disabled={submitted} readOnly={submitted}>
 
+                <div className={styles.section}>
+                    <Field
+                        name="company_name"
+                        label="Company Name"
+                        accepter={MaskedInput}
+                        error={formError["company_name"]}
+                    />
+                </div>
+                <small>This is used across the site. For SMS and email reminders.</small>
+
+                <br />
+
                 <Header title={"Office Address & Phone Number"}
                         label={"This will be used in emails, SMS messages, and booking process."}/>
                 <div className={styles.section}>
@@ -277,6 +289,12 @@ export default function DashboardSettings(props) {
                             label="Auth Token"
                             accepter={MaskedInput}
                             error={formError["twilio_auth_token"]}
+                        />
+                        <Field
+                            name="twilio_mg_sid"
+                            label="Messaging SID"
+                            accepter={MaskedInput}
+                            error={formError["twilio_mg_sid"]}
                         />
                         <Field
                             name="twilio_number"

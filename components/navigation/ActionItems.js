@@ -23,6 +23,7 @@ export function ActionItems(props) {
         if (value && value.length) {
             (async () => {
                 const requiredFields = [
+                    "company_name^Set your company name.",
                     "google_tokens^Sign in with Google.",
                     "google_calendar_id^Sign in with Google and select the calendar to be used by Full Schedule.",
                     "phone^Company phone number.",

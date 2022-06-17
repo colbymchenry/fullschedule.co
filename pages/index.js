@@ -13,7 +13,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import Script from "next/script";
 
-function Home() {
+function Home({designSettings}) {
 
     const [setupData, setSetupData] = useState(null);
     const [formValues, setFormValues] = useState({});
@@ -95,29 +95,29 @@ function Home() {
     ]
 
     useEffect(() => {
-        if (typeof document !== "undefined" && setupData) {
+        if (typeof document !== "undefined" && designSettings) {
             document.getElementsByTagName("HEAD")[0].insertAdjacentHTML("beforeend", `
                 <style>
                     body {
-                        ${setupData?.booking_settings?.color?.background && `background: ${setupData.booking_settings.color.background} !important;`}
+                        ${designSettings?.color?.background && `background: ${designSettings.color.background} !important;`}
                     }
                     
                     label,input,button,h1,h2,h3,h4,h5,p,a,small {
-                        ${setupData?.booking_settings?.font && `font-family: ${setupData.booking_settings.font} !important;`}
+                        ${designSettings?.font && `font-family: ${designSettings.font} !important;`}
                     }
                     
                     label,h1,h2,h3,h4,h5,p,a,small {
-                        ${setupData?.booking_settings?.color?.foreground && `color: ${setupData.booking_settings.color.foreground} !important;`}
+                        ${designSettings?.color?.foreground && `color: ${designSettings.color.foreground} !important;`}
                     }
                     
                     input {
-                        ${setupData?.booking_settings?.color?.input_background && `background: ${setupData.booking_settings.color.input_background} !important;`}
-                        ${setupData?.booking_settings?.color?.input_color && `color: ${setupData.booking_settings.color.input_color} !important;`}
+                        ${designSettings?.color?.input_background && `background: ${designSettings.color.input_background} !important;`}
+                        ${designSettings?.color?.input_color && `color: ${designSettings.color.input_color} !important;`}
                     }
                     
                     button[type="submit"] {
-                        ${setupData?.booking_settings?.color?.button_background && `background: ${setupData.booking_settings.color.button_background} !important;`}
-                        ${setupData?.booking_settings?.color?.button_color && `color: ${setupData.booking_settings.color.button_color} !important;`}
+                        ${designSettings?.color?.button_background && `background: ${designSettings.color.button_background} !important;`}
+                        ${designSettings?.color?.button_color && `color: ${designSettings.color.button_color} !important;`}
                     }
                     
                 </style>
@@ -198,13 +198,13 @@ function Home() {
     )
 }
 
-// export async function getServerSideProps({req}) {
-//     const protocol = req.headers['x-forwarded-proto'] || 'http'
-//     const baseUrl = req ? `${protocol}://${req.headers.host}` : ''
-//
-//     const res = await axios.get(baseUrl + '/api/booking/setup-data')
-//     // Pass data to the page via props
-//     return {props: {setupData: res.data}}
-// }
+export async function getServerSideProps({req}) {
+    const protocol = req.headers['x-forwarded-proto'] || 'http'
+    const baseUrl = req ? `${protocol}://${req.headers.host}` : ''
+
+    const res = await axios.get(baseUrl + '/api/booking/design-settings')
+    // Pass data to the page via props
+    return {props: {designSettings: res.data.booking_settings}}
+}
 
 export default Home;

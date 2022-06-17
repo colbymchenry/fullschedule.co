@@ -55,12 +55,13 @@ export class CloverAPI {
         return await this.run('employee.CreateEmployee', {name, nickname, customId: nickname});
     }
 
-    async createCharge(source, amount) {
+    async createCharge(source, amount, receipt_email) {
         return await this.connector.charges.create({
             source,
             amount,
             currency: 'usd',
             capture: 'true',
+            ...(receipt_email && { receipt_email })
         })
     }
 

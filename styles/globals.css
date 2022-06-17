@@ -126,3 +126,7 @@ div::-webkit-scrollbar-corner {
   align-items: center;
   gap: 0.5rem;
 }
+
+.rs-calendar-table-cell-content {
+  position: relative;
+}

@@ -8,6 +8,8 @@ export default function SelectDate(props) {
     const [submitted, setSubmitted] = useState(false);
     const [formValue, setFormValue] = useState({ date: null });
     const [triggerRender, setTriggerRender] = useState(false);
+    const today = new Date();
+    today.setDate(today.getDate() + 2);
 
     useEffect(() => {
         if (props?.formValues?.lead?.date) {
@@ -31,12 +33,26 @@ export default function SelectDate(props) {
         setSubmitted(false);
     }
 
+    function renderCell(date) {
+        if (date <= today) {
+            return <div className={styles.badDate}>{" "}</div>
+        }
+
+        return null;
+    }
+
     const date = props?.formValues?.lead?.date ? new Date(props?.formValues?.lead?.date) : undefined;
 
     return (
         <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted} >
             <div className={styles.calendarContainer}>
-                <Calendar compact bordered defaultValue={date} onChange={(date) => setFormValue({ date })} />
+                <Calendar compact bordered renderCell={renderCell} defaultValue={date} onChange={(date) => {
+                    if (date > today) {
+                        setFormValue({date});
+                    } else {
+                        setFormValue({ date: null })
+                    }
+                }} />
             </div>
             <div style={{ marginTop: "4rem" }} className={styles.nextBtn}>
                 <Button appearance="primary" type="submit" onClick={submitForm} loading={submitted} disabled={formValue.date === null}>Next</Button>

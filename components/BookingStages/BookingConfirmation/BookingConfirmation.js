@@ -9,8 +9,6 @@ export default function BookingConfirmation(props) {
     const {width, height} = useWindowSize()
     const [formValue, setFormValue] = useState({});
 
-    console.log(props)
-
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const dayOfWeek = days[new Date(props.formValues.booking.start.dateTime).getDay()];
     let startTime = new Date(props.formValues.booking.start.dateTime).toLocaleTimeString([], {
@@ -57,12 +55,8 @@ export default function BookingConfirmation(props) {
                     </section>
                     <section>
                         <label>Packages / Services Added</label>
-                        {services.map((service) => <span>{service}</span>)}
+                        {services.map((service) => <span key={Math.random()}>{service}</span>)}
                     </section>
-                    {/*<h4>Your booking is confirmed!</h4>*/}
-                    {/*<br />*/}
-                    {/*<br />*/}
-                    {/*<p>Your appointment with <b>{staff.firstname} {staff.lastname}</b> is schedule on <b>{startTime}</b> and is expected to end at <b>{endTime}</b>.</p>*/}
                 </div>
                 <div style={{marginTop: "4rem"}}>
                 </div>

@@ -11,6 +11,7 @@ import BillingInformation from "../components/BookingStages/BillingInformation/B
 import BookingConfirmation from "../components/BookingStages/BookingConfirmation/BookingConfirmation";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
+import Script from "next/script";
 
 function Home() {
 
@@ -26,7 +27,23 @@ function Home() {
                 setSetupData(res.data);
             })();
         }
+
+        if (typeof document !== 'undefined') {
+            if (!window.clover) {
+                const t = setInterval(() => {
+                    try {
+                        window.clover = new Clover('dcbd11f4c0a4e6d56b9adbfb71be863c');
+                        clearInterval(t)
+                    } catch (error) {
+                    }
+                }, 500);
+            }
+        }
     }, [])
+
+    function setupClover() {
+
+    }
 
     const appendFormValues = (values) => {
         // if animating do nothing
@@ -147,9 +164,8 @@ function Home() {
                     <link
                         href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`}
                         rel="stylesheet"/>}
-                <script src="https://checkout.clover.com/sdk.js"/>
-                <script src="/setup-clover.js"/>
             </Head>
+            <Script src="https://checkout.clover.com/sdk.js"/>
             <div className={styles.container} id={"booking-container"}>
                 <Steps className={styles.desktopSteps + (step === steps.length ? " fadeAway" : "")} current={step - 1}
                        vertical style={{

@@ -17,6 +17,14 @@ export default function SelectDate(props) {
             setFormValue(formValue);
             setTriggerRender(!triggerRender);
         }
+
+        if (typeof document !== "undefined") {
+            Array.from(document.getElementsByClassName("rs-calendar-table-cell-content")).forEach((parentElem) => {
+                if (parentElem.querySelector(".invalidDatePicker")) {
+                    parentElem.style.pointerEvents = "none";
+                }
+            })
+        }
     }, [])
 
     const submitForm = async () => {
@@ -35,7 +43,7 @@ export default function SelectDate(props) {
 
     function renderCell(date) {
         if (date <= today) {
-            return <div className={styles.badDate}>{" "}</div>
+            return <div className={"invalidDatePicker"}>{" "}</div>
         }
 
         return null;

@@ -49,7 +49,7 @@ export default function BookingConfirmation(props) {
                     </section>
                     <section>
                         <label>Date & Time</label>
-                        <span>{startTime} {dayOfWeek.substring(0, 3)}, {startDate}</span>
+                        <span>{startTime} to {endTime} {dayOfWeek.substring(0, 3)}, {startDate}</span>
                     </section>
                     <section>
                         <label>Booked for</label>

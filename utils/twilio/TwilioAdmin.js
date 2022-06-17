@@ -21,4 +21,10 @@ export class TwilioAdmin {
         })
     }
 
+    static async cancelText(sid) {
+        const settings = await Settings.getInstance();
+        const client = twilio(settings.get("twilio_sid"), settings.get("twilio_auth_token"));
+        return await client.messages(sid).update({status: 'canceled'})
+    }
+
 }

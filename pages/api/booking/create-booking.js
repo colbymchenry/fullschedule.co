@@ -65,22 +65,25 @@ export default async function handler(req, res) {
             lead: lead.doc_id
         });
 
+        let twilioReminderData = null;
+
         try {
-            sendSMSConfirmation(settings, new Date(postedEvent.start.dateTime), staff, lead.phone);
+            twilioReminderData = await sendSMSConfirmation(settings, new Date(postedEvent.start.dateTime), staff, lead.phone);
         } catch (err) {
             console.error(err);
             console.error("Failed to send SMS confirmation.");
         }
 
         // Add appointment to DB
-        // await FirebaseAdmin.firestore().collection("appointments").add({
-        //     lead,
-        //     staff: staff.doc_id,
-        //     google_event_id: postedEvent.id,
-        //     google_event_link: postedEvent.htmlLink,
-        //     start: postedEvent.start,
-        //     end: postedEvent.end
-        // });
+        await FirebaseAdmin.firestore().collection("appointments").add({
+            lead: lead.doc_id,
+            staff: staff.doc_id,
+            google_event_id: postedEvent.id,
+            google_event_link: postedEvent.htmlLink,
+            start: postedEvent.start,
+            end: postedEvent.end,
+            ...(twilioReminderData && { twilioReminderSID: twilioReminderData.sid })
+        });
 
         return res.json(
             {
@@ -112,5 +115,5 @@ async function sendSMSConfirmation(settings, startDate, staff, toPhone) {
     await TwilioAdmin.sendText(toPhone, textBody);
     const reminderDate = startDate;
     reminderDate.setHours(8, 0, 0, 0);
-    await TwilioAdmin.scheduleText(toPhone, textBody, reminderDate);
+    return await TwilioAdmin.scheduleText(toPhone, textBody, reminderDate);
 }

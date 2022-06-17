@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 import {Button, Form, Input, InputGroup, Modal, Notification, Schema, toaster} from "rsuite";
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../../../context/AuthContext";
@@ -27,6 +27,7 @@ export default function NewTextModal(props) {
     const [submitted, setSubmitted] = useState(false);
     const [formValue, setFormValue] = useState({});
     const [formError, setFormError] = useState({});
+    const [triggerRender, setTriggerRender] = useState(false);
     const submitRef = useRef();
     const { currentUser } = useAuth();
 
@@ -36,6 +37,14 @@ export default function NewTextModal(props) {
         phone: StringType().isRequired('This field is required.').minLength(12),
         message: StringType().isRequired('This field is required.')
     });
+
+    useEffect(() => {
+        if (props.phone) {
+            formValue["phone"] = props.phone;
+            setFormValue(formValue);
+            setTriggerRender(!triggerRender);
+        }
+    }, []);
 
     const handleClose = () => {
         setOpen(false);

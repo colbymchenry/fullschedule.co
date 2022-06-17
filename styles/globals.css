@@ -121,6 +121,21 @@ div::-webkit-scrollbar-corner {
   }
 }
 
+.fadeIn {
+  animation: fadeInAnimation ease 0.5s !important;
+  animation-iteration-count: 1 !important;
+  animation-fill-mode: forwards !important;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .rs-steps-item-title > label {
   display: flex;
   align-items: center;

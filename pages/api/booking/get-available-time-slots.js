@@ -63,7 +63,7 @@ export default async function handler(req, res) {
             googleEvents.forEach((event) => {
                 const startTime = new Date(event.start.dateTime);
                 const endTime = new Date(event.end.dateTime);
-                startTime.setHours(startTime.getHours() - servicesHours - (servicesMinutes > 0 ? 1 : 0), startTime.getMinutes() + servicesMinutes, startTime.getSeconds());
+                startTime.setHours(startTime.getHours() - servicesHours - (servicesMinutes > 0 ? 1 : 0), startTime.getMinutes() - servicesMinutes, 0);
 
                 timeSlots[staff.doc_id] = timeSlots[staff.doc_id].filter((timeSlot) => {
                     const [hour, minute] = TimeHelper.sliderValTo24(timeSlot).split(":");

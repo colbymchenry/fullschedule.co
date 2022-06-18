@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {useAuth} from "../../../context/AuthContext";
 import ConfirmModal from "../../modals/ConfirmModal/ConfirmModal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faCheckCircle, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {APIConnector} from "../../APIConnector";
 
 export default function AppointmentCancel(props) {
@@ -22,10 +22,7 @@ export default function AppointmentCancel(props) {
 
             try {
                 const res = await (await APIConnector.create(10000, currentUser)).post(`/appointment/cancel?id=${props.appointment_id}`, {charge});
-
                 setResponse(res.data.response);
-
-
             } catch (error) {
                 console.error(error);
                 toaster.push(<Notification type={"error"} header={"Failed to cancel appointment."}/>, {
@@ -35,7 +32,7 @@ export default function AppointmentCancel(props) {
         }
         }>
             <p>
-                {response ? response.map((msg) => <>{msg}<br/></>) :
+                {response ? response.map((msg) => <><span style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>{msg.trim().length === 0 ? <></> : msg.includes("Failed") ? <FontAwesomeIcon icon={faExclamationTriangle} color={"red"} /> : <FontAwesomeIcon icon={faCheckCircle} color={"green"} />} {msg}</span></>) :
                     <>
                         <FontAwesomeIcon icon={faExclamationTriangle} color={"yellow"}/> Warning: Canceling an
                         appointment is

@@ -5,6 +5,7 @@ import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
 import {TimeHelper} from "../../../utils/TimeHelper";
 import {Settings} from "../../../modals/Settings";
 import {TwilioAdmin} from "../../../utils/twilio/TwilioAdmin";
+import TextMagicHelper from "../../../utils/textmagic/TextMagicHelper";
 
 export default async function handler(req, res) {
     try {
@@ -65,10 +66,10 @@ export default async function handler(req, res) {
             lead: lead.doc_id
         });
 
-        let twilioReminderData = null;
+        let textMagicId = null;
 
         try {
-            twilioReminderData = await sendSMSConfirmation(settings, new Date(postedEvent.start.dateTime), staff, lead.phone);
+            textMagicId = await sendSMSConfirmation(settings, new Date(postedEvent.start.dateTime), postedEvent.start.timeZone, staff, lead.phone);
         } catch (err) {
             console.error(err);
             console.error("Failed to send SMS confirmation.");
@@ -83,7 +84,7 @@ export default async function handler(req, res) {
             start: postedEvent.start,
             end: postedEvent.end,
             services: lead.services.map(({doc_id}) => doc_id),
-            ...(twilioReminderData && { twilioReminderSID: twilioReminderData.sid })
+            ...(textMagicId && { text_magic_reminder_id: textMagicId })
         });
 
         return res.json(
@@ -103,20 +104,49 @@ export default async function handler(req, res) {
 
 }
 
-async function sendSMSConfirmation(settings, startDate, staff, toPhone) {
+async function sendSMSConfirmation(settings, startDate, timeZone, staff, toPhone) {
     const dateHuman = startDate.toLocaleTimeString([], {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-        ...(settings?.time_zone && { timeZone: settings.time_zone })
+        timeZone
     });
     const textBody = `\n\nYour appointment on\n\n${dateHuman} with ${staff?.firstname ? staff.firstname : ""} ${staff?.lastname ? staff.lastname : ""} is scheduled.\n\nAddress:\n${settings.get("address_street_line1") && settings.get("address_street_line1") + "\n"}${settings.get("address_street_line2") && settings.get("address_street_line2") + "\n"}${settings.get("address_city") && settings.get("address_city") + ", "}${settings.get("address_state") && settings.get("address_state")} ${settings.get("address_zip") && settings.get("address_zip")}\n\nThanks for choosing ${settings.get("company_name")}! We look forward to seeing you!`;
     await TwilioAdmin.sendText(toPhone, settings.get("company_name") + textBody);
 
    // TODO: Scheduler can't do past 7 days
-    const reminderDate = startDate;
-    reminderDate.setHours(8, 0, 0, 0);
-    return await TwilioAdmin.scheduleText(toPhone, settings.get("company_name") + " - REMINDER" + textBody, reminderDate);
+    const reminderDate = new Date(startDate);
+    reminderDate.setHours(8, 0, 30);
+
+    const textMagic = await TextMagicHelper.getInstance();
+    const resp = await textMagic.sendMessage({
+        text: textBody,
+        phones: toPhone,
+        sendingDateTime: formatDate(reminderDate),
+        sendingTimeZone: timeZone
+    });
+
+    return resp.scheduleId;
+}
+
+function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+}
+
+function formatDate(date) {
+    return (
+        [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+        ].join('-') +
+        ' ' +
+        [
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+            padTo2Digits(date.getSeconds()),
+        ].join(':')
+    );
 }

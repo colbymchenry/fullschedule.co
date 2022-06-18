@@ -31,6 +31,7 @@
     "react-input-mask": "^2.0.4",
     "react-use": "^17.4.0",
     "rsuite": "^5.9.0",
+    "textmagic-client": "^2.0.3361",
     "twilio": "^3.76.1"
   },
   "devDependencies": {

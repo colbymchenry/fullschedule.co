@@ -2,10 +2,17 @@ import GoogleCalendarAPI from "../../utils/googleapis/GoogleCalendarAPI";
 import {FirebaseAdmin} from "../../utils/firebase/FirebaseAdmin";
 import {Staff} from "../../modals/Staff";
 import {Lead} from "../../modals/Lead";
+import TextMagicHelper from "../../utils/textmagic/TextMagicHelper";
 
 export default async function handler(req, res) {
     try {
         const calendarApi = await GoogleCalendarAPI.getInstance();
+
+        try {
+            await TextMagicHelper.getInstance();
+        } catch (error) {
+            console.error(error);
+        }
 
         // create date at start of day for the day selected
         const timeMin = new Date(req.body.date);

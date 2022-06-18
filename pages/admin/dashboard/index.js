@@ -19,6 +19,7 @@ import AppointmentCheckInOut from "../../../components/Appointment/CheckInOut/Ap
 import {FaSvgIcon} from "../../../components/SVG";
 import {Icon} from "@rsuite/icons";
 import AppointmentCancel from "../../../components/Appointment/Cancel/AppointmentCancel";
+import AppointmentModify from "../../../components/Appointment/Modify/AppointmentModify";
 
 export default function DashboardAppointments(props) {
 
@@ -132,7 +133,7 @@ export default function DashboardAppointments(props) {
                 <br/>
                 <button type={"button"} disabled={!appointment?.check_in} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={false} appointment_id={appointment.doc_id} onComplete={() => fetchAppointments(true)} /></AuthProvider>)}>Check-Out</button>
                 <br/>
-                <button type={"button"}>Edit / Modify</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentModify appointment={appointment} onComplete={() => fetchAppointments(true)} /></AuthProvider>)}>Edit / Modify</button>
                 <hr/>
                 <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment_id={appointment.doc_id} onComplete={() => fetchAppointments(true)} /></AuthProvider>)}>Cancel Appointment</button>
             </div>
@@ -155,6 +156,8 @@ export default function DashboardAppointments(props) {
                     </div>
                     {Object.keys(appointments).map((staff_id, index) => {
                         const apps = findAppointments(staff_id, hour);
+
+                        console.log(hour, apps)
 
                         if ((!apps.length) || (apps.length && renderedApps.includes(apps[0].doc_id))) return <div
                             className={styles.block + (isLunchBlock(staff_id, hour) ? " " + styles.lunch : "")}>

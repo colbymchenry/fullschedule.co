@@ -1,8 +1,8 @@
 import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
-import {TwilioAdmin} from "../../../utils/twilio/TwilioAdmin";
 import GoogleCalendarAPI from "../../../utils/googleapis/GoogleCalendarAPI";
 import {Lead} from "../../../modals/Lead";
 import {CloverAPI} from "../../../utils/clover/CloverAPI";
+import TextMagicHelper from "../../../utils/textmagic/TextMagicHelper";
 
 export default async function handler(req, res) {
     try {
@@ -17,7 +17,8 @@ export default async function handler(req, res) {
         let response = [];
 
         try {
-            await TwilioAdmin.cancelText(appointment.twilioReminderSID);
+            const textMagic = await TextMagicHelper.getInstance();
+            await textMagic.deleteScheduledMessage(appointment.text_magic_reminder_id);
             response.push("Cancelled text reminder.");
         } catch (err) {
             response.push("Failed to cancel text reminder.");

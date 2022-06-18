@@ -303,6 +303,23 @@ export default function DashboardSettings(props) {
                             error={formError["twilio_number"]}
                         />
                     </div>
+                    <br />
+                    <br />
+                    <div className={styles.section}>
+                        <h4>TextMagic (Automated Text Reminders)</h4>
+                        <Field
+                            name="text_magic_user"
+                            label="Username"
+                            accepter={MaskedInput}
+                            error={formError["text_magic_user"]}
+                        />
+                        <Field
+                            name="text_magic_api_key"
+                            label="API Key"
+                            accepter={MaskedInput}
+                            error={formError["text_magic_api_key"]}
+                        />
+                    </div>
                     <br/>
                     <br/>
                     <div className={styles.section}>

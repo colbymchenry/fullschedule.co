@@ -42,7 +42,9 @@ export function ActionItems(props) {
                     "twilio_auth_token^Twilio Auth Token.",
                     "twilio_number^Twilio number.",
                     "twilio_sid^Twilio SID.",
-                    "twilio_mg_sid^Twilio Messaging SID."
+                    "twilio_mg_sid^Twilio Messaging SID.",
+                    "text_magic_api_key^Text Magic API Key.",
+                    "text_magic_user^Text Magic username."
                 ];
                 setRequirements(requiredFields.filter((key) => !value[0][key.split("^")[0]]));
             })();

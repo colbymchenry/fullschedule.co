@@ -29,7 +29,6 @@ export default function AppointmentModify(props) {
 
     const handleClose = () => {
         setOpen(false);
-        props.fetchInventory();
     }
 
     const submitForm = async (passed) => {
@@ -37,10 +36,7 @@ export default function AppointmentModify(props) {
 
         setSubmitted(true);
         try {
-            const createRes = await (await APIConnector.create(6000, currentUser)).post(`/clover/create-product`, formValue);
-            toaster.push(<Notification type={"success"} header={"Product created!"}/>, {
-                placement: 'topEnd'
-            });
+
             handleClose();
         } catch (error) {
             if (error?.response?.data?.code === 'auth/email-already-exists') {
@@ -66,23 +62,7 @@ export default function AppointmentModify(props) {
                 if (Object.keys(formError).length) setFormError({});
             }} model={model} disabled={submitted} readOnly={submitted}>
                 <div className={styles.section}>
-                    <Field
-                        name="name"
-                        label="Name"
-                        message={"Required"}
-                        accepter={MaskedInput}
-                        error={formError["name"]}
-                    />
 
-                    <Field
-                        name="price"
-                        label="Price"
-                        message={"Required"}
-                        accepter={MaskedInput}
-                        pattern="[0-9]{1,5}"
-                        type={"tel"}
-                        error={formError["price"]}
-                    />
                 </div>
                 <button ref={submitRef} type={"submit"} style={{display: 'none'}}/>
             </Form>

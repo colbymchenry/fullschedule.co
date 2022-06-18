@@ -1,6 +1,8 @@
 import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
 import {TwilioAdmin} from "../../../utils/twilio/TwilioAdmin";
 import GoogleCalendarAPI from "../../../utils/googleapis/GoogleCalendarAPI";
+import {Lead} from "../../../modals/Lead";
+import {CloverAPI} from "../../../utils/clover/CloverAPI";
 
 export default async function handler(req, res) {
     try {
@@ -12,22 +14,41 @@ export default async function handler(req, res) {
             cancelled: true
         });
 
+        let response = [];
+
         try {
             await TwilioAdmin.cancelText(appointment.twilioReminderSID);
-            console.log("CANCELLED TEXT");
+            response.push("Cancelled text reminder.");
         } catch (err) {
-
+            response.push("Failed to cancel text reminder.");
         }
 
         try {
             const calendarApi = await GoogleCalendarAPI.getInstance();
             await calendarApi.deleteEvent(appointment.google_event_id);
-            console.log("DELETED CALENDAR EVENT")
+            response.push("Cancelled Google calendar event and notified customer.");
         } catch (err) {
-
+            response.push("Failed to cancel Google event.");
         }
 
-        return res.json({});
+        if (req.body.charge) {
+            try {
+                const lead = await Lead.get(appointment.lead);
+                const cloverApi = await CloverAPI.getInstance();
+                if (process.env.NEXT_ENV !== "DEV") {
+                    await cloverApi.createCharge(lead.clover_source, 5 * 100, lead.email);
+                }
+                response.push("Charged $75 no show fee and emailed customer a receipt.");
+            } catch (err) {
+                console.error(err.raw)
+                response.push("Failed to charge no show fee.");
+            }
+        }
+
+        response.push(" ");
+        response.push("Appointment cancelled.");
+
+        return res.json({ response });
     } catch (error) {
         console.error(error);
 

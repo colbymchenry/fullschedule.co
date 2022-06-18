@@ -243,8 +243,8 @@
 
 .currentTimeLine {
     position: absolute;
-    left: 25px;
-    width: calc(100% - 25px);
+    left: 20px;
+    width: calc(100% - 20px);
     height: 1px;
     overflow: visible;
     z-index: 2;
@@ -254,7 +254,7 @@
 
 .currentTimeLine span {
     position: absolute;
-    margin-top: -15px;
+    margin-top: -16px;
     background: var(--rs-blue-500);
     padding: 5px;
     padding-right: 15px;

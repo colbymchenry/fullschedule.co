@@ -123,20 +123,20 @@ export default function DashboardAppointments(props) {
 
     }
 
-    const Overlay = forwardRef(({style, onClose, appointment_id, ...rest}, ref) => {
+    const Overlay = forwardRef(({style, onClose, appointment, ...rest}, ref) => {
         const styles = {
             ...style,
         };
 
         return (
             <div {...rest} style={styles} ref={ref}>
-                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={true} appointment_id={appointment_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-In</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={true} appointment_id={appointment.doc_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-In</button>
                 <br/>
-                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={false} appointment_id={appointment_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-Out</button>
+                <button type={"button"} disabled={!appointment?.check_in} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={false} appointment_id={appointment.doc_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-Out</button>
                 <br/>
                 <button type={"button"}>Edit / Modify</button>
                 <hr/>
-                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment_id={appointment_id} /></AuthProvider>)}>Cancel Appointment</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment_id={appointment.doc_id} /></AuthProvider>)}>Cancel Appointment</button>
             </div>
         );
     });
@@ -214,7 +214,7 @@ export default function DashboardAppointments(props) {
                                                     trigger="click"
                                                     speaker={(props, ref) => {
                                                         const {left, top, onClose} = props;
-                                                        return <Overlay style={{left, top}} appointment_id={app.doc_id} onClose={onClose}
+                                                        return <Overlay style={{left, top}} appointment={app} onClose={onClose}
                                                                         className={styles.overlay + " fadeIn"}
                                                                         ref={ref}/>;
                                                     }}

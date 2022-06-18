@@ -7,6 +7,7 @@ import IFrameApp from "../../IFrameApp/IFrameApp";
 export default function BillingInformation(props) {
     const [submitted, setSubmitted] = useState(false);
     const [cardError, setCardError] = useState(false);
+    const [secondToken, setSecondToken] = useState(null);
 
     const processPayment = async (data) => {
         if (submitted) return;
@@ -23,7 +24,7 @@ export default function BillingInformation(props) {
         }
 
         try {
-            const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, {clover_source: data.token});
+            const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, {clover_source: secondToken});
             const createBooking = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, props.formValues.lead);
             props.appendFormValues({ ...leadUpdate.data, booking: createBooking.data })
         } catch (err) {
@@ -51,6 +52,7 @@ export default function BillingInformation(props) {
                     btnStyle={{backgroundColor: "#0051ff", color: "white", padding: '0.5rem 0'}}
                     noBlack={true}
                     onChange={() => setCardError(false)}
+                    onSecondaryToken={(token) => setSecondToken(token)}
                     info={[...errorArray, "* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a $75 no show fee. A $0.01 charge will show up on your account to secure your appointment."]}
                 />
                 :

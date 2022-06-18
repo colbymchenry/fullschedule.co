@@ -142,6 +142,22 @@ class IFrameApp extends React.Component {
             })
             .then((resp) => this.callCreateChargeAPI(resp))
             .catch(err => console.log(err));
+
+        window.clover.createToken()
+            .then((result) => {
+                if (result.errors) {
+                    Object.values(result.errors).forEach(function (value) {
+                        displayError.textContent = value;
+                    });
+                } else {
+                    this.props.outputHandler(`Token Id is -> ${result.token}`);
+                }
+                return result;
+            })
+            .then((resp) => {
+                if(this.props?.onSecondaryToken) this.props.onSecondaryToken(resp.token);
+            })
+            .catch(err => console.log(err));
     }
     componentWillUnmount(){
         const cloverFooter = document.getElementsByClassName('clover-footer')[0];

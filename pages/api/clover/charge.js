@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     try {
         const lead = await Lead.get(req.query.id);
         const cloverApi = await CloverAPI.getInstance();
-        const resp = await cloverApi.createCharge(source, 0.01, lead?.email);
+        const resp = await cloverApi.createCharge(source, 1, lead?.email);
         return res.json({ id: resp.id })
     } catch (e) {
         console.error(e)

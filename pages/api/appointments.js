@@ -47,16 +47,21 @@ export default async function handler(req, res) {
                 });
 
                 if (result.length > 0) {
+                    // try catch in case data is missing, should prevent front errors but could cause unknown issues to why data isn't showing
+                    try {
+                        if (result[0]["lead"]) {
+                            result[0]["lead"] = await Lead.get(result[0]["lead"]);
+                        }
 
-                    if (result[0]["lead"]) {
-                        result[0]["lead"] = await Lead.get(result[0]["lead"]);
+                        if (result[0]["services"]) {
+                            result[0]["services"] = await Promise.all(result[0]["services"].map(async (service_id) => (await FirebaseAdmin.firestore().collection("clover_inventory").doc(service_id).get()).data()))
+                        }
+
+                        results[eventStaffId]["appointments"].push(result[0]);
+                    } catch (error) {
+
                     }
 
-                    if (result[0]["services"]) {
-                        result[0]["services"] = await Promise.all(result[0]["services"].map(async (service_id) => (await FirebaseAdmin.firestore().collection("clover_inventory").doc(service_id).get()).data()))
-                    }
-
-                    results[eventStaffId]["appointments"].push(result[0]);
                 }
             }
         }))

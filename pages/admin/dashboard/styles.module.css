@@ -260,3 +260,20 @@
     border-bottom-right-radius: 50%;
     border-top-right-radius: 50%;
 }
+
+.lunch {
+    justify-content: center;
+    align-items: center;
+}
+
+.block h5 {
+    display: none;
+}
+
+.lunch h5 {
+    display: block;
+    position: absolute;
+    letter-spacing: 4px;
+    font-size: 34px;
+    color: var(--rs-border-secondary);
+}

@@ -86,6 +86,20 @@ export default function DashboardAppointments(props) {
         });
     }
 
+    const isLunchBlock = (staff_id, timeSlot) => {
+        const dayOfWeek = days[activeDate.getDay()];
+
+        if(appointments[staff_id].staff?.schedule && appointments[staff_id].staff?.schedule[dayOfWeek]) {
+            if(appointments[staff_id].staff?.schedule[dayOfWeek]["lunch"]) {
+                const lunchSchedule = appointments[staff_id].staff?.schedule[dayOfWeek]["lunch"];
+                const timeSlotVal = parseFloat(TimeHelper.getSliderValFrom24(timeSlot));
+                return timeSlotVal >= parseFloat(lunchSchedule[0]) && timeSlotVal <= parseFloat(lunchSchedule[1]);
+            }
+        }
+
+        return false;
+    }
+
     const Overlay = forwardRef(({style, onClose, ...rest}, ref) => {
         const styles = {
             ...style,
@@ -119,7 +133,7 @@ export default function DashboardAppointments(props) {
                         const apps = findAppointments(staff_id, hour);
 
                         if ((!apps.length) || (apps.length && renderedApps.includes(apps[0].doc_id))) return <div
-                            className={styles.block}/>
+                            className={styles.block + (isLunchBlock(staff_id, hour) ? " " + styles.lunch : "")}><h5>LUNCH</h5></div>
 
                         renderedApps.push(apps[0].doc_id);
 
@@ -132,7 +146,7 @@ export default function DashboardAppointments(props) {
                         // if height is 100px and each 100px represent 30 minutes than 1 minute = 100 / 30 px's
                         // for the height we have to subtract 10 when padding of block is 20
                         return (
-                            <div key={staff_id + index} className={styles.block}>
+                            <div key={staff_id + index} className={styles.block + (isLunchBlock(staff_id, hour) ? " " + styles.lunch : "")}>
                                 {apps.length && (
                                     <div className={styles.appointment} style={{
                                         height: (totalMinutes * (100 / 30) - 10) + "px",
@@ -164,6 +178,8 @@ export default function DashboardAppointments(props) {
                                         </Whisper>
                                     </div>
                                 )}
+
+                                <h5>LUNCH</h5>
                             </div>
                         )
                     })}

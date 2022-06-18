@@ -29,7 +29,7 @@ export default function DashboardAppointments(props) {
     const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     activeDate.setHours(0, 0, 0, 0);
 
-    const fetchAppointments = async () => {
+    const fetchAppointments = async (dontScroll) => {
         activeDate.setHours(0, 0, 0, 0);
         setFetching(true);
 
@@ -40,12 +40,14 @@ export default function DashboardAppointments(props) {
 
             setAppointments(res.data);
 
-            if (document.getElementById("current-time-line")) {
+            if (!dontScroll) {
+                if (document.getElementById("current-time-line")) {
 
-                document.getElementsByClassName("page-root")[0].scrollTo({
-                    top: document.getElementById("current-time-line").offsetTop - 200,
-                    behavior: 'smooth'
-                });
+                    document.getElementsByClassName("page-root")[0].scrollTo({
+                        top: document.getElementById("current-time-line").offsetTop - 200,
+                        behavior: 'smooth'
+                    });
+                }
             }
         } catch (err) {
 
@@ -59,7 +61,7 @@ export default function DashboardAppointments(props) {
     }, []);
 
     useEffect(() => {
-        fetchAppointments();
+        fetchAppointments(true);
     }, [activeDate]);
 
     if (!appointments) {
@@ -119,10 +121,6 @@ export default function DashboardAppointments(props) {
         return false;
     }
 
-    const onSuccessCheckInOut = (appointment_id, formValues) => {
-
-    }
-
     const Overlay = forwardRef(({style, onClose, appointment, ...rest}, ref) => {
         const styles = {
             ...style,
@@ -130,13 +128,13 @@ export default function DashboardAppointments(props) {
 
         return (
             <div {...rest} style={styles} ref={ref}>
-                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={true} appointment_id={appointment.doc_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-In</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={true} appointment_id={appointment.doc_id} onComplete={() => fetchAppointments(true)} /></AuthProvider>)}>Check-In</button>
                 <br/>
-                <button type={"button"} disabled={!appointment?.check_in} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={false} appointment_id={appointment.doc_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-Out</button>
+                <button type={"button"} disabled={!appointment?.check_in} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={false} appointment_id={appointment.doc_id} onComplete={() => fetchAppointments(true)} /></AuthProvider>)}>Check-Out</button>
                 <br/>
                 <button type={"button"}>Edit / Modify</button>
                 <hr/>
-                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment_id={appointment.doc_id} /></AuthProvider>)}>Cancel Appointment</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment_id={appointment.doc_id} onComplete={() => fetchAppointments(true)} /></AuthProvider>)}>Cancel Appointment</button>
             </div>
         );
     });

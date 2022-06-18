@@ -30,7 +30,7 @@ export default function AppointmentCheckInOut(props) {
             await (await APIConnector.create(6000, currentUser)).post(`/appointment/checkinout?id=${props.appointment_id}`, body);
 
             setOpen(false);
-            if (props.onSuccess) props.onSuccess(props.appointment_id, body);
+            if (props.onComplete) props.onComplete(body);
         } catch (error) {
             toaster.push(<Notification type={"error"} header={"Failed."}/>, {
                 placement: 'topEnd'

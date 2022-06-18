@@ -114,6 +114,8 @@ async function sendSMSConfirmation(settings, startDate, staff, toPhone) {
     });
     const textBody = `\n\nYour appointment on\n\n${dateHuman} with ${staff?.firstname ? staff.firstname : ""} ${staff?.lastname ? staff.lastname : ""} is scheduled.\n\nAddress:\n${settings.get("address_street_line1") && settings.get("address_street_line1") + "\n"}${settings.get("address_street_line2") && settings.get("address_street_line2") + "\n"}${settings.get("address_city") && settings.get("address_city") + ", "}${settings.get("address_state") && settings.get("address_state")} ${settings.get("address_zip") && settings.get("address_zip")}\n\nThanks for choosing ${settings.get("company_name")}! We look forward to seeing you!`;
     await TwilioAdmin.sendText(toPhone, settings.get("company_name") + textBody);
+
+   // TODO: Scheduler can't do past 7 days
     const reminderDate = startDate;
     reminderDate.setHours(8, 0, 0, 0);
     return await TwilioAdmin.scheduleText(toPhone, settings.get("company_name") + " - REMINDER" + textBody, reminderDate);

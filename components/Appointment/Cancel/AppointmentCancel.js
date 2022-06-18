@@ -23,6 +23,7 @@ export default function AppointmentCancel(props) {
             try {
                 const res = await (await APIConnector.create(10000, currentUser)).post(`/appointment/cancel?id=${props.appointment_id}`, {charge});
                 setResponse(res.data.response);
+                if (props.onComplete) props.onComplete();
             } catch (error) {
                 console.error(error);
                 toaster.push(<Notification type={"error"} header={"Failed to cancel appointment."}/>, {

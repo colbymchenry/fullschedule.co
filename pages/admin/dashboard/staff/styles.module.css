@@ -2,6 +2,10 @@
     height: 80vh;
 }
 
+.table img {
+    object-fit: cover;
+}
+
 .center > div {
     display: flex;
     justify-content: center;

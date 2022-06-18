@@ -24,7 +24,10 @@ export default function ConfirmModal(props) {
     }
 
     return (
-        <Modal open={"open" in props ? props.open : visible} onClose={() => setVisible(false)} backdrop={"static"}>
+        <Modal open={"open" in props ? props.open : visible} onClose={() => {
+            setVisible(false)
+            if (props.handleClose) props.handleClose()
+        }} backdrop={"static"}>
             <Modal.Header>
                 <Modal.Title>{props.title}</Modal.Title>
             </Modal.Header>
@@ -36,7 +39,10 @@ export default function ConfirmModal(props) {
                     {props.confirmText || "Ok"}
                 </Button>
                 {!props.hideCancel &&
-                    <Button onClick={() => setVisible(false)} appearance="subtle">
+                    <Button onClick={() => {
+                        setVisible(false)
+                        if (props.handleClose) props.handleClose()
+                    }} appearance="subtle">
                         {props.cancelText || "Cancel"}
                     </Button>
                 }

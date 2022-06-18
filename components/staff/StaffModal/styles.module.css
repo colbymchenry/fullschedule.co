@@ -10,6 +10,10 @@
     padding-bottom: 1rem;
 }
 
+.form img {
+    object-fit: cover;
+}
+
 .section {
     display: flex;
     flex-wrap: wrap;

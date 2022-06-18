@@ -305,13 +305,16 @@
 
 .checked_out {
     color: var(--rs-green-500);
+    font-weight: bold;
 }
 
 .checked_in {
     color: var(--rs-yellow-500);
+    font-weight: bold;
 }
 
 .attention {
     color: var(--rs-red-500);
+    font-weight: bold;
 }
 

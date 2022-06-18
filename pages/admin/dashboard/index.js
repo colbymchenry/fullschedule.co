@@ -2,7 +2,7 @@ import React, {forwardRef, useEffect, useState} from 'react';
 import {APIConnector} from "../../../components/APIConnector";
 import {AuthProvider, useAuth} from "../../../context/AuthContext";
 import styles from "./styles.module.css";
-import {Button, DatePicker, Loader, Tag, toaster, Whisper} from "rsuite";
+import {Button, DatePicker, Loader, Notification, Tag, toaster, Whisper} from "rsuite";
 import {
     faCheckCircle,
     faChevronLeft,
@@ -15,6 +15,10 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {TimeHelper} from "../../../utils/TimeHelper";
 import Overlay from "rsuite/Overlay";
 import NewTextModal from "../../../components/sms/NewTextModal/NewTextModal";
+import AppointmentCheckInOut from "../../../components/Appointment/CheckInOut/AppointmentCheckInOut";
+import {FaSvgIcon} from "../../../components/SVG";
+import {Icon} from "@rsuite/icons";
+import AppointmentCancel from "../../../components/Appointment/Cancel/AppointmentCancel";
 
 export default function DashboardAppointments(props) {
 
@@ -115,20 +119,24 @@ export default function DashboardAppointments(props) {
         return false;
     }
 
-    const Overlay = forwardRef(({style, onClose, ...rest}, ref) => {
+    const onSuccessCheckInOut = (appointment_id, formValues) => {
+
+    }
+
+    const Overlay = forwardRef(({style, onClose, appointment_id, ...rest}, ref) => {
         const styles = {
             ...style,
         };
 
         return (
             <div {...rest} style={styles} ref={ref}>
-                <button type={"button"}>Check-In</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={true} appointment_id={appointment_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-In</button>
                 <br/>
-                <button type={"button"}>Check-Out</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCheckInOut checkIn={false} appointment_id={appointment_id} onSuccess={onSuccessCheckInOut} /></AuthProvider>)}>Check-Out</button>
                 <br/>
                 <button type={"button"}>Edit / Modify</button>
                 <hr/>
-                <button type={"button"}>Cancel Appointment</button>
+                <button type={"button"} onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment_id={appointment_id} /></AuthProvider>)}>Cancel Appointment</button>
             </div>
         );
     });
@@ -165,7 +173,7 @@ export default function DashboardAppointments(props) {
                         const minuteDiff = new Date(app.start.dateTime).getMinutes() - parseInt(hour.split(":")[1]);
                         let marginTop = (minuteDiff * (100 / 30) - 8) + "px";
 
-                        const icon = app?.check_out ? faCheckCircle : app?.check_in ? faCogs : faExclamationTriangle;
+                        const icon = app?.check_out ? <FontAwesomeIcon icon={faCheckCircle}/> : app?.check_in ? <FontAwesomeIcon icon={faCog} className={"spin"} /> : <FontAwesomeIcon icon={faExclamationTriangle} />;
                         const status = app?.check_out ? "Completed!" : app?.check_in ? "In progress" : "Check in"
                         const color = app?.check_out ? styles.checked_out : app?.check_in ? styles.checked_in : styles.attention;
 
@@ -197,7 +205,7 @@ export default function DashboardAppointments(props) {
                                                     </span>
 
                                                     <span className={color}>
-                                                        <FontAwesomeIcon icon={icon}/>
+                                                        {icon}
                                                         {" "}
                                                         {status}
                                                     </span>
@@ -206,7 +214,7 @@ export default function DashboardAppointments(props) {
                                                     trigger="click"
                                                     speaker={(props, ref) => {
                                                         const {left, top, onClose} = props;
-                                                        return <Overlay style={{left, top}} onClose={onClose}
+                                                        return <Overlay style={{left, top}} appointment_id={app.doc_id} onClose={onClose}
                                                                         className={styles.overlay + " fadeIn"}
                                                                         ref={ref}/>;
                                                     }}
@@ -315,7 +323,7 @@ export default function DashboardAppointments(props) {
                 </div>
 
             </div>
-            {fetching && <Loader backdrop size={"lg"} vertical/>}
+            {fetching &&  <Loader backdrop size={"lg"} vertical style={{ position: "sticky", zIndex: 4, width: "100%" }}/> }
 
         </>
     )

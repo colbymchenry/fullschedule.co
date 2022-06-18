@@ -41,7 +41,8 @@ export function ActionItems(props) {
                     "email_username^Email username.",
                     "twilio_auth_token^Twilio Auth Token.",
                     "twilio_number^Twilio number.",
-                    "twilio_sid^Twilio SID."
+                    "twilio_sid^Twilio SID.",
+                    "twilio_mg_sid^Twilio Messaging SID."
                 ];
                 setRequirements(requiredFields.filter((key) => !value[0][key.split("^")[0]]));
             })();

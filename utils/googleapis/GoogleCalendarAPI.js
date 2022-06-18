@@ -107,6 +107,15 @@ export default class GoogleCalendarAPI {
         return res.data;
     }
 
+    async deleteEvent(id) {
+        return await this.calendar.events.delete({
+            calendarId: this.calendarId,
+            eventId: id
+        }, {
+            sendUpdates: true
+        });
+    }
+
 //     try {
 //     const calendarApi = await GoogleCalendarAPI.getInstance();
 //

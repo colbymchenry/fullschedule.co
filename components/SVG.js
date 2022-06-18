@@ -1,3 +1,13 @@
+export const FaSvgIcon = ({ faIcon, ...rest }) => {
+    const { width, height, svgPathData } = faIcon;
+    console.log(faIcon)
+    return (
+        <svg {...rest} viewBox={`0 0 ${width} ${height}`} width="2em" height="2em" fill="currentColor">
+            <path d={faIcon.icon[4]}></path>
+        </svg>
+    );
+};
+
 export const AvatarSVG = (props) => (
     <svg style={props.style} width={props.width || "1em"} height={props.height || "1em"} viewBox="0 0 32 32" aria-hidden="true" focusable="false" className={`rs-icon ${props.className}`}
          aria-label="avatar" data-category="legacy" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

@@ -27,7 +27,6 @@ export default async function handler(req, res) {
             let allStaff = await FirebaseAdmin.getCollectionArray("staff");
             allStaff = allStaff.filter((staff) => staff?.bookable);
             await Promise.all(allStaff.map(async (staff) => {
-                console.log(staff)
                 if (!results[staff.doc_id]) {
                     results[staff.doc_id] = {}
                     results[staff.doc_id]["appointments"] = [];

@@ -3,7 +3,7 @@
     flex-direction: column;
     width: 100%;
     position: relative;
-    overflow-x: hidden;
+    overflow: visible;
 }
 
 .headers {
@@ -13,7 +13,7 @@
     top: 0;
     width: 100%;
     background-color: var(--rs-body);
-    z-index: 2;
+    z-index: 4;
     border-bottom: 1px solid var(--rs-border-secondary);
 }
 
@@ -121,7 +121,6 @@
 }
 
 .timeStamp span {
-    margin-top: -8px;
     color: var(--rs-text-secondary);
 }
 
@@ -139,7 +138,6 @@
 .events {
     display: flex;
     flex-direction: column;
-    margin-top: 2rem;
     position: relative;
     overflow: hidden;
     padding-bottom: 10rem;
@@ -157,12 +155,25 @@
     width: calc(100% - 20px);
     color: var(--rs-btn-default-text);
     background: var(--rs-btn-default-bg);
-    z-index: 1;
-    padding: 10px;
+    z-index: 3;
     border-radius: 10px;
     overflow: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+
+.body {
     display: flex;
     white-space: nowrap;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.innerds {
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .appointment label {
@@ -171,13 +182,8 @@
 }
 
 .appointment .editBtn {
-    position: static;
-    top: 0;
-    right: 0;
     background: none !important;
-    align-self: flex-start;
-    margin-top: -10px;
-    margin-left: -5px;
+    justify-self: flex-end;
 }
 
 .appointment .editBtn:hover {
@@ -189,9 +195,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    border-right: 1px solid var(--rs-border-secondary);
     gap: 5px;
-    padding-right: 20px;
 }
 
 .leadInfo button {
@@ -206,7 +210,6 @@
     flex-direction: column;
     flex: 1;
     gap: 5px;
-    padding-left: 20px;
 }
 
 .overlay {
@@ -244,7 +247,7 @@
     width: calc(100% - 25px);
     height: 1px;
     overflow: visible;
-    z-index: 3;
+    z-index: 2;
     border-top: 1px solid var(--rs-blue-500);
     transition: all 0.3s ease;
 }
@@ -277,3 +280,38 @@
     font-size: 34px;
     color: var(--rs-border-secondary);
 }
+
+.infoBar {
+    width: calc(100% + 10px);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    justify-content: space-between;
+    top: 0;
+    background: var(--rs-btn-default-bg);
+}
+
+.infoBar .left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--rs-text-secondary);
+}
+
+.infoBar div:global(.rs-tag) {
+    box-shadow: #32325d1c 0 4px 6px, #00000014 0 1px 3px;
+    cursor: pointer;
+}
+
+.checked_out {
+    color: var(--rs-green-500);
+}
+
+.checked_in {
+    color: var(--rs-yellow-500);
+}
+
+.attention {
+    color: var(--rs-red-500);
+}
+

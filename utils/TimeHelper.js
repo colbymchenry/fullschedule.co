@@ -12,7 +12,7 @@ export class TimeHelper {
 
         if (hours === undefined || minutes === undefined) return ""
 
-        return  hours + ":" + (minutes == "0" ? "00" : minutes) + " " + AmOrPm;
+        return  hours + ":" + (minutes == "0" ? "00" : minutes.length === 1 ? "0" + minutes : minutes) + " " + AmOrPm;
     }
 
     static convertTime12to24(time12h) {

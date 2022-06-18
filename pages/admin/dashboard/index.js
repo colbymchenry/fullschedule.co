@@ -18,6 +18,7 @@ export default function DashboardAppointments(props) {
 
     const fetchAppointments = async () => {
         try {
+            activeDate.setHours(0, 0, 0, 0);
             const res = await (await APIConnector.create(2000, currentUser)).post(`/appointments`, {
                 date: activeDate.toISOString()
             });
@@ -157,6 +158,9 @@ export default function DashboardAppointments(props) {
 
     }
 
+
+
+
     return (
         <div className={styles.container}>
             <div className={styles.headers}>
@@ -207,7 +211,39 @@ export default function DashboardAppointments(props) {
 
             <div className={styles.events}>
                 {renderRows()}
+                <CurrentTimeLine />
             </div>
+        </div>
+    )
+
+}
+
+function CurrentTimeLine() {
+
+    const [now, setNow] = useState(new Date());
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNow(new Date());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const getCurrentTimeOffset = () => {
+        if (now.getHours() === 4) {
+            return now.getMinutes() * (100/30);
+        }
+
+        const hours = now.getHours() - 4;
+        const minutes = now.getMinutes();
+        const totalMinutes = (hours * 60) + minutes;
+
+        return totalMinutes * (100/30);
+    }
+
+    return (
+        <div className={styles.currentTimeLine} style={{ marginTop: (getCurrentTimeOffset()) + "px"}}>
+            <span>{TimeHelper.convertTime24to12(now.getHours() + ":" + now.getMinutes())}</span>
         </div>
     )
 

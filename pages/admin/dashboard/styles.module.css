@@ -3,6 +3,7 @@
     flex-direction: column;
     width: 100%;
     position: relative;
+    overflow-x: hidden;
 }
 
 .headers {
@@ -21,7 +22,6 @@
     box-shadow: #32325d1c 0 4px 6px, #00000014 0 1px 3px;
     justify-content: space-between;
     height: 64px;
-    width: 100%;
 }
 
 .providers > div {
@@ -140,6 +140,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 2rem;
+    position: relative;
 }
 
 .allDay {
@@ -229,4 +230,27 @@
 
 .overlay hr {
     margin: 10px 0;
+}
+
+.currentTimeLine {
+    position: absolute;
+    left: 25px;
+    width: calc(100% - 25px);
+    height: 1px;
+    overflow: visible;
+    z-index: 3;
+    border-top: 1px solid var(--rs-blue-500);
+    transition: all 0.3s ease;
+}
+
+.currentTimeLine span {
+    position: absolute;
+    margin-top: -15px;
+    background: var(--rs-blue-500);
+    padding: 5px;
+    padding-right: 15px;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    border-bottom-right-radius: 50%;
+    border-top-right-radius: 50%;
 }

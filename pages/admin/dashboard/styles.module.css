@@ -160,10 +160,9 @@
     z-index: 1;
     padding: 10px;
     border-radius: 10px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: auto;
     display: flex;
-    gap: 20px;
+    white-space: nowrap;
 }
 
 .appointment label {
@@ -172,10 +171,13 @@
 }
 
 .appointment .editBtn {
-    position: absolute;
+    position: static;
     top: 0;
     right: 0;
     background: none !important;
+    align-self: flex-start;
+    margin-top: -10px;
+    margin-left: -5px;
 }
 
 .appointment .editBtn:hover {
@@ -189,6 +191,7 @@
     flex: 1;
     border-right: 1px solid var(--rs-border-secondary);
     gap: 5px;
+    padding-right: 20px;
 }
 
 .leadInfo button {
@@ -203,6 +206,7 @@
     flex-direction: column;
     flex: 1;
     gap: 5px;
+    padding-left: 20px;
 }
 
 .overlay {

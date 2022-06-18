@@ -15,10 +15,12 @@ export default function DashboardAppointments(props) {
     const [appointments, setAppointments] = useState(null);
     const [activeDate, setActiveDate] = useState(new Date());
     const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    activeDate.setHours(0, 0, 0, 0);
 
     const fetchAppointments = async () => {
+        activeDate.setHours(0, 0, 0, 0);
+
         try {
-            activeDate.setHours(0, 0, 0, 0);
             const res = await (await APIConnector.create(2000, currentUser)).post(`/appointments`, {
                 date: activeDate.toISOString()
             });
@@ -166,10 +168,18 @@ export default function DashboardAppointments(props) {
             <div className={styles.headers}>
                 <div className={styles.mainControls}>
                     <div className={styles.dayControls}>
-                        <button type={"button"}>
+                        <button type={"button"} onClick={() => {
+                            const newDate = new Date(activeDate);
+                            newDate.setDate(newDate.getDate() - 1);
+                            setActiveDate(newDate);
+                        }}>
                             <FontAwesomeIcon icon={faChevronLeft} />
                         </button>
-                        <button type={"button"}>
+                        <button type={"button"} onClick={() => {
+                            const newDate = new Date(activeDate);
+                            newDate.setDate(newDate.getDate() + 1);
+                            setActiveDate(newDate);
+                        }}>
                             <FontAwesomeIcon icon={faChevronRight} />
                         </button>
                     </div>
@@ -232,6 +242,10 @@ function CurrentTimeLine() {
     const getCurrentTimeOffset = () => {
         if (now.getHours() === 4) {
             return now.getMinutes() * (100/30);
+        } else if (now.getHours() >= 8) {
+            if (now.getMinutes() >= 30) {
+                return -1000;
+            }
         }
 
         const hours = now.getHours() - 4;

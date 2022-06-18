@@ -141,6 +141,8 @@
     flex-direction: column;
     margin-top: 2rem;
     position: relative;
+    overflow: hidden;
+    padding-bottom: 10rem;
 }
 
 .allDay {

@@ -14,11 +14,13 @@ export default function DashboardAppointments(props) {
     const {currentUser} = useAuth();
     const [appointments, setAppointments] = useState(null);
     const [activeDate, setActiveDate] = useState(new Date());
+    const [fetching, setFetching] = useState(false);
     const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     activeDate.setHours(0, 0, 0, 0);
 
     const fetchAppointments = async () => {
         activeDate.setHours(0, 0, 0, 0);
+        setFetching(true);
 
         try {
             const res = await (await APIConnector.create(2000, currentUser)).post(`/appointments`, {
@@ -29,6 +31,8 @@ export default function DashboardAppointments(props) {
         } catch (err) {
 
         }
+
+        setFetching(false);
     }
 
     useEffect(() => {
@@ -41,7 +45,7 @@ export default function DashboardAppointments(props) {
 
     if (!appointments) {
         return (
-            <Loader backdrop size={"lg"} vertical />
+            <Loader backdrop size={"lg"} vertical/>
         )
     }
 
@@ -82,7 +86,7 @@ export default function DashboardAppointments(props) {
         });
     }
 
-    const Overlay = forwardRef(({ style, onClose, ...rest }, ref) => {
+    const Overlay = forwardRef(({style, onClose, ...rest}, ref) => {
         const styles = {
             ...style,
         };
@@ -91,7 +95,7 @@ export default function DashboardAppointments(props) {
             <div {...rest} style={styles} ref={ref}>
                 <button type={"button"}>Change Date & Time</button>
                 <button type={"button"}>Modify Services</button>
-                <hr />
+                <hr/>
                 <button type={"button"}>Cancel</button>
             </div>
         );
@@ -101,7 +105,7 @@ export default function DashboardAppointments(props) {
 
     const renderRows = () => {
         let timeMap = [];
-        for (let hour = 4; hour <= 20; hour+= 0.5) timeMap.push(TimeHelper.sliderValTo24(hour));
+        for (let hour = 4; hour <= 20; hour += 0.5) timeMap.push(TimeHelper.sliderValTo24(hour));
 
         const renderedApps = [];
 
@@ -114,7 +118,8 @@ export default function DashboardAppointments(props) {
                     {Object.keys(appointments).map((staff_id, index) => {
                         const apps = findAppointments(staff_id, hour);
 
-                        if ((!apps.length) || (apps.length && renderedApps.includes(apps[0].doc_id))) return  <div className={styles.block} />
+                        if ((!apps.length) || (apps.length && renderedApps.includes(apps[0].doc_id))) return <div
+                            className={styles.block}/>
 
                         renderedApps.push(apps[0].doc_id);
 
@@ -129,12 +134,18 @@ export default function DashboardAppointments(props) {
                         return (
                             <div key={staff_id + index} className={styles.block}>
                                 {apps.length && (
-                                    <div className={styles.appointment} style={{ height: (totalMinutes * (100/30) - 10) + "px", maxHeight: (totalMinutes * (100/30) - 10) + "px" }}>
+                                    <div className={styles.appointment} style={{
+                                        height: (totalMinutes * (100 / 30) - 10) + "px",
+                                        maxHeight: (totalMinutes * (100 / 30) - 10) + "px"
+                                    }}>
                                         <div className={styles.leadInfo}>
                                             <label>Client Info:</label>
                                             <span>Name: {app.lead.name}</span>
                                             <span>Email: {app.lead.email}</span>
-                                            <span>Phone: <button type={"button"} onClick={() => toaster.push(<AuthProvider><NewTextModal phone={app.lead.phone} /></AuthProvider>)}><Tag color="blue">{app.lead.phone}</Tag></button></span>
+                                            <span>Phone: <button type={"button"}
+                                                                 onClick={() => toaster.push(<AuthProvider><NewTextModal
+                                                                     phone={app.lead.phone}/></AuthProvider>)}><Tag
+                                                color="blue">{app.lead.phone}</Tag></button></span>
                                         </div>
                                         <div className={styles.services}>
                                             <label>Services:</label>
@@ -143,11 +154,13 @@ export default function DashboardAppointments(props) {
                                         <Whisper
                                             trigger="click"
                                             speaker={(props, ref) => {
-                                                const { left, top, onClose } = props;
-                                                return <Overlay style={{ left, top }} onClose={onClose} className={styles.overlay + " fadeIn"} ref={ref} />;
+                                                const {left, top, onClose} = props;
+                                                return <Overlay style={{left, top}} onClose={onClose}
+                                                                className={styles.overlay + " fadeIn"} ref={ref}/>;
                                             }}
                                         >
-                                            <Button className={styles.editBtn}><FontAwesomeIcon icon={faEllipsis} /></Button>
+                                            <Button className={styles.editBtn}><FontAwesomeIcon
+                                                icon={faEllipsis}/></Button>
                                         </Whisper>
                                     </div>
                                 )}
@@ -161,69 +174,74 @@ export default function DashboardAppointments(props) {
     }
 
 
-
-
     return (
-        <div className={styles.container}>
-            <div className={styles.headers}>
-                <div className={styles.mainControls}>
-                    <div className={styles.dayControls}>
-                        <button type={"button"} onClick={() => {
-                            const newDate = new Date(activeDate);
-                            newDate.setDate(newDate.getDate() - 1);
-                            setActiveDate(newDate);
-                        }}>
-                            <FontAwesomeIcon icon={faChevronLeft} />
-                        </button>
-                        <button type={"button"} onClick={() => {
-                            const newDate = new Date(activeDate);
-                            newDate.setDate(newDate.getDate() + 1);
-                            setActiveDate(newDate);
-                        }}>
-                            <FontAwesomeIcon icon={faChevronRight} />
-                        </button>
-                    </div>
+        <>
+            <div className={styles.container}>
+                <div className={styles.headers}>
+                    <div className={styles.mainControls}>
+                        <div className={styles.dayControls}>
+                            <button type={"button"} onClick={() => {
+                                const newDate = new Date(activeDate);
+                                newDate.setDate(newDate.getDate() - 1);
+                                setActiveDate(newDate);
+                            }}>
+                                <FontAwesomeIcon icon={faChevronLeft}/>
+                            </button>
+                            <button type={"button"} onClick={() => {
+                                const newDate = new Date(activeDate);
+                                newDate.setDate(newDate.getDate() + 1);
+                                setActiveDate(newDate);
+                            }}>
+                                <FontAwesomeIcon icon={faChevronRight}/>
+                            </button>
+                        </div>
 
-                    <div className={styles.activeDate}>
-                        <button type={"button"} onClick={() => {
-                            if (typeof document !== "undefined") {
-                                document.getElementById("date-picker").click();
-                            }
-                        }}>
-                            {activeDate.toLocaleDateString([], {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            })}
-                        </button>
+                        <div className={styles.activeDate}>
+                            <button type={"button"} onClick={() => {
+                                if (typeof document !== "undefined") {
+                                    document.getElementById("date-picker").click();
+                                }
+                            }}>
+                                {activeDate.toLocaleDateString([], {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })}
+                            </button>
 
-                        {isToday() && <span>Today</span>}
-                        <DatePicker className={styles.datePicker} id="date-picker" appearance="subtle" placeholder="Subtle" style={{ width: 200 }} onChange={(date) => setActiveDate(date)} />
+                            {isToday() && <span>Today</span>}
+                            <DatePicker className={styles.datePicker} id="date-picker" appearance="subtle"
+                                        placeholder="Subtle" style={{width: 200}}
+                                        onChange={(date) => setActiveDate(date)}/>
+                        </div>
                     </div>
-                </div>
-                <div className={styles.providers}>
+                    <div className={styles.providers}>
                 <span className={styles.timeStamp + " " + styles.allDay}>
                     All Day
                 </span>
-                    {providers.map(({firstname, lastname, doc_id, photoURL}) => {
-                        return (
-                            <div key={doc_id}>
-                                <img src={photoURL} alt={firstname + " " + lastname}/>
-                                <div>
-                                    <span>{firstname} {lastname}</span>
-                                    <small>{getHoursForDay(doc_id)}</small>
+                        {providers.map(({firstname, lastname, doc_id, photoURL}) => {
+                            return (
+                                <div key={doc_id}>
+                                    <img src={photoURL} alt={firstname + " " + lastname}/>
+                                    <div>
+                                        <span>{firstname} {lastname}</span>
+                                        <small>{getHoursForDay(doc_id)}</small>
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    })}
+                            )
+                        })}
+                    </div>
                 </div>
-            </div>
 
-            <div className={styles.events}>
-                {renderRows()}
-                <CurrentTimeLine />
+                <div className={styles.events}>
+                    {renderRows()}
+                    <CurrentTimeLine/>
+                </div>
+
             </div>
-        </div>
+            {fetching && <Loader backdrop size={"lg"} vertical/>}
+
+        </>
     )
 
 }
@@ -241,7 +259,7 @@ function CurrentTimeLine() {
 
     const getCurrentTimeOffset = () => {
         if (now.getHours() === 4) {
-            return now.getMinutes() * (100/30);
+            return now.getMinutes() * (100 / 30);
         } else if (now.getHours() >= 8) {
             if (now.getMinutes() >= 30) {
                 return -1000;
@@ -252,11 +270,11 @@ function CurrentTimeLine() {
         const minutes = now.getMinutes();
         const totalMinutes = (hours * 60) + minutes;
 
-        return totalMinutes * (100/30);
+        return totalMinutes * (100 / 30);
     }
 
     return (
-        <div className={styles.currentTimeLine} style={{ marginTop: (getCurrentTimeOffset()) + "px"}}>
+        <div className={styles.currentTimeLine} style={{marginTop: (getCurrentTimeOffset()) + "px"}}>
             <span>{TimeHelper.convertTime24to12(now.getHours() + ":" + now.getMinutes())}</span>
         </div>
     )

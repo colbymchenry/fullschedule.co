@@ -53,7 +53,7 @@ export default function BillingInformation(props) {
                     noBlack={true}
                     onChange={() => setCardError(false)}
                     onSecondaryToken={(token) => setSecondToken(token)}
-                    info={[...errorArray, "* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a $75 no show fee. A $0.01 charge will show up on your account to secure your appointment."]}
+                    info={[...errorArray, "* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a ", <b key={Math.random()}>$75 no show fee</b>, ". A $0.01 charge will show up on your account to secure your appointment."]}
                 />
                 :
                 <h5 style={{textAlign: 'center'}}>Error loading payment

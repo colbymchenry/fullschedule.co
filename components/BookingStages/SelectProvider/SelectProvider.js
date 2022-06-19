@@ -48,11 +48,9 @@ export default function SelectProvider(props) {
         }
     }
 
-    const renderTimeSlots = (staff_id) => {
-
-    }
-
     const renderStaff = () => {
+        console.log(props.setupData.staff)
+        console.log(timeSlots)
         return props.setupData.staff.filter((staff) => staff["schedule"] && staff["photoURL"]).map((staff) => {
             return (
                 <div key={staff.doc_id} className={styles.staffMasterBody}>

@@ -16,12 +16,14 @@ export default async function handler(req, res) {
         const calendarApi = await GoogleCalendarAPI.getInstance();
 
         // create date at start of day for the day selected
-        const newDate = new Date(req.body.date);
-        newDate.setUTCHours(0, 0, 0, 0);
+        const timeMin = new Date(req.body.date);
+        timeMin.setUTCHours(0, 0, 0, 0);
+        const timeMax = new Date(req.body.date);
+        timeMax.setUTCHours(24, 0, 0, 0);
 
         // get all events for this day
         const events = await calendarApi.getEvents({
-            timeMin: newDate,
+            timeMin, timeMax,
             singleEvents: true,
             orderBy: 'startTime'
         });

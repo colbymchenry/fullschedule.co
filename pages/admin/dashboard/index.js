@@ -220,7 +220,7 @@ function Appointment({appointment, fetchAppointments}) {
         const hours = appDate.getHours() - 4.5;
         const minutes = appDate.getMinutes();
         const totalMinutes = (hours * 60) + minutes;
-        return totalMinutes * (100 / 30);
+        return totalMinutes * (100 / 30) - 10;
     }
 
     const icon = appointment?.check_out ? <FontAwesomeIcon icon={faCheckCircle}/> : appointment?.check_in ?
@@ -266,8 +266,8 @@ function Appointment({appointment, fetchAppointments}) {
 
     return (
         <div className={styles.appointment} style={{
-            height: (totalMinutes * (100 / 30) - 7) + "px",
-            maxHeight: (totalMinutes * (100 / 30) - 7) + "px",
+            height: (totalMinutes * (100 / 30) - 3) + "px",
+            maxHeight: (totalMinutes * (100 / 30) - 3) + "px",
             marginTop: marginTop() + "px"
         }}>
             <div className={styles.innerds}>

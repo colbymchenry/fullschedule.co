@@ -152,7 +152,8 @@
 
 .appointment {
     position: absolute;
-    width: calc(100% - 20px);
+    width: calc(100% - 4px);
+    margin-left: -8px;
     color: var(--rs-btn-default-text);
     background: var(--rs-btn-default-bg);
     z-index: 3;
@@ -161,6 +162,7 @@
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 5px;
+    box-shadow: #32325d1c 0 4px 6px, #00000014 0 1px 3px;
 }
 
 .body {

@@ -10,6 +10,7 @@ export default function SelectDate(props) {
     const [triggerRender, setTriggerRender] = useState(false);
     const today = new Date();
     today.setDate(today.getDate() + 2);
+    today.setHours(24, 0, 0);
 
     useEffect(() => {
         if (props?.formValues?.lead?.date) {

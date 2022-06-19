@@ -34,19 +34,22 @@ export default function ConfirmModal(props) {
             <Modal.Body>
                 {props.children}
             </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={submitForm} appearance="primary" loading={submitted} disabled={props.disableConfirm || false}>
-                    {props.confirmText || "Ok"}
-                </Button>
-                {!props.hideCancel &&
-                    <Button onClick={() => {
-                        setVisible(false)
-                        if (props.handleClose) props.handleClose()
-                    }} appearance="subtle">
-                        {props.cancelText || "Cancel"}
+            {!props.hideFooter &&
+                <Modal.Footer>
+                    <Button onClick={submitForm} appearance="primary" loading={submitted}
+                            disabled={props.disableConfirm || false}>
+                        {props.confirmText || "Ok"}
                     </Button>
-                }
-            </Modal.Footer>
+                    {!props.hideCancel &&
+                        <Button onClick={() => {
+                            setVisible(false)
+                            if (props.handleClose) props.handleClose()
+                        }} appearance="subtle">
+                            {props.cancelText || "Cancel"}
+                        </Button>
+                    }
+                </Modal.Footer>
+            }
         </Modal>
     )
 

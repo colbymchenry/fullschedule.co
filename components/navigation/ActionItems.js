@@ -35,6 +35,7 @@ export function ActionItems(props) {
                     "clover_ecomm_private_token^Set your Clover private token.",
                     "clover_api_token^Set your Clover API-Key.",
                     "clover_merchant_id^Set your Clover Merchant ID.",
+                    "clover_app_id^Set your Clover App ID.",
                     "email_host^Email host.",
                     "email_password^Email password.",
                     "email_port^Email port.",

@@ -1,0 +1,22 @@
+
+.trash {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+}
+
+.trash svg {
+    color: var(--rs-sidenav-default-text);
+    cursor: pointer;
+}
+
+.recipient {
+    cursor: pointer !important;
+}
+
+.recipient:hover {
+    text-decoration: underline !important;
+}

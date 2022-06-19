@@ -373,6 +373,12 @@ export default function DashboardSettings(props) {
                             accepter={MaskedInput}
                             error={formError["clover_merchant_id"]}
                         />
+                        <Field
+                            name="clover_app_id"
+                            label="App ID"
+                            accepter={MaskedInput}
+                            error={formError["clover_app_id"]}
+                        />
                     </div>
                     <br />
                     <br />

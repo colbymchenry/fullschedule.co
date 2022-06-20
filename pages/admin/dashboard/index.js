@@ -9,7 +9,7 @@ import {
     faChevronRight,
     faCog,
     faEllipsis,
-    faExclamationTriangle
+    faExclamationTriangle, faPlus
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {TimeHelper} from "../../../utils/TimeHelper";
@@ -17,7 +17,7 @@ import Overlay from "rsuite/Overlay";
 import NewTextModal from "../../../components/sms/NewTextModal/NewTextModal";
 import AppointmentCheckInOut from "../../../components/Appointment/CheckInOut/AppointmentCheckInOut";
 import AppointmentCancel from "../../../components/Appointment/Cancel/AppointmentCancel";
-import AppointmentModify from "../../../components/Appointment/Modify/AppointmentModify";
+import AppointmentCreate from "../../../components/Appointment/Create/AppointmentCreate";
 
 export default function DashboardAppointments(props) {
 
@@ -159,7 +159,6 @@ export default function DashboardAppointments(props) {
                                 <FontAwesomeIcon icon={faChevronRight}/>
                             </button>
                         </div>
-
                         <div className={styles.activeDate}>
                             <button type={"button"} onClick={() => {
                                 if (typeof document !== "undefined") {
@@ -178,11 +177,12 @@ export default function DashboardAppointments(props) {
                                         placeholder="Subtle" style={{width: 200}}
                                         onChange={(date) => setActiveDate(date)}/>
                         </div>
-                    </div>
-                    <div className={styles.providers}>
-                <span className={styles.timeStamp + " " + styles.allDay}>
-                    All Day
-                </span>
+                        <Button type={"button"} className={styles.newAppointment} onClick={() => toaster.push(<AuthProvider><AppointmentCreate /></AuthProvider>)}><FontAwesomeIcon icon={faPlus} /></Button>
+                </div>
+                <div className={styles.providers}>
+                    <span className={styles.timeStamp + " " + styles.allDay}>
+                        All Day
+                    </span>
                         {providers.map(({firstname, lastname, doc_id, photoURL}) => {
                             return (
                                 <div key={doc_id}>
@@ -201,10 +201,8 @@ export default function DashboardAppointments(props) {
                     {renderRows()}
                     <CurrentTimeLine/>
                 </div>
-
             </div>
             {fetching && <Loader backdrop size={"lg"} vertical style={{position: "sticky", zIndex: 4, width: "100%"}}/>}
-
         </>
     )
 
@@ -248,7 +246,7 @@ function Appointment({appointment, fetchAppointments}) {
                 </button>
                 <br/>
                 <button type={"button"}
-                        onClick={() => toaster.push(<AuthProvider><AppointmentModify appointment={appointment}
+                        onClick={() => toaster.push(<AuthProvider><AppointmentCreate appointment={appointment}
                                                                                      onComplete={() => fetchAppointments(true)}/></AuthProvider>)}>Edit
                     / Modify
                 </button>

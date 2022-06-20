@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
         const lead = await Lead.get(req.query.id);
 
-        if (!lead) {
+        if (!lead && !req.body.services) {
             return res.status(400).json({message: "Failed to find Lead data."});
         }
 
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         allStaff = allStaff.filter((staff) => staff?.bookable && staff?.schedule[req.body.day]?.day);
 
         // get services from DB
-        const services = await Promise.all(lead.services.map(async ({doc_id}) => {
+        const services = await Promise.all((lead.services || req.body.services).map(async ({doc_id}) => {
             const service = await FirebaseAdmin.firestore().collection("clover_inventory").doc(doc_id).get();
             return service.data();
         }));

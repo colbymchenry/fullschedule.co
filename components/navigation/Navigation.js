@@ -54,9 +54,9 @@ export default function Navigation(props) {
                                       icon={<FontAwesomeIcon icon={faSms}/>}>
                                 SMS Messages
                             </Nav.Item>
-                            <Nav.Item as={NavLink} href="/admin/dashboard/clients" eventKey="/admin/dashboard/clients"
+                            <Nav.Item as={NavLink} href="/admin/dashboard/customers" eventKey="/admin/dashboard/customers"
                                       icon={<FontAwesomeIcon icon={faUsers}/>}>
-                                Clients
+                                Customers
                             </Nav.Item>
                             <Nav.Item as={NavLink} href="/admin/dashboard/staff" eventKey="/admin/dashboard/staff"
                                       icon={<FontAwesomeIcon icon={faUserMd}/>}>

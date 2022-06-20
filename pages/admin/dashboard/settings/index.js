@@ -357,13 +357,13 @@ export default function DashboardSettings(props) {
                         <h4>Clover</h4>
                         <Field
                             name="clover_ecomm_private_token"
-                            label="Private Token"
+                            label="E-Commerce Token (Private)"
                             accepter={MaskedInput}
                             error={formError["clover_ecomm_private_token"]}
                         />
                         <Field
                             name="clover_api_token"
-                            label="API-Key"
+                            label="API Tokens (Private)"
                             accepter={MaskedInput}
                             error={formError["clover_api_token"]}
                         />

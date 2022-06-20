@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
-import {Form, Notification, Schema, toaster} from "rsuite";
+import {DatePicker, Form, Notification, Schema, toaster} from "rsuite";
 import {Field} from "../../inputs/Field";
 import {MaskedInput} from "../../inputs/MaskedInput";
 import React, {useRef, useState} from "react";
@@ -9,7 +9,7 @@ import {useAuth} from "../../../context/AuthContext";
 
 const {StringType} = Schema.Types;
 
-export default function NewProductModal(props) {
+export default function NewCustomerModal(props) {
 
     const [open, setOpen] = useState(true);
     const [submitted, setSubmitted] = useState(false);
@@ -59,28 +59,69 @@ export default function NewProductModal(props) {
     }
 
     return (
-        <ConfirmModal open={open} title={"New Product"} handleClose={handleClose} confirmText={"Create"} onConfirm={() => submitForm(true)}>
+        <ConfirmModal open={open} handleClose={handleClose} title={"New Customer"} confirmText={"Create"} onConfirm={() => submitForm(true)}>
             <Form className={styles.form} formValue={formValue} onChange={formValue => {
                 setFormValue(formValue);
                 if (Object.keys(formError).length) setFormError({});
             }} model={model} disabled={submitted} readOnly={submitted}>
                 <div className={styles.section}>
                     <Field
-                        name="name"
-                        label="Name"
+                        name="firstName"
+                        label="First Name"
                         message={"Required"}
                         accepter={MaskedInput}
-                        error={formError["name"]}
+                        error={formError["firstName"]}
+                        required
                     />
 
                     <Field
-                        name="price"
-                        label="Price"
+                        name="lastName"
+                        label="Last Name"
                         message={"Required"}
                         accepter={MaskedInput}
-                        pattern="[0-9]{1,5}"
+                        error={formError["lastName"]}
+                        required
+                    />
+                </div>
+                <div className={styles.section}>
+                    <Field
+                        name="email"
+                        label="Email"
+                        message={"Required"}
+                        accepter={MaskedInput}
+                        error={formError["email"]}
+                        required
+                    />
+
+                    <Field
+                        name="phoneNumber"
+                        label="Phone"
                         type={"tel"}
-                        error={formError["price"]}
+                        mask={"999-999-9999"}
+                        maskChar={""}
+                        accepter={MaskedInput}
+                        error={formError["phoneNumber"]}
+                        required
+                    />
+                </div>
+
+                <div className={styles.section}>
+                    <Field
+                        name="dob"
+                        label="Date of Birth"
+                        message={"Required"}
+                        accepter={DatePicker}
+                        error={formError["dob"]}
+                    />
+
+                    <Field
+                        name="phoneNumber"
+                        label="Phone"
+                        type={"tel"}
+                        mask={"999-999-9999"}
+                        maskChar={""}
+                        accepter={MaskedInput}
+                        error={formError["phoneNumber"]}
                     />
                 </div>
                 <button ref={submitRef} type={"submit"} style={{display: 'none'}}/>

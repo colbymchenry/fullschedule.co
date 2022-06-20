@@ -96,6 +96,42 @@ export class CloverAPI {
         }
     }
 
+    async getCustomers(refresh) {
+        if (refresh) {
+            const elements = [];
+
+            let offset = 0;
+            let res = await this.run('/v3/merchants/{mId}/customers?limit=1000&expand=addresses,emailAddresses,phoneNumbers,cards,metadata');
+
+            while (res.data.elements.length <= 1000 && res.data.elements.length > 0) {
+                await Promise.all(res.data.elements.map(async (customer) => {
+                    const body = {
+                        ...(customer?.firstName && {firstName: customer.firstName }),
+                        ...(customer?.lastName && { lastName: customer.lastName }),
+                        ...(customer.emailAddresses.elements.length && { email: customer.emailAddresses.elements[0].emailAddress }),
+                        ...(customer.phoneNumbers.elements.length && { phoneNumber: customer.phoneNumbers.elements[0].phoneNumber })
+                    }
+
+                    if (body?.firstName && body?.lastName && body?.email) {
+                        await FirebaseAdmin.firestore().collection("customers").doc(customer.id).set(body);
+                        elements.push(body);
+                    }
+                }));
+
+                offset += 1000;
+
+                res = await this.run(`/v3/merchants/{mId}/customers?offset=${offset}&expand=addresses,emailAddresses,phoneNumbers,cards,metadata`);
+            }
+
+            return elements.map((customer) => {
+                customer["doc_id"] = customer.id;
+                return customer;
+            });
+        } else {
+            return await FirebaseAdmin.getCollectionArray("customers");
+        }
+    }
+
     async updateInventoryItem(itemId, body) {
         return await this.run(`/v3/merchants/{mId}/items/${itemId}`, body);
     }

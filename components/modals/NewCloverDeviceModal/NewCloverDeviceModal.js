@@ -80,6 +80,8 @@ export default function NewCloverDeviceModal(props) {
                         aria-describedby="snpdAppIdHelp"
                         value={settings.get("clover_app_id")}
                         name="snpdAppId"
+                        readOnly
+                        disabled
                         label="Application ID"
                         message={["The ", <a
                             key={Math.random()}
@@ -132,13 +134,11 @@ export default function NewCloverDeviceModal(props) {
                     {connected ? "Save Clover Device" : "Connect to your Clover device"}
                 </Button>
 
-                <br />
-
                 <div className={`d-flex w-100 flex-column m-2`}>
                     <div className="w-100" id="statusContainer" style={{display: 'none'}}>
                         <div id="statusMessage" className="alert alert-warning d-flex w-100"></div>
                     </div>
-                    <small><b>You must have Secure Network Pay Display installed and running on your
+                    <small style={{ marginTop: '1rem' }}><b>You must have Secure Network Pay Display installed and running on your
                         Clover device. If you would like to use a secure connection (wss) you will need to have the
                         Clover Device certificate installed in your web browser.</b></small>
                     <div className="w-100 justify-content-between mt-4" id="actions"

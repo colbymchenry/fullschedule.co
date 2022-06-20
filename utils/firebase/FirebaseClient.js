@@ -121,6 +121,8 @@ export class FirebaseClient {
             });
             return result;
         }
+
+        return undefined;
     }
 
     static async doc(collectionName, docId) {
@@ -131,6 +133,8 @@ export class FirebaseClient {
                 return {...docSnap.data(), doc_id: docId};
             }
         }
+
+        return undefined;
     }
 
     static async set(collectionName, docId, data) {
@@ -144,6 +148,8 @@ export class FirebaseClient {
             });
             return await this.doc(collectionName, docId);
         }
+
+        return undefined;
     }
 
     static async add(collectionName, data) {
@@ -157,6 +163,8 @@ export class FirebaseClient {
             });
             return await this.doc(collectionName, docRef.id);
         }
+
+        return undefined;
     }
 
     static async update(collectionName, docId, data) {
@@ -165,6 +173,8 @@ export class FirebaseClient {
             await updateDoc(doc(firebaseDb, collectionName, docId), {...data, updated_at: serverTimestamp()});
             return await this.doc(collectionName, docId);
         }
+
+        return undefined;
     }
 
     static async delete(collectionName, docId) {

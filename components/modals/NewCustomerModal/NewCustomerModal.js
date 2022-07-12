@@ -36,16 +36,19 @@ export default function NewCustomerModal(props) {
 
         setSubmitted(true);
         try {
-            const createRes = await (await APIConnector.create(6000, currentUser)).post(`/clover/create-product`, formValue);
-            toaster.push(<Notification type={"success"} header={"Product created!"}/>, {
+            const createRes = await (await APIConnector.create(6000, currentUser)).post(`/clover/create-customer`, formValue);
+            toaster.push(<Notification type={"success"} header={"Customer created!"}/>, {
                 placement: 'topEnd'
             });
+
+            if (props.fetchCustomers) {
+                await props.fetchCustomers();
+            }
+
             handleClose();
         } catch (error) {
-            if (error?.response?.data?.code === 'auth/email-already-exists') {
-                formError["email"] = error?.response?.data.message;
-            } else if (error?.response?.data?.code === 'auth/invalid-password') {
-                formError["password"] = error?.response?.data.message;
+            if (error.response.status === 400) {
+                setFormError(error.response.data);
             } else {
                 toaster.push(<Notification type={"error"} header={"Failed to create product."}/>, {
                     placement: 'topEnd'
@@ -53,7 +56,6 @@ export default function NewCustomerModal(props) {
                 console.error(error);
             }
 
-            setFormError(formError);
             setSubmitted(false);
         }
     }
@@ -114,15 +116,6 @@ export default function NewCustomerModal(props) {
                         error={formError["dob"]}
                     />
 
-                    <Field
-                        name="phoneNumber"
-                        label="Phone"
-                        type={"tel"}
-                        mask={"999-999-9999"}
-                        maskChar={""}
-                        accepter={MaskedInput}
-                        error={formError["phoneNumber"]}
-                    />
                 </div>
                 <button ref={submitRef} type={"submit"} style={{display: 'none'}}/>
             </Form>

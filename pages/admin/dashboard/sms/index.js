@@ -1,16 +1,18 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Notification, Table, toaster} from "rsuite";
 import NewTextModal from "../../../../components/sms/NewTextModal/NewTextModal";
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
 import {collection, orderBy, query, where} from "firebase/firestore";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faExclamationTriangle, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
+import {faExclamationTriangle, faPlus, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import styles from "./styles.module.css";
 import ConfirmModal from "../../../../components/modals/ConfirmModal/ConfirmModal";
 import ConversationModal from "../../../../components/sms/ConversationModal/ConversationModal";
 import {AuthProvider} from "../../../../context/AuthContext";
 import FullWidthTable from "../../../../components/FullWidthTable/FullWidthTable";
+import {InputSearch} from "../../../../components/inputs/InputSearch";
+import NewCustomerModal from "../../../../components/modals/NewCustomerModal/NewCustomerModal";
 
 export default function DashboardSMS(props) {
 
@@ -20,6 +22,22 @@ export default function DashboardSMS(props) {
             snapshotListenOptions: {includeMetadataChanges: true},
         }
     );
+
+    const [searchVal, setSearchVal] = useState("");
+
+    useEffect(() => {},  [searchVal])
+
+    useEffect(() => {
+        if (error) {
+            toaster.push(
+                <ConfirmModal title={"Database Error"} hideCancel={true}>
+                    <p><FontAwesomeIcon icon={faExclamationTriangle} color={"red"}/> Warning:
+                         {" " + error.message}
+                    </p>
+                </ConfirmModal>
+            )
+        }
+    }, [error])
 
     const tableData = () => {
         let added = []
@@ -33,6 +51,26 @@ export default function DashboardSMS(props) {
                 added.push(txt.receiver)
             }
         });
+
+        if (searchVal) {
+            const searchVals = ["receiver"];
+
+            const results = texts.filter((client) => {
+                let match = false;
+
+                searchVals.forEach((key) => {
+                    if (client[key]) {
+                        if (client[key].toLowerCase().includes(searchVal.toLowerCase())) {
+                            match = true;
+                        }
+                    }
+                })
+
+                return match;
+            });
+
+            return results;
+        }
 
         return texts;
     }
@@ -79,6 +117,10 @@ export default function DashboardSMS(props) {
 
     return (
         <div style={{height: '80vh'}}>
+            <div style={{ margin: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <InputSearch onChange={(value) => setSearchVal(value)} disabled={loading || error} />
+                <Button type={"button"} className={'btn-round'} onClick={() => toaster.push(<AuthProvider><NewTextModal /></AuthProvider>)}><FontAwesomeIcon icon={faPlus} /></Button>
+            </div>
             <FullWidthTable data={() => tableData()} className={`m-4`} loading={loading} fillHeight={true}>
                 <Table.Column width={60} align="center">
                     <Table.HeaderCell>{""}</Table.HeaderCell>
@@ -98,7 +140,6 @@ export default function DashboardSMS(props) {
                     <DateCell />
                 </Table.Column>
             </FullWidthTable>
-            <Button appearance="primary" onClick={() => toaster.push(<AuthProvider><NewTextModal/></AuthProvider>)} className={'save-button'}>New Text</Button>
         </div>
     )
 

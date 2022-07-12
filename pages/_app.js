@@ -19,7 +19,7 @@ function MyApp({Component, pageProps}) {
     // if trying to access anything backend must include AuthProvider
     if (router.pathname.includes('/admin')) {
         return (
-            <CustomProvider theme={"dark"}>
+            <>
                 <Head>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
                 </Head>
@@ -29,7 +29,7 @@ function MyApp({Component, pageProps}) {
                         <Component {...pageProps} />
                     </div>
                 </AuthProvider>
-            </CustomProvider>
+            </>
         )
     } else {
         return (

@@ -8,6 +8,9 @@ import {AuthProvider, useAuth} from "../../../../context/AuthContext";
 import NewCustomerModal from "../../../../components/modals/NewCustomerModal/NewCustomerModal";
 import NewTextModal from "../../../../components/sms/NewTextModal/NewTextModal";
 import thisStyles from "./styles.module.css";
+import AppointmentCreate from "../../../../components/Appointment/Create/AppointmentCreate";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 
 export default function DashboardCustomers(props) {
 
@@ -68,29 +71,33 @@ export default function DashboardCustomers(props) {
 
     const PhoneCell = ({rowData, dataKey, ...props}) => (
         <Table.Cell {...props}>
-            {rowData["phoneNumber"]}
+            {rowData["phoneNumber"] ?
             <button type={"button"} className={thisStyles.phoneButton}
                     onClick={() => toaster.push(
                         <AuthProvider><NewTextModal
                             phone={rowData["phoneNumber"]}/></AuthProvider>)}><Tag
-                color="blue">{rowData["phoneNumber"]}</Tag></button>
+                color="blue">{addDashes(rowData["phoneNumber"])}</Tag></button>
+                : "N/A"}
         </Table.Cell>
     );
 
-
-
+    function addDashes(f) {
+        const f_val = f.replace(/\D[^\.]/g, "");
+        return f_val.slice(0,3)+"-"+f_val.slice(3,6)+"-"+f_val.slice(6);
+    }
 
     return (
         <div className={styles.table}>
-            <div style={{ margin: '1.5rem' }}>
+            <div style={{ margin: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <InputSearch onChange={search} disabled={!clients} />
+                <Button type={"button"} className={'btn-round'} onClick={() => toaster.push(<AuthProvider><NewCustomerModal fetchCustomers={getClients} /></AuthProvider>)}><FontAwesomeIcon icon={faPlus} /></Button>
             </div>
             <FullWidthTable data={filteredData || []} className={`m-4`} loading={!filteredData} fillHeight={true} paginate={true}>
                 <Table.Column width={300} align="left" resizable>
                     <Table.HeaderCell>{"Name"}</Table.HeaderCell>
                     <NameCell />
                 </Table.Column>
-                <Table.Column width={300} align="center" resizable>
+                <Table.Column width={300} align="left" resizable>
                     <Table.HeaderCell>{"Email"}</Table.HeaderCell>
                     <Table.Cell dataKey={"email"} />
                 </Table.Column>
@@ -99,7 +106,6 @@ export default function DashboardCustomers(props) {
                     <PhoneCell />
                 </Table.Column>
             </FullWidthTable>
-            <Button appearance="primary" type="button" onClick={() => toaster.push(<AuthProvider><NewCustomerModal fetchCustomers={getClients}/></AuthProvider>)} className={'save-button'}>New Client</Button>
         </div>
     )
 

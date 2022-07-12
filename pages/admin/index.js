@@ -56,7 +56,7 @@ export default function AdminLogin(props) {
                 <Form onChange={formValue => {
                     setFormValue(formValue);
                     if (Object.keys(formError).length) setFormError({});
-                }} model={model} disabled={submitted} readOnly={submitted}>
+                }} model={model} disabled={submitted} readOnly={submitted} onSubmit={submitForm}>
                     <Form.Group controlId="email">
                         <Form.ControlLabel>Email</Form.ControlLabel>
                         {formError['email'] ? <Form.Control name="email" type="email" errorMessage={formError.email}  /> : <Form.Control name="email" type="email"  /> }
@@ -68,7 +68,7 @@ export default function AdminLogin(props) {
                     </Form.Group>
                     <Form.Group>
                         <ButtonToolbar>
-                            <Button appearance="primary" loading={submitted} onClick={submitForm}>Login</Button>
+                            <Button appearance="primary" loading={submitted} type={"submit"}>Login</Button>
                         </ButtonToolbar>
                     </Form.Group>
                 </Form>

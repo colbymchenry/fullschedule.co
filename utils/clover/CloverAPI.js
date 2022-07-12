@@ -32,8 +32,8 @@ export class CloverAPI {
         }
     }
 
-    async createCustomer(phone, email, firstname, lastname) {
-        return await this.run('handlers.CreateCustomer', {
+    async createCustomer(phone, email, firstname, lastname, metadata) {
+        return await this.run('/v3/merchants/{mId}/customers', {
             emailAddresses: [
                 {
                     customer: {},
@@ -47,7 +47,8 @@ export class CloverAPI {
                 }
             ],
             firstName: firstname,
-            lastName: lastname
+            lastName: lastname,
+            ...(metadata && { metadata })
         });
     }
 

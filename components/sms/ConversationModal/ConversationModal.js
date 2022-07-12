@@ -77,7 +77,7 @@ export default function ConversationModal(props) {
             <Modal.Header>
                 <Modal.Title>{props.receiver}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{ overflow: 'hidden' }}>
 
                 <div className={styles.messages}>
                     {loading ? <Loader content="Loading..." vertical size={"lg"} /> : renderMessages()}

@@ -14,14 +14,15 @@ export function EditableField(props) {
         return (
             <div className={styles.inputFieldGroup}>
                 <label>{props.label}</label>
-                <Form onChange={formValue => {
-                    console.log(formValue)
-                }}>
+                <Form>
                     <Field
                         defaultValue={value}
                         name={props.dataKey}
                         accepter={props.accepter}
                         error={""}
+                        mask={props.mask}
+                        maskChar={props.maskChar}
+                        type={props.type || "text"}
                         onBlur={(e) => {
                             if (props.onBlur) {
                                 props.onBlur(e.target.value);

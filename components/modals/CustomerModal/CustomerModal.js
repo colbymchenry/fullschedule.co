@@ -1,19 +1,19 @@
 import {useState} from "react";
 import {Button, Drawer, Form, Nav} from "rsuite";
 import styles from './styles.module.css';
-import {HomeTab} from "./HomeTab";
+import {PersonalInformation} from "./PersonalInformation";
 
 
 export default function CustomerModal({customer}) {
 
-    const [activeTab, setActiveTab] = useState('home');
+    const [activeTab, setActiveTab] = useState('personal_information');
     const [open, setOpen] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const CustomNav = ({ active, onSelect, ...props }) => {
         return (
             <Nav {...props} activeKey={active} onSelect={onSelect} style={styles}>
-                <Nav.Item eventKey="home">Personal Information</Nav.Item>
+                <Nav.Item eventKey="personal_information">Personal Information</Nav.Item>
                 <Nav.Item eventKey="history">History</Nav.Item>
                 <Nav.Item eventKey="notes">Notes</Nav.Item>
             </Nav>
@@ -32,7 +32,7 @@ export default function CustomerModal({customer}) {
             </Drawer.Header>
             <Drawer.Body>
                 <CustomNav appearance="tabs" reversed active={activeTab} onSelect={setActiveTab} className={styles.nav} />
-                {activeTab === 'home' ? <HomeTab customer={customer} /> : activeTab === 'history' ?
+                {activeTab === 'personal_information' ? <PersonalInformation customer={customer} /> : activeTab === 'history' ?
                         (
                             <>
                             </>

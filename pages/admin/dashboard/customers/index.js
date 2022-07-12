@@ -11,6 +11,12 @@ import thisStyles from "./styles.module.css";
 import AppointmentCreate from "../../../../components/Appointment/Create/AppointmentCreate";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import CustomerModal from "../../../../components/modals/CustomerModal/CustomerModal";
+
+export function addDashes(f) {
+    const f_val = f.replace(/\D[^\.]/g, "");
+    return f_val.slice(0,3)+"-"+f_val.slice(3,6)+"-"+f_val.slice(6);
+}
 
 export default function DashboardCustomers(props) {
 
@@ -65,7 +71,8 @@ export default function DashboardCustomers(props) {
 
     const NameCell = ({rowData, dataKey, ...props}) => (
         <Table.Cell {...props}>
-            {rowData["firstName"]} {rowData["lastName"]}
+            <button type={"button"} className={thisStyles.nameBtn} onClick={() => toaster.push(
+                <AuthProvider><CustomerModal customer={rowData} /></AuthProvider>)}><u>{rowData["firstName"]} {rowData["lastName"]}</u></button>
         </Table.Cell>
     );
 
@@ -81,10 +88,6 @@ export default function DashboardCustomers(props) {
         </Table.Cell>
     );
 
-    function addDashes(f) {
-        const f_val = f.replace(/\D[^\.]/g, "");
-        return f_val.slice(0,3)+"-"+f_val.slice(3,6)+"-"+f_val.slice(6);
-    }
 
     return (
         <div className={styles.table}>

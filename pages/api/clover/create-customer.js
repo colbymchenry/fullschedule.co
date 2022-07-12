@@ -41,7 +41,7 @@ export default async function handler(req, res) {
             lastName: req.body['lastName'],
             email: req.body['email'].toLowerCase(),
             phoneNumber: req.body['phoneNumber'],
-            metadata
+            dob: req.body["dob"].split("T")[0]
         })
 
         return res.json({});

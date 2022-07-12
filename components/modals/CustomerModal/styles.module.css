@@ -1,0 +1,40 @@
+.inputFieldGroup {
+    display: flex;
+    align-items: center;
+}
+
+.inputFieldGroup span {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputFieldGroup span button {
+    background: none;
+    outline: none;
+    border: none;
+    opacity: 0.2;
+    transition: all 0.3s ease;
+}
+
+.inputFieldGroup span button:hover {
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.inputFieldGroup label {
+    font-weight: bold;
+    min-width: 150px;
+}
+
+.nav {
+    margin-top: -2rem;
+    margin-bottom: 2rem;
+}
+
+.homeTab {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+

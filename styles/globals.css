@@ -158,7 +158,7 @@ div::-webkit-scrollbar-corner {
 
 .spin {
   animation-name: spin;
-  animation-duration: 2500ms;
+  animation-duration: 1000ms;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
@@ -175,4 +175,9 @@ div::-webkit-scrollbar-corner {
 .btn-round {
   border-radius: 50% !important;
   border: 3px solid var(--rs-border-secondary) !important;
+}
+
+.error {
+  color: var(--rs-progress-bar-fail);
+  font-weight: bold;
 }

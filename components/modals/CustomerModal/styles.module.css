@@ -47,3 +47,23 @@
     margin-left: 2px;
 }
 
+.saveBtn {
+    background: none;
+    outline: none;
+    border: none;
+    position: absolute;
+    color: var(--rs-navs-text);
+    font-size: 18px;
+    margin-top: 2px;
+    margin-left: 4px;
+}
+
+.saveBtn:hover {
+    background: none;
+    color: var(--rs-navs-text-hover);
+}
+
+.saveBtn[data-saving="true"] {
+    color: red;
+}
+

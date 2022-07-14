@@ -52,6 +52,26 @@ export class CloverAPI {
         });
     }
 
+    async updateCustomer(id, phone, email, firstname, lastname, metadata) {
+        return await this.run(`/v3/merchants/{mId}/customers/${id}`, {
+            ...(email && { emailAddresses: [
+                {
+                    customer: {},
+                    emailAddress: email
+                }
+            ]}),
+            ...(phone && { phoneNumbers: [
+                {
+                    customer: {},
+                    phoneNumber: phone
+                }
+            ]}),
+            ...(firstname && { firstName: firstname }),
+            ...(lastname && { lastName: lastname }),
+            ...(metadata && { metadata })
+        });
+    }
+
     async createEmployee(name, nickname) {
         return await this.run('employee.CreateEmployee', {name, nickname, customId: nickname});
     }

@@ -37,6 +37,8 @@ export default function DashboardCustomers(props) {
         }
     }
 
+    // TODO: Write function to updateLocalClient(id, body)
+
     useEffect(() => {
         if (!clients) {
             (async () => {

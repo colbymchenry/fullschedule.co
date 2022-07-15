@@ -177,7 +177,7 @@ export default function DashboardAppointments(props) {
                                         placeholder="Subtle" style={{width: 200}}
                                         onChange={(date) => setActiveDate(date)}/>
                         </div>
-                        <Button type={"button"} className={'btn-round'} style={{ marginLeft: "auto", marginRight: "2rem"}} onClick={() => toaster.push(<AuthProvider><AppointmentCreate /></AuthProvider>)}><FontAwesomeIcon icon={faPlus} /></Button>
+                        <Button type={"button"} className={'btn-round'} style={{ marginLeft: "auto", marginRight: "2rem"}} onClick={() => toaster.push(<AuthProvider><AppointmentCreate fetchAppointments={fetchAppointments} /></AuthProvider>)}><FontAwesomeIcon icon={faPlus} /></Button>
                 </div>
                 <div className={styles.providers}>
                     <span className={styles.timeStamp + " " + styles.allDay}>

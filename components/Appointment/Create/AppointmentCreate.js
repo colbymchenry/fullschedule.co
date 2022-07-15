@@ -96,6 +96,7 @@ export default function AppointmentCreate(props) {
                 selectedTimeSlot: formValue.selectedTimeSlot,
                 date
             });
+            props.fetchAppointments(true);
             handleClose();
         } catch (error) {
             if (error?.response?.data?.code === 'auth/email-already-exists') {

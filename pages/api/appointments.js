@@ -3,6 +3,8 @@ import {FirebaseAdmin} from "../../utils/firebase/FirebaseAdmin";
 import {Staff} from "../../modals/Staff";
 import {Lead} from "../../modals/Lead";
 import TextMagicHelper from "../../utils/textmagic/TextMagicHelper";
+import {Customer} from "../../modals/Customer";
+import {addDashes} from "../admin/dashboard/customers";
 
 export default async function handler(req, res) {
     try {
@@ -58,6 +60,14 @@ export default async function handler(req, res) {
                     try {
                         if (result[0]["lead"]) {
                             result[0]["lead"] = await Lead.get(result[0]["lead"]);
+                        } else if (result[0]["customer"]) {
+                            const customer = await Customer.get(result[0]["customer"]);
+                            result[0]["lead"] = {
+                                doc_id: customer.doc_id,
+                                name: customer.firstName + " " + customer.lastName,
+                                email: customer.email,
+                                phone: addDashes(customer.phoneNumber.replace(/-/, ""))
+                            }
                         }
 
                         if (result[0]["services"]) {

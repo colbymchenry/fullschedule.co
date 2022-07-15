@@ -64,6 +64,10 @@ export class FirebaseClient {
         return firebaseAuth;
     }
 
+    static app() {
+        return firebaseApp;
+    }
+
     static async createUser(email, password) {
         return await createUserWithEmailAndPassword(firebaseAuth, email, password);
     }

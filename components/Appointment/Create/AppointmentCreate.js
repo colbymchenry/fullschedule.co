@@ -1,12 +1,25 @@
 import styles from './styles.module.css';
-import {Calendar, Checkbox, Form, Loader, Notification, toaster} from "rsuite";
+import {Calendar, Checkbox, Form, Input, InputGroup, Loader, Notification, toaster} from "rsuite";
 import React, {useEffect, useState} from "react";
 import {useAuth} from "../../../context/AuthContext";
 import ConfirmModal from "../../modals/ConfirmModal/ConfirmModal";
 import axios from "axios";
 import {TimeHelper} from "../../../utils/TimeHelper";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {useCollectionData} from "react-firebase-hooks/firestore";
+import {collection, query} from "firebase/firestore";
+import {FirebaseClient} from "../../../utils/firebase/FirebaseClient";
+import {APIConnector} from "../../APIConnector";
 
 export default function AppointmentCreate(props) {
+
+    const [value, loading, error] = useCollectionData(
+        query(collection(FirebaseClient.db(), 'customers')),
+        {
+            snapshotListenOptions: {includeMetadataChanges: true},
+        }
+    );
 
     const [open, setOpen] = useState(true);
     const [submitted, setSubmitted] = useState(false);
@@ -16,7 +29,9 @@ export default function AppointmentCreate(props) {
     const [timeSlots, setTimeSlots] = useState(null);
     const [date, setDate] = useState(props.date || new Date());
     const [services, setServices] = useState([]);
-    const { currentUser } = useAuth();
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const {currentUser} = useAuth();
 
     useEffect(() => {
         if (!setupData) {
@@ -70,12 +85,17 @@ export default function AppointmentCreate(props) {
         setOpen(false);
     }
 
-    const submitForm = async (passed) => {
-        if (!passed) return false;
-
+    const submitForm = async () => {
         setSubmitted(true);
-        try {
 
+        try {
+            const res = await (await APIConnector.create(2000, currentUser)).post(`/appointment/create`, {
+                customer_email: selectedCustomer.email,
+                staff_id: formValue.selectedStaff.doc_id,
+                services,
+                selectedTimeSlot: formValue.selectedTimeSlot,
+                date
+            });
             handleClose();
         } catch (error) {
             if (error?.response?.data?.code === 'auth/email-already-exists') {
@@ -106,14 +126,17 @@ export default function AppointmentCreate(props) {
                     </div>
                     <div className={styles.timeSlots}>
                         {(() => {
-                            if (!timeSlots) return <Loader content={"Loading..."} />
+                            if (!timeSlots) return <Loader content={"Loading..."}/>
 
                             if (timeSlots[staff.doc_id]) {
                                 return timeSlots[staff.doc_id].map((timeSlot) => {
                                     const isSelected = formValue?.selectedStaff?.doc_id === staff?.doc_id && formValue?.selectedTimeSlot === timeSlot;
                                     return <span key={timeSlot}
-                                                 className={"rs-btn rs-btn-active" + (isSelected ? " rs-btn-primary": " rs-btn-subtle")}
-                                                 onClick={() => setFormValue({selectedStaff: staff, selectedTimeSlot: timeSlot})}>{TimeHelper.convertTime24to12(TimeHelper.sliderValTo24(timeSlot))}</span>
+                                                 className={"rs-btn rs-btn-active" + (isSelected ? " rs-btn-primary" : " rs-btn-subtle")}
+                                                 onClick={() => setFormValue({
+                                                     selectedStaff: staff,
+                                                     selectedTimeSlot: timeSlot
+                                                 })}>{TimeHelper.convertTime24to12(TimeHelper.sliderValTo24(timeSlot))}</span>
                                 })
                             } else {
                                 return <span>No availability.</span>
@@ -134,7 +157,7 @@ export default function AppointmentCreate(props) {
                         services.push(service.doc_id);
                         setServices(services);
                     } else {
-                        setServices((oldServices) => oldServices.filter((s) => s.doc_id !== service.doc_id));
+                        setServices((oldServices) => oldServices.filter((s) => s !== service.doc_id));
                     }
 
                     await fetchTimeSlots()
@@ -143,8 +166,32 @@ export default function AppointmentCreate(props) {
         })
     }
 
+    const CustomInputGroup = ({placeholder, ...props}) => (
+        <InputGroup {...props} style={styles}>
+            <Input placeholder={placeholder}/>
+            <InputGroup.Addon>
+                <FontAwesomeIcon icon={faSearch}/>
+            </InputGroup.Addon>
+        </InputGroup>
+    );
+
+    const search = async (searchVal) => {
+        setSelectedCustomer(null);
+        try {
+            setSearchResults(value.filter((customer) => customer.firstName.toLowerCase().includes(searchVal.toLowerCase()) ||
+                customer.lastName.toLowerCase().includes(searchVal.toLowerCase())));
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const disableConfirm = !formValue['selectedStaff'] || !formValue['selectedTimeSlot'] || !services.length || !selectedCustomer || !date;
+
     return (
-        <ConfirmModal open={open} handleClose={handleClose} title={props.appointment ? "Modify Appointment" : "New Appointment"} confirmText={props.appointment ? "Update" : "Create"} onConfirm={submitForm}>
+        <ConfirmModal open={open} handleClose={handleClose}
+                      title={props.appointment ? "Modify Appointment" : "New Appointment"}
+                      confirmText={props.appointment ? "Update" : "Create"} onConfirm={submitForm}
+                      disableConfirm={disableConfirm}>
             <Form className={styles.form} formValue={formValue} onChange={formValue => {
                 setFormValue(formValue);
                 if (Object.keys(formError).length) setFormError({});
@@ -153,13 +200,32 @@ export default function AppointmentCreate(props) {
                     <Calendar compact bordered className={styles.calendar} onChange={(date) => {
                         setDate(date);
                         setTimeSlots(null);
-                    }} />
+                        setFormValue({});
+                    }}/>
                     <div className={styles.services}>
-                        {!setupData ? <Loader size={"md"} /> : renderServices()}
+                        {!setupData ? <Loader size={"md"}/> : renderServices()}
+                    </div>
+                </div>
+                <div className={styles.customerContainer}>
+                    <CustomInputGroup size="md" className={selectedCustomer ? styles.selectedCustomer : ''}
+                                      placeholder={selectedCustomer ? selectedCustomer?.firstName + " " + selectedCustomer?.lastName : "Search Customer"}
+                                      onChange={async (e) => {
+                                          await search(e.target.value);
+                                      }}/>
+                    <div className={styles.searchResults}
+                         style={searchResults.length ? {display: 'flex'} : {display: 'none'}}>
+                        {searchResults.map((customer) => {
+                            return (
+                                <span key={Math.random()} onClick={() => {
+                                    setSelectedCustomer(customer);
+                                    setSearchResults([]);
+                                }}>{customer.firstName} {customer.lastName}</span>
+                            )
+                        })}
                     </div>
                 </div>
                 <div className={styles.staffContainer}>
-                    {(!setupData) ? <Loader size={"md"} style={{ marginTop: "2rem" }} /> : renderStaff()}
+                    {(!setupData) ? <Loader size={"md"} style={{marginTop: "2rem"}}/> : renderStaff()}
                 </div>
             </Form>
         </ConfirmModal>

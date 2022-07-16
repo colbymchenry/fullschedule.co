@@ -89,7 +89,7 @@ export default function AppointmentCreate(props) {
         setSubmitted(true);
 
         try {
-            const res = await (await APIConnector.create(2000, currentUser)).post(`/appointment/create`, {
+            const res = await (await APIConnector.create(10000, currentUser)).post(`/appointment/create`, {
                 customer_email: selectedCustomer.email,
                 staff_id: formValue.selectedStaff.doc_id,
                 services,
@@ -99,16 +99,10 @@ export default function AppointmentCreate(props) {
             props.fetchAppointments(true);
             handleClose();
         } catch (error) {
-            if (error?.response?.data?.code === 'auth/email-already-exists') {
-                formError["email"] = error?.response?.data.message;
-            } else if (error?.response?.data?.code === 'auth/invalid-password') {
-                formError["password"] = error?.response?.data.message;
-            } else {
-                toaster.push(<Notification type={"error"} header={"Failed to create product."}/>, {
-                    placement: 'topEnd'
-                });
-                console.error(error);
-            }
+            toaster.push(<Notification type={"error"} header={"Failed to create appointment."}/>, {
+                placement: 'topEnd'
+            });
+            console.error(error);
 
             setFormError(formError);
             setSubmitted(false);

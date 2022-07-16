@@ -29,11 +29,13 @@ export default function DashboardStaff(props) {
                     placement: 'topEnd'
                 });
                 await refreshStaff();
+                return true;
             } catch (error) {
                 console.error(error);
                 toaster.push(<Notification type={"error"} header={"Failed to delete staff account."}/>, {
                     placement: 'topEnd'
                 });
+                return false;
             }
         }
         }><p><FontAwesomeIcon icon={faExclamationTriangle} color={"yellow"}/> Warning: Deleting a staff account is

@@ -11,7 +11,9 @@ export const ToggleCell = ({rowData, dataKey, ...props}) => {
                 setDisabled(true);
 
                 if (props["onChange"]) {
-                    await props.onChange(rowData)
+                    await props.onChange(rowData, checked)
+                } else {
+                    // TODO: Revert check
                 }
                 setDisabled(props["disabled"] || false);
             }} />

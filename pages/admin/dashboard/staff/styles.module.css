@@ -27,7 +27,8 @@
 .controlsCell {
     display: flex;
     align-items: center;
-    width: calc(100vw - 320px - 100px - 350px) !important;
+    height: 100%;
+    /*width: calc(100vw - 320px - 100px - 350px) !important;*/
 }
 
 .controlsCell > div {

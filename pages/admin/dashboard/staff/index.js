@@ -12,6 +12,8 @@ import ConfirmModal from "../../../../components/modals/ConfirmModal/ConfirmModa
 import {APIConnector} from "../../../../components/APIConnector";
 import ChangePasswordModal from "../../../../components/staff/ChangePasswordModal/ChangePasswordModal";
 import ScheduleModal from "../../../../components/staff/ScheduleModal/ScheduleModal";
+import {ToggleCell} from "../../../../components/CustomCells/ToggleCell";
+import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
 
 export default function DashboardStaff(props) {
 
@@ -40,6 +42,22 @@ export default function DashboardStaff(props) {
         }
         }><p><FontAwesomeIcon icon={faExclamationTriangle} color={"yellow"}/> Warning: Deleting a staff account is
             irreversible.<br/><br/>Are you sure?</p></ConfirmModal>)
+    }
+
+    const changeBookable = async (rowData) => {
+        try {
+            await FirebaseClient.update("staff", rowData['doc_id'], {
+                bookable: !rowData['bookable']
+            });
+            await refreshStaff();
+            return true;
+        } catch (error) {
+            toaster.push(<Notification type={"error"} header={"Failed to update staff member."}/>, {
+                placement: 'topEnd'
+            });
+            console.error(error);
+            return false;
+        }
     }
 
     const refreshStaff = async () => {
@@ -143,13 +161,21 @@ export default function DashboardStaff(props) {
                     <Table.HeaderCell>{""}</Table.HeaderCell>
                     <AvatarCell/>
                 </Table.Column>
-                <Table.Column width={350}>
+                <Table.Column width={350} flexGrow={1}>
                     <Table.HeaderCell>{""}</Table.HeaderCell>
                     <InfoCell/>
                 </Table.Column>
-                <Table.Column align={"right"}>
+                <Table.Column width={150}>
                     <Table.HeaderCell>{""}</Table.HeaderCell>
                     <ControlsCell/>
+                </Table.Column>
+                <Table.Column width={80}>
+                    <Table.HeaderCell>{"Bookable"}</Table.HeaderCell>
+                    <ToggleCell cellKey={"bookable"} className={styles.controlsCell} onChange={async (rowData) => {
+                        if (rowData["doc_id"] ){
+                            await changeBookable(rowData);
+                        }
+                    }} />
                 </Table.Column>
             </FullWidthTable>
             <Button appearance="primary" onClick={() => toaster.push(<AuthProvider><StaffModal

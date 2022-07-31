@@ -1,39 +1,21 @@
-When adding new clients
-- Create Vercel Project with Sub-Domain
-- Setup Environment Variables
-- Create settings collection and create a doc called "main" with "doc_id=main"
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### 1. Create Firebase project.
+### 2. Setup Firebase authentication methods.
+`Google Client ID: 285842046610-d8fdce2jurfes2523nfotrn2k1ivg950.apps.googleusercontent.com`<br />
+`Google Client Secret: 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`<br />
+`Facebook App ID: 582863809850014`<br />
+`Facebook App Secret: 8c40782eb810fe25105170abe5ee5986`<br />
+### 3. Create default user in Firebase Authentication.
+### 4. Create Firebase database.
+`Create settings collection with 'main' and 'booking' doc's`<br />
+`Update DB Rules: allow read, write: if request.auth.uid;`<br />
+### 5. Setup static environment variables on Vercel project.
+`NEXT_PUBLIC_PRODUCTION=true`<br />
+`NEXT_GOOGLE_CLIENT_SECRET=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`<br />
+`NEXT_PUBLIC_GOOGLE_CLIENT_ID=766102917114-n2dnvdieq2c6alrrnasrhuidtufcqr64.apps.googleusercontent.com`<br />
+`NEXT_GOOGLE_API_KEY=AIzaSyC89dBUy8LxrKmMINw-YLLl3FbWhL6dcfs`<br />
+### 6. Create Firebase Full-Schedule App and Admin Service Account SDK
+`Put both in one line json in environment variables`<br />
+`NEXT_ADMIN_FIREBASE_CONFIG=`<br />
+`NEXT_PUBLIC_FIREBASE_CONFIG=`<br />

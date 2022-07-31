@@ -14,6 +14,7 @@ import ChangePasswordModal from "../../../../components/staff/ChangePasswordModa
 import ScheduleModal from "../../../../components/staff/ScheduleModal/ScheduleModal";
 import {ToggleCell} from "../../../../components/CustomCells/ToggleCell";
 import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
+import ServicesModal from "../../../../components/staff/ServicesModal/ServicesModal";
 
 export default function DashboardStaff(props) {
 
@@ -122,6 +123,11 @@ export default function DashboardStaff(props) {
                                     deleteStaff(rowData["doc_id"]);
                                     break;
                                 }
+                                case 4: {
+                                    toaster.push(<AuthProvider><ServicesModal refreshStaff={refreshStaff}
+                                                                              staff={rowData}/></AuthProvider>);
+                                    break;
+                                }
                             }
                         };
                         return (
@@ -129,6 +135,9 @@ export default function DashboardStaff(props) {
                                 <Dropdown.Menu onSelect={handleSelect}>
                                     <Dropdown.Item key={0} eventKey={0}>
                                         Modify Schedule
+                                    </Dropdown.Item>
+                                    <Dropdown.Item key={4} eventKey={4}>
+                                        Modify Services
                                     </Dropdown.Item>
                                     <Dropdown.Item key={1} eventKey={1}>
                                         Change Password

@@ -32,14 +32,14 @@ export default async function handler(req, res) {
             response.push("Failed to cancel Google event.");
         }
 
-        if (req.body.charge) {
+        if (req.body.charge && req.body.cancellationFee) {
             try {
                 const lead = await Lead.get(appointment.lead);
                 const cloverApi = await CloverAPI.getInstance();
                 if (process.env.NEXT_ENV !== "DEV") {
-                    await cloverApi.createCharge(lead.clover_source, 5 * 100, lead.email);
+                    await cloverApi.createCharge(lead.clover_source, req.body.cancellationFee * 100, lead.email);
                 }
-                response.push("Charged $75 no show fee and emailed customer a receipt.");
+                response.push(`Charged $${req.body.cancellationFee} no show fee and emailed customer a receipt.`);
             } catch (err) {
                 console.error(err.raw)
                 response.push("Failed to charge no show fee.");

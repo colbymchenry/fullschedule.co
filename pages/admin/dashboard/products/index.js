@@ -7,6 +7,7 @@ import FullWidthTable from "../../../../components/FullWidthTable/FullWidthTable
 import {InputSearch} from "../../../../components/inputs/InputSearch";
 import {ToggleCell} from "../../../../components/CustomCells/ToggleCell";
 import NewProductModal from "../../../../components/modals/NewProductModal/NewProductModal";
+import {FirebaseClient} from "../../../../utils/firebase/FirebaseClient";
 
 export default function DashboardProducts(props) {
 
@@ -22,6 +23,7 @@ export default function DashboardProducts(props) {
     const [editingNameId, setEditingNameId] = useState(null);
     const [editingCategoryId, setEditingCategoryId] = useState(null);
     const [editingDurationId, setEditingDurationId] = useState(null);
+    const [editingMaxAtATimeId, setEditingMaxAtATimeId] = useState(null);
 
     const fetchInventory = async () => {
         setInventory(null);
@@ -112,6 +114,27 @@ export default function DashboardProducts(props) {
             })
 
             setEditingDurationId(null);
+        } catch (error) {
+            toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
+                placement: 'topEnd'
+            });
+        }
+    }
+
+    const updateMaxAtATime = async (id, value) => {
+        if (!id || !value) return;
+
+        try {
+
+            await FirebaseClient.update("clover_inventory", id, {
+                max_at_a_time: parseInt(value)
+            })
+
+            updateData(id, {
+                max_at_a_time: parseInt(value)
+            })
+
+            setEditingMaxAtATimeId(null);
         } catch (error) {
             toaster.push(<Notification type={"error"} header={error?.response?.data?.message || "Failed server error. Please try again."}/>, {
                 placement: 'topEnd'
@@ -287,6 +310,24 @@ export default function DashboardProducts(props) {
         </Table.Cell>
     );
 
+    const MaxAtATimeCell = ({rowData, dataKey, ...props}) => (
+        <Table.Cell {...props}>
+            {rowData["available"] ?
+                editingMaxAtATimeId === rowData["doc_id"] ? (
+                        <DurationInput value={rowData["max_at_a_time"]} id={rowData["doc_id"]} updateDuration={updateMaxAtATime} />
+                    )
+                    : (
+                        <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}} onClick={() => {
+                            if (rowData['available']) {
+                                setEditingMaxAtATimeId(rowData["doc_id"]);
+                            }
+                        }}>{rowData["max_at_a_time"] || "N/A"}</p>
+                    )
+                : <p style={!rowData['available'] ? { textDecoration: "line-through", color: 'gray' } : {}}>N/A</p>
+            }
+        </Table.Cell>
+    );
+
     const search = (val) => {
         if (!val) {
             setFilteredData(inventory)
@@ -302,7 +343,7 @@ export default function DashboardProducts(props) {
                 <InputSearch onChange={search} disabled={!inventory} />
             </div>
             <FullWidthTable data={filteredData || []} className={`m-4`} loading={!filteredData} fillHeight={true} paginate={true}>
-                <Table.Column width={300} align="left" resizable>
+                <Table.Column width={300} align="left" flexGrow={1}>
                     <Table.HeaderCell>{"Name"}</Table.HeaderCell>
                     <NameCell />
                 </Table.Column>
@@ -323,6 +364,10 @@ export default function DashboardProducts(props) {
                 <Table.Column width={100} align="center">
                     <Table.HeaderCell>{"Duration"}</Table.HeaderCell>
                     <DurationCell />
+                </Table.Column>
+                <Table.Column width={120} align="center">
+                    <Table.HeaderCell>{"Max At a Time"}</Table.HeaderCell>
+                    <MaxAtATimeCell />
                 </Table.Column>
             </FullWidthTable>
             <Button appearance="primary" onClick={() => toaster.push(<AuthProvider><NewProductModal

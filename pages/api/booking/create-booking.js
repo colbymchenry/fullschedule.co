@@ -25,6 +25,7 @@ export default async function handler(req, res) {
 
         // get services from DB
         const services = await Promise.all(lead.services.map(async ({doc_id}) => {
+            console.log("doc_id", doc_id)
             const service = await FirebaseAdmin.firestore().collection("clover_inventory").doc(doc_id).get();
             return service.data();
         }));
@@ -84,7 +85,8 @@ export default async function handler(req, res) {
             start: postedEvent.start,
             end: postedEvent.end,
             services: lead.services.map(({doc_id}) => doc_id),
-            ...(textMagicId && { text_magic_reminder_id: textMagicId })
+            ...(req.body["clover_source"] && {clover_source: req.body["clover_source"]}),
+            ...(textMagicId && {text_magic_reminder_id: textMagicId})
         });
 
         return res.json(
@@ -116,7 +118,7 @@ async function sendSMSConfirmation(settings, startDate, timeZone, staff, toPhone
     const textBody = `\n\nYour appointment on\n\n${dateHuman} with ${staff?.firstname ? staff.firstname : ""} ${staff?.lastname ? staff.lastname : ""} is scheduled.\n\nAddress:\n${settings.get("address_street_line1") && settings.get("address_street_line1") + "\n"}${settings.get("address_street_line2") && settings.get("address_street_line2") + "\n"}${settings.get("address_city") && settings.get("address_city") + ", "}${settings.get("address_state") && settings.get("address_state")} ${settings.get("address_zip") && settings.get("address_zip")}\n\nThanks for choosing ${settings.get("company_name")}! We look forward to seeing you!`;
     await TwilioAdmin.sendText(toPhone, settings.get("company_name") + textBody);
 
-   // TODO: Scheduler can't do past 7 days
+    // TODO: Scheduler can't do past 7 days
     const reminderDate = new Date(startDate);
     reminderDate.setHours(8, 0, 30);
 

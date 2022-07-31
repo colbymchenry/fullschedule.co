@@ -211,16 +211,6 @@ export default function DashboardSettings(props) {
                         />
                     </FeatureField>
 
-                    <FeatureField title={"Booking Fee"} hint={"Charge a booking fee to protect from no shows."}>
-                        <Field
-                            name="booking_fee"
-                            accepter={MaskedInput}
-                            mask={"$9999"}
-                            maskChar={""}
-                            error={formError["booking_fee"]}
-                        />
-                    </FeatureField>
-
                     <FeatureField title={"Restrict Providers"}
                                   hint={"Only allow providers to be booked for authorized services."}>
                         <Field
@@ -229,11 +219,11 @@ export default function DashboardSettings(props) {
                             error={formError["restrict_providers"]}
                         />
                     </FeatureField>
-
                 </div>
 
                 <br/>
                 <br/>
+
                 <Header title={"Socials"} label={"This will be used in emails, SMS messages, and booking process."}/>
                 <div className={styles.section}>
                     <Field

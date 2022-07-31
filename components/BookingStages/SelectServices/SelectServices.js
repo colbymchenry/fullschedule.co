@@ -105,6 +105,7 @@ const Panel = forwardRef(({style, ...props}, ref) => (
                     value={service.doc_id}
                     label={service.name}
                     accepter={Checkbox}
+                    disabled={props.disabled || false}
                     checked={props.formValue.services.filter((s) => s.doc_id === service.doc_id).length > 0}
                 />
             )

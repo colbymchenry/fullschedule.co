@@ -13,21 +13,13 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import Script from "next/script";
 
-function Home({designSettings}) {
+function Home({designSettings, setupData}) {
 
-    const [setupData, setSetupData] = useState(null);
     const [formValues, setFormValues] = useState({});
     const [step, setStep] = useState(1);
     const [stepsCompleted, setStepsCompleted] = useState(1);
 
     useEffect(() => {
-        if (!setupData) {
-            (async () => {
-                const res = await axios.get('/api/booking/setup-data');
-                setSetupData(res.data);
-            })();
-        }
-
         if (typeof document !== 'undefined') {
             if (!window.clover) {
                 const t = setInterval(() => {
@@ -45,29 +37,30 @@ function Home({designSettings}) {
 
     }
 
-    const appendFormValues = (values) => {
+    const appendFormValues = (values, dontIncrementStep) => {
         // if animating do nothing
         if (document.getElementById("booking-container").querySelector("FORM").classList.contains("fadeAway")) return;
 
         setFormValues({...formValues, ...values});
 
-        document.getElementById("booking-container").querySelector("FORM").classList.add("fadeAway");
-
-        setTimeout(() => {
-            setStep((prevStep) => {
-                if (prevStep + 1 > stepsCompleted) {
-                    setStepsCompleted(prevStep + 1);
-                }
-                return prevStep + 1;
-            });
-        }, 500);
+        if (!dontIncrementStep) {
+            document.getElementById("booking-container").querySelector("FORM").classList.add("fadeAway");
+            setTimeout(() => {
+                setStep((prevStep) => {
+                    if (prevStep + 1 > stepsCompleted) {
+                        setStepsCompleted(prevStep + 1);
+                    }
+                    return prevStep + 1;
+                });
+            }, 500);
+        }
     }
 
     const PROPS = {
         formValues, setFormValues, appendFormValues, setupData
     }
 
-    const steps = [
+    let steps = [
         {
             component: <PersonalInformation {...PROPS} />,
             title: "Personal Information"
@@ -85,14 +78,17 @@ function Home({designSettings}) {
             title: "Provider"
         },
         {
-            component: <BillingInformation {...PROPS} />,
-            title: "Billing Information"
-        },
-        {
             component: <BookingConfirmation {...PROPS} />,
             title: ["Confirmation ", <FontAwesomeIcon key={Math.random()} icon={faCheck} height={"16px"}/>]
         }
     ]
+
+    if (setupData.booking_settings["no_show_fee"] && parseFloat(setupData.booking_settings["no_show_fee"].replace("$", "")) > 0) {
+        steps.splice(4, 0, {
+            component: <BillingInformation {...PROPS} />,
+            title: "Billing Information"
+        });
+    }
 
     useEffect(() => {
         if (typeof document !== "undefined" && designSettings) {
@@ -203,8 +199,9 @@ export async function getServerSideProps({req}) {
     const baseUrl = req ? `${protocol}://${req.headers.host}` : ''
 
     const res = await axios.get(baseUrl + '/api/booking/design-settings')
+    const res1 = await axios.get(baseUrl + '/api/booking/setup-data');
     // Pass data to the page via props
-    return {props: {designSettings: res.data.booking_settings}}
+    return {props: {designSettings: res.data.booking_settings, setupData: res1.data}}
 }
 
 export default Home;

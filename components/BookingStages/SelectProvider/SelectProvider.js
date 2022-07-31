@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Form, Notification, toaster, Loader} from "rsuite";
 import axios from "axios";
 import {TimeHelper} from "../../../utils/TimeHelper";
+import ArrayHelper from "../../../utils/ArrayHelper";
 
 export default function SelectProvider(props) {
 
@@ -17,17 +18,23 @@ export default function SelectProvider(props) {
     }, [])
 
     const submitForm = async () => {
-        // setSubmitted(true);
+        setSubmitted(true);
         try {
             const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, formValue);
-            props.appendFormValues(leadUpdate.data)
+            if (!props.setupData.booking_settings["no_show_fee"]) {
+                const createBooking = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, {...props.formValues.lead, ...formValue});
+                props.appendFormValues({...leadUpdate.data, booking: createBooking.data})
+            } else {
+                props.appendFormValues(leadUpdate.data);
+            }
         } catch (error) {
             toaster.push(<Notification type={"error"}
                                        header={"Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
                 placement: 'topEnd'
             });
+
+            setSubmitted(false);
         }
-        // setSubmitted(false);
     }
 
     const fetchTimeSlots = async () => {
@@ -48,8 +55,14 @@ export default function SelectProvider(props) {
         }
     }
 
+    const staffIsAuthorizedForServices = (staff) => {
+        const selectedServicesDocIds = props.formValues.lead.services.map((service) => service.doc_id);
+        const staffServiceDocIds = staff.services.map((id) => props.setupData.services.find((service) => service.id === id).doc_id);
+        return ArrayHelper.containsAll(selectedServicesDocIds, staffServiceDocIds);
+    }
+
     const renderStaff = () => {
-        return props.setupData.staff.filter((staff) => staff["schedule"] && staff["photoURL"]).map((staff) => {
+        return props.setupData.staff.filter((staff) => staff["schedule"] && staff["photoURL"] && staffIsAuthorizedForServices(staff)).map((staff) => {
             return (
                 <div key={staff.doc_id} className={styles.staffMasterBody}>
                     <div key={staff.doc_id} className={styles.staffBody}>

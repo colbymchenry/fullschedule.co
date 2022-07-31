@@ -1,5 +1,4 @@
 import {FirebaseClient} from "../utils/firebase/FirebaseClient";
-import {FirebaseAdmin} from "../utils/firebase/FirebaseAdmin";
 
 export class SettingsClient {
 

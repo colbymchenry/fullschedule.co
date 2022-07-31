@@ -129,6 +129,16 @@ export default function DashboardPromotions(props) {
                         />
                     </FeatureField>
 
+                    <FeatureField title={"No Show Fee"} hint={"Charge a fee to protect from no shows. (Leave blank to disable)"}>
+                        <Field
+                            name="no_show_fee"
+                            accepter={MaskedInput}
+                            mask={"$9999"}
+                            maskChar={""}
+                            error={formError["no_show_fee"]}
+                        />
+                    </FeatureField>
+
                 </div>
 
                 <br/>

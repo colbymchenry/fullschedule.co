@@ -3,6 +3,7 @@ import GoogleCalendarAPI from "../../../utils/googleapis/GoogleCalendarAPI";
 import {FirebaseAdmin} from "../../../utils/firebase/FirebaseAdmin";
 import {TimeHelper} from "../../../utils/TimeHelper";
 import {Lead} from "../../../modals/Lead";
+import ArrayHelper from "../../../utils/ArrayHelper";
 
 export default async function handler(req, res) {
     try {
@@ -43,6 +44,9 @@ export default async function handler(req, res) {
         services.forEach(({duration}) => totalMinutes += parseInt(duration));
         const servicesHours = Math.floor(totalMinutes / 60);
         const servicesMinutes = totalMinutes % 60;
+
+        // make sure to only return staff members that have all services selected available to them
+        allStaff = allStaff.filter((staff) => ArrayHelper.containsAll(services, staff.services, "id"));
 
         // iterate over the staff accounts and add their available time slots
         const timeSlots = {}

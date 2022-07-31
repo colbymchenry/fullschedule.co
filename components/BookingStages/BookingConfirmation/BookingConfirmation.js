@@ -29,6 +29,7 @@ export default function BookingConfirmation(props) {
         minute: '2-digit',
         timeZone: props.formValues.booking.end.timeZone
     });
+
     const staff = props.formValues.lead.selectedStaff;
     const time = props.formValues.lead.selectedTimeSlot;
     const services = props.formValues.lead.services.map(({name}) => name);

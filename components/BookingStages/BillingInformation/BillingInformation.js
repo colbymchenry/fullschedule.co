@@ -24,9 +24,8 @@ export default function BillingInformation(props) {
         }
 
         try {
-            const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, {clover_source: secondToken});
-            const createBooking = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, props.formValues.lead);
-            props.appendFormValues({ ...leadUpdate.data, booking: createBooking.data })
+            const createBooking = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, {...props.formValues.lead, clover_source: secondToken});
+            props.appendFormValues({ booking: createBooking.data })
         } catch (err) {
             toaster.push(<Notification type={"error"}
                                        header={err?.response?.data?.message || "Error connecting to database. Please email, call, or use our live chat to reach us."}/>, {
@@ -53,7 +52,7 @@ export default function BillingInformation(props) {
                     noBlack={true}
                     onChange={() => setCardError(false)}
                     onSecondaryToken={(token) => setSecondToken(token)}
-                    info={[...errorArray, "* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a ", <b key={Math.random()}>$75 no show fee</b>, ". A $0.01 charge will show up on your account to secure your appointment."]}
+                    info={[...errorArray, "* Please stay in touch! If you do not modify or cancel 24 hours in advance of your appointment we will charge a ", <b key={Math.random()}>{props.setupData.booking_settings["no_show_fee"]} no show fee</b>, ". A $0.01 charge will show up on your account to secure your appointment."]}
                 />
                 :
                 <h5 style={{textAlign: 'center'}}>Error loading payment

@@ -8,7 +8,6 @@ export async function getBookableServices() {
         delete data["modifiedTime"]
         delete data["isRevenue"]
         delete data["defaultTaxRates"];
-        delete data["id"];
         result.push({...data, doc_id: doc.id})
     });
     return result;
@@ -38,7 +37,7 @@ export async function getBookableStaff() {
 
 export default async function handler(req, res) {
     try {
-        const services = await getBookableServices();
+        let services = await getBookableServices();
         const staff = await getBookableStaff();
         let booking_settings = await FirebaseAdmin.firestore().collection("settings").doc("booking").get();
         let main_settings = await FirebaseAdmin.firestore().collection("settings").doc("main").get();
@@ -49,6 +48,18 @@ export default async function handler(req, res) {
 
         if (main_settings) {
             main_settings = main_settings.data();
+        }
+
+        // restrict selectable services to ones that are available to bookable staff members
+        if (staff) {
+            let allServices = [];
+            staff.forEach((s) => {
+                if (s?.services) {
+                    allServices = [...allServices, ...s.services]
+                }
+            });
+
+            services = services.filter((s) => allServices.includes(s.id));
         }
 
         return res.json({services, staff, booking_settings, ...(main_settings?.phone && { phone: main_settings.phone }) });

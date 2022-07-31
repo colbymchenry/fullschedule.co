@@ -34,3 +34,17 @@
 .section > div > div > div {
     width: 100% !important;
 }
+
+.cancelField label span {
+    top: 20px;
+}
+
+.cancelField label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cancelField input {
+    width: 25%;
+}

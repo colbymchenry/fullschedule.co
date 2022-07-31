@@ -252,7 +252,7 @@ function Appointment({appointment, fetchAppointments}) {
                 </button>
                 <hr/>
                 <button type={"button"}
-                        onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment_id={appointment.doc_id}
+                        onClick={() => toaster.push(<AuthProvider><AppointmentCancel appointment={appointment} appointment_id={appointment.doc_id}
                                                                                      onComplete={() => fetchAppointments(true)}/></AuthProvider>)}>Cancel
                     Appointment
                 </button>

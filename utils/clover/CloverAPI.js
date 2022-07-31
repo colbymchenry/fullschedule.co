@@ -77,13 +77,20 @@ export class CloverAPI {
     }
 
     async createCharge(source, amount, receipt_email) {
-        return await this.connector.charges.create({
+        return await this.run('/v1/charges', {
             source,
             amount,
             currency: 'usd',
             capture: 'true',
             ...(receipt_email && { receipt_email })
-        })
+        });
+        // return await this.connector.charges.create({
+        //     source,
+        //     amount,
+        //     currency: 'usd',
+        //     capture: 'true',
+        //     ...(receipt_email && { receipt_email })
+        // })
     }
 
     async getInventory(refresh) {

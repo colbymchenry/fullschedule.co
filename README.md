@@ -9,7 +9,8 @@
 ### 3. Create default user in Firebase Authentication.
 ### 4. Create Firebase database.
 `Create settings collection with 'main' and 'booking' doc's`<br />
-`Update DB Rules: allow read, write: if request.auth.uid;`<br />
+`Update DB Rules: allow read, write: if request.auth != null;`<br />
+More DB rules can be found [here](https://firebase.google.com/docs/firestore/solutions/role-based-access) at **Step 3**.
 ### 5. Setup static environment variables on Vercel project.
 `NEXT_PUBLIC_PRODUCTION=true`<br />
 `NEXT_GOOGLE_CLIENT_SECRET=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`<br />

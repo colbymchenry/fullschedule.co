@@ -15,7 +15,7 @@ More DB rules can be found [here](https://firebase.google.com/docs/firestore/sol
 `NEXT_PUBLIC_PRODUCTION=true`<br />
 `NEXT_GOOGLE_CLIENT_SECRET=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`<br />
 `NEXT_PUBLIC_GOOGLE_CLIENT_ID=766102917114-n2dnvdieq2c6alrrnasrhuidtufcqr64.apps.googleusercontent.com`<br />
-`NEXT_GOOGLE_API_KEY=AIzaSyC89dBUy8LxrKmMINw-YLLl3FbWhL6dcfs`<br />
+`NEXT_GOOGLE_API_KEY=AIzaSyC89dBUy8LxrKmMINw-YLLl3FbWhL6dcfs`<br />k
 ### 6. Create Firebase Full-Schedule App and Admin Service Account SDK
 `Put both in one line json in environment variables`<br />
 `NEXT_ADMIN_FIREBASE_CONFIG=`<br />

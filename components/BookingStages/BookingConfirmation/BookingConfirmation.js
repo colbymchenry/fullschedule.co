@@ -35,16 +35,37 @@ export default function BookingConfirmation(props) {
     const services = props.formValues.lead.services.map(({name}) => name);
     const date = props.formValues.lead.date;
 
+    let address = props.setupData["address_street_line1"];
+
+    if (props.setupData["address_street_line2"]) {
+        address += ", " + props.setupData["address_street_line2"];
+    }
+
+    if (props.setupData["address_city"]) {
+        address += ", " + props.setupData["address_city"];
+    }
+
+    if (props.setupData["address_state"]) {
+        address += ", " + props.setupData["address_state"];
+    }
+
+    if (props.setupData["address_zip"]) {
+        address += " " + props.setupData["address_zip"];
+    }
+
     return (
         <>
             <Form formValue={formValue} disabled={props.submitted} readOnly={props.submitted} className={styles.form}>
                 <div className={styles.container}>
-                    <h5 style={{ fontSize: "1.2rem" }}><b>Booking Details</b></h5>
+                    <h5 style={{fontSize: "1.2rem"}}><b>Booking Details</b></h5>
                     <div className={styles.divider}>{" "}</div>
                     <section>
                         <label>Location</label>
-                        <h5><b>Athens</b></h5>
-                        <p style={{ overflowX: "auto", whiteSpace: "nowrap" }}>3372 Peachtree Rd NE, Unit 2302, Atlanta, GA 30326</p>
+                        <span>{props.setupData["address_city"]}</span>
+                        <a href={`https://maps.apple.com/?address=${encodeURIComponent(address)}`} style={{
+                            overflowX: "auto",
+                            whiteSpace: "nowrap"
+                        }}>{address}</a>
                     </section>
                     <section>
                         <label>Date & Time</label>

@@ -21,7 +21,7 @@ export default function SelectProvider(props) {
         setSubmitted(true);
         try {
             const leadUpdate = await axios.post(`/api/booking/update-lead?id=${props.formValues.lead.doc_id}`, formValue);
-            if (!props.setupData.booking_settings["no_show_fee"]) {
+            if (!props.isBookingFee) {
                 const createBooking = await axios.post(`/api/booking/create-booking?id=${props.formValues.lead.doc_id}`, {...props.formValues.lead, ...formValue});
                 props.appendFormValues({...leadUpdate.data, booking: createBooking.data})
             } else {

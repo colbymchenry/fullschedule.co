@@ -49,11 +49,14 @@ export function ActionItems(props) {
                     "text_magic_api_key^Text Magic API Key.",
                     "text_magic_user^Text Magic username."
                 ];
-                setRequirements(requiredFields.filter((key) => !value[0][key.split("^")[0]]));
 
-                if (typeof window !== 'undefined') {
+                const reqs = requiredFields.filter((key) => !value[0][key.split("^")[0]]);
+
+                setRequirements(reqs);
+
+                if (typeof window !== 'undefined' && reqs.length) {
                     if (router.pathname !== '/admin/dashboard/settings') {
-                        await router.push(`/admin/dashboard/settings?invalid=${requiredFields.filter((key) => !value[0][key.split("^")[0]]).map((key) => key.split("^")[0]).join(",")}`);
+                        await router.push(`/admin/dashboard/settings?invalid=${reqs.map((key) => key.split("^")[0]).join(",")}`);
                     }
                 }
             })();

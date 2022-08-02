@@ -62,7 +62,23 @@ export default async function handler(req, res) {
             services = services.filter((s) => allServices.includes(s.id));
         }
 
-        return res.json({services, staff, booking_settings, ...(main_settings?.phone && { phone: main_settings.phone }) });
+        return res.json({services, staff, booking_settings,
+            ...(main_settings?.phone && { phone: main_settings.phone }),
+            ...(main_settings?.address_city && { address_city: main_settings.address_city }),
+            ...(main_settings?.address_street_line1 && { address_street_line1: main_settings.address_street_line1 }),
+            ...(main_settings?.address_street_line2 && { address_street_line2: main_settings.address_street_line2 }),
+            ...(main_settings?.address_zip && { address_zip: main_settings.address_zip }),
+            ...(main_settings?.address_state && { address_state: main_settings.address_state }),
+            ...(main_settings?.office_manager_email && { office_manager_email: main_settings.office_manager_email }),
+            ...(main_settings?.pixel_id && { pixel_id: main_settings.pixel_id }),
+            ...(main_settings?.time_zone && { time_zone: main_settings.time_zone }),
+            ...(main_settings?.company_name && { company_name: main_settings.company_name }),
+            ...(main_settings?.socials_facebook && { socials_facebook: main_settings.socials_facebook }),
+            ...(main_settings?.socials_instagram && { socials_instagram: main_settings.socials_instagram }),
+            ...(main_settings?.socials_tiktok && { socials_tiktok: main_settings.socials_tiktok }),
+            ...(main_settings?.socials_twitter && { socials_twitter: main_settings.socials_twitter }),
+            ...(main_settings?.socials_youtube && { socials_youtube: main_settings.socials_youtube })
+        });
     } catch (error) {
         console.error(error)
         if (error?.code) {

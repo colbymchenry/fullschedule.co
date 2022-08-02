@@ -18,6 +18,7 @@ function Home({designSettings, setupData}) {
     const [formValues, setFormValues] = useState({});
     const [step, setStep] = useState(1);
     const [stepsCompleted, setStepsCompleted] = useState(1);
+    const isBookingFee = setupData.booking_settings["no_show_fee"] && parseFloat(setupData.booking_settings["no_show_fee"].replace("$", "")) > 0;
 
     useEffect(() => {
         if (typeof document !== 'undefined') {
@@ -57,7 +58,7 @@ function Home({designSettings, setupData}) {
     }
 
     const PROPS = {
-        formValues, setFormValues, appendFormValues, setupData
+        formValues, setFormValues, appendFormValues, setupData, isBookingFee
     }
 
     let steps = [
@@ -83,7 +84,7 @@ function Home({designSettings, setupData}) {
         }
     ]
 
-    if (setupData.booking_settings["no_show_fee"] && parseFloat(setupData.booking_settings["no_show_fee"].replace("$", "")) > 0) {
+    if (isBookingFee) {
         steps.splice(4, 0, {
             component: <BillingInformation {...PROPS} />,
             title: "Billing Information"
@@ -161,7 +162,8 @@ function Home({designSettings, setupData}) {
                         href={`https://fonts.googleapis.com/css2?family=${setupData.booking_settings.font.split(' ').join('+')}&display=swap`}
                         rel="stylesheet"/>}
             </Head>
-            <Script src="https://checkout.clover.com/sdk.js"/>
+            {isBookingFee ?  <Script src="https://checkout.clover.com/sdk.js"/> : <></>}
+
             <div className={styles.container} id={"booking-container"}>
                 <Steps className={styles.desktopSteps + (step === steps.length ? " fadeAway" : "")} current={step - 1}
                        vertical style={{

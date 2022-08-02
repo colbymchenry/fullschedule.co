@@ -104,6 +104,24 @@ export default function PersonalInformation(props) {
         return !formValue["name"] || !emailRegex.test(formValue["email"]) || !phoneRegex.test(formValue["phone"]);
     }
 
+    let address = props.setupData["address_street_line1"];
+
+    if (props.setupData["address_street_line2"]) {
+        address += ", " + props.setupData["address_street_line2"];
+    }
+
+    if (props.setupData["address_city"]) {
+        address += ", " + props.setupData["address_city"];
+    }
+
+    if (props.setupData["address_state"]) {
+        address += ", " + props.setupData["address_state"];
+    }
+
+    if (props.setupData["address_zip"]) {
+        address += " " + props.setupData["address_zip"];
+    }
+
     return (
         <Form formValue={formValue} onChange={formValue => {
             setFormValue(formValue);
@@ -135,6 +153,17 @@ export default function PersonalInformation(props) {
                 error={formError["phone"]}
                 onChange={() => setTriggerRender(!triggerRender)}
             />
+
+            <br />
+
+            <a href={`https://maps.apple.com/?address=${encodeURIComponent(address)}`} style={{
+                overflowX: "auto",
+                whiteSpace: "nowrap"
+            }}>{address}</a>
+
+            <br />
+            <br />
+            <br />
 
             <div className={styles.loginButtons}>
                 <Button appearance="subtle" type="button" onClick={signInWithGoogle}><GoogleSVG/>Sign in with

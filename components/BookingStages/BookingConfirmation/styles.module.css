@@ -34,3 +34,46 @@
     border-top: 1px solid var(--rs-text-primary);
     margin: 1rem 0;
 }
+
+.addToMaps {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.addToMaps a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 40px;
+    flex-basis: calc(50% - 0.5rem);
+    justify-content: center;
+}
+
+.addToMaps svg {
+    width: 18px;
+}
+
+.addToMaps .apple {
+    background: black;
+    fill: white;
+    color: white;
+    white-space: nowrap;
+}
+
+.addToMaps .google {
+    white-space: nowrap;
+    background-color: #f6f6f6;
+    background-image: linear-gradient(#f6f6f6 0%, #e9e9e9 100%);
+    border: 1px solid #e9e9e9;
+    color: rgb(86, 86, 86);
+}
+
+.addToMaps .waze {
+    white-space: nowrap;
+    background-color: #32CBFE;
+    border: 1px solid #e9e9e9;
+    color: white;
+}

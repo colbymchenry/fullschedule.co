@@ -156,15 +156,6 @@ export default function PersonalInformation(props) {
 
             <br />
 
-            <a href={`https://maps.apple.com/?address=${encodeURIComponent(address)}`} style={{
-                overflowX: "auto",
-                whiteSpace: "nowrap"
-            }}>{address}</a>
-
-            <br />
-            <br />
-            <br />
-
             <div className={styles.loginButtons}>
                 <Button appearance="subtle" type="button" onClick={signInWithGoogle}><GoogleSVG/>Sign in with
                     Google</Button>

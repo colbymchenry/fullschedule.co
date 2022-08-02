@@ -3,6 +3,9 @@ import React, {useState} from "react";
 import {Form, Tag} from "rsuite";
 import useWindowSize from 'react-use/lib/useWindowSize';
 import Confetti from 'react-confetti';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faApple, faApplePay, faGoogle, faWaze} from "@fortawesome/free-brands-svg-icons";
+import {GoogleSVG} from "../../SVG";
 
 export default function BookingConfirmation(props) {
 
@@ -62,10 +65,15 @@ export default function BookingConfirmation(props) {
                     <section>
                         <label>Location</label>
                         <span>{props.setupData["address_city"]}</span>
-                        <a href={`https://maps.apple.com/?address=${encodeURIComponent(address)}`} style={{
+                        <p style={{
                             overflowX: "auto",
                             whiteSpace: "nowrap"
-                        }}>{address}</a>
+                        }}>{address}</p>
+                        <div className={styles.addToMaps}>
+                            <a href={`https://maps.apple.com/?address=${encodeURIComponent(address)}`} className={styles.apple + " rs-btn-subtle rs-btn"} target={"_blank"}  rel="noreferrer"><FontAwesomeIcon icon={faApple} /> Apple Maps</a>
+                            <a href={`https://www.google.com/maps/place/${encodeURIComponent(address)}`} className={styles.google + " rs-btn-subtle rs-btn"} target={"_blank"}  rel="noreferrer"><GoogleSVG/> Google Maps</a>
+                            <a href={`https://waze.com/ul?q=${encodeURIComponent(address)}`} className={styles.waze + " rs-btn-subtle rs-btn"} target={"_blank"}  rel="noreferrer"><FontAwesomeIcon icon={faWaze} /> Waze</a>
+                        </div>
                     </section>
                     <section>
                         <label>Date & Time</label>

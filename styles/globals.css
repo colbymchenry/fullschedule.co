@@ -181,3 +181,11 @@ div::-webkit-scrollbar-corner {
   color: var(--rs-progress-bar-fail);
   font-weight: bold;
 }
+
+.has-error .rs-input,.has-error .rs-picker-toggle {
+  border: 1px solid var(--rs-text-error) !important;
+}
+
+button.has-error {
+  border: 2px solid var(--rs-text-error) !important;
+}

@@ -7,6 +7,7 @@ import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {useCollectionData} from "react-firebase-hooks/firestore";
 import {collection, query, where} from "firebase/firestore";
 import {FirebaseClient} from "../../utils/firebase/FirebaseClient";
+import {useRouter} from "next/router";
 
 export function ActionItems(props) {
 
@@ -17,7 +18,8 @@ export function ActionItems(props) {
         }
     );
 
-    const [requirements, setRequirements] = useState([])
+    const [requirements, setRequirements] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         if (value && value.length) {
@@ -48,6 +50,12 @@ export function ActionItems(props) {
                     "text_magic_user^Text Magic username."
                 ];
                 setRequirements(requiredFields.filter((key) => !value[0][key.split("^")[0]]));
+
+                if (typeof window !== 'undefined') {
+                    if (router.pathname !== '/admin/dashboard/settings') {
+                        await router.push(`/admin/dashboard/settings?invalid=${requiredFields.filter((key) => !value[0][key.split("^")[0]]).map((key) => key.split("^")[0]).join(",")}`);
+                    }
+                }
             })();
         }
     }, [value])

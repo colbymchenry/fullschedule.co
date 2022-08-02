@@ -10,6 +10,7 @@ import {useAuth} from "../../../../context/AuthContext";
 import GoogleLogin from "react-google-login";
 import {APIConnector} from "../../../../components/APIConnector";
 import GoogleCalendarListModal from "../../../../components/modals/GoogleCalendarListModal/GoogleCalendarListModal";
+import {useRouter} from "next/router";
 
 const {StringType} = Schema.Types;
 
@@ -40,6 +41,7 @@ export default function DashboardSettings(props) {
     const [formValue, setFormValue] = useState({});
     const [formError, setFormError] = useState({});
     const {currentUser} = useAuth();
+    const { query } = useRouter();
 
     const model = Schema.Model({
         password: StringType().isRequired('This field is required.'),
@@ -97,6 +99,13 @@ export default function DashboardSettings(props) {
                     });
                 }
             })();
+        }
+
+        if (query["invalid"]) {
+            query.invalid.split(",").forEach((key) => {
+                formError[key] = "required";
+            })
+            setFormError(formError)
         }
     }, [])
 
@@ -185,8 +194,9 @@ export default function DashboardSettings(props) {
 
                         {!formValue["google_tokens"] ?
                             <GoogleLogin
+                                className={formError["google_tokens"] ? "has-error" : ""}
                                 clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-                                buttonText="Login with Google"
+                                buttonText={"Login with Google"}
                                 onSuccess={(data) => googleOauth(true, data)}
                                 onFailure={() => googleOauth(false)}
                                 cookiePolicy="single_host_origin"
@@ -194,6 +204,7 @@ export default function DashboardSettings(props) {
                                 responseType="code"
                                 approvalPrompt="force"
                                 prompt='consent'
+
                                 scope={"https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events"}
                                 redirectUri={"http://localhost:3000/admin/dashboard/settings"}
                             />
@@ -264,7 +275,7 @@ export default function DashboardSettings(props) {
                 <Panel header={[
                     <Header key="head" title={"API Keys"}
                             label={"This is used for third-party implementations. (Have an admin set this up)"}/>
-                ]} collapsible>
+                ]} collapsible expanded={query["invalid"] !== null}>
 
                     <div className={styles.section}>
                         <h4>Twilio SMS</h4>

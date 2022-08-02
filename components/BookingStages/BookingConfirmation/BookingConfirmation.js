@@ -70,9 +70,15 @@ export default function BookingConfirmation(props) {
                             whiteSpace: "nowrap"
                         }}>{address}</p>
                         <div className={styles.addToMaps}>
-                            <a href={`https://maps.apple.com/?address=${encodeURIComponent(address)}`} className={styles.apple + " rs-btn-subtle rs-btn"} target={"_blank"}  rel="noreferrer"><FontAwesomeIcon icon={faApple} /> Apple Maps</a>
-                            <a href={`https://www.google.com/maps/place/${encodeURIComponent(address)}`} className={styles.google + " rs-btn-subtle rs-btn"} target={"_blank"}  rel="noreferrer"><GoogleSVG/> Google Maps</a>
-                            <a href={`https://waze.com/ul?q=${encodeURIComponent(address)}`} className={styles.waze + " rs-btn-subtle rs-btn"} target={"_blank"}  rel="noreferrer"><FontAwesomeIcon icon={faWaze} /> Waze</a>
+                            <a href={`https://maps.apple.com/?address=${encodeURIComponent(address)}`}
+                               className={styles.apple + " rs-btn-subtle rs-btn"} target={"_blank"}
+                               rel="noreferrer"><FontAwesomeIcon icon={faApple}/> Apple Maps</a>
+                            <a href={`https://www.google.com/maps/place/${encodeURIComponent(address)}`}
+                               className={styles.google + " rs-btn-subtle rs-btn"} target={"_blank"}
+                               rel="noreferrer"><GoogleSVG/> Google Maps</a>
+                            <a href={`https://waze.com/ul?q=${encodeURIComponent(address)}`}
+                               className={styles.waze + " rs-btn-subtle rs-btn"} target={"_blank"}
+                               rel="noreferrer"><FontAwesomeIcon icon={faWaze}/> Waze</a>
                         </div>
                     </section>
                     <section>
@@ -80,22 +86,24 @@ export default function BookingConfirmation(props) {
                         <span>{startTime} to {endTime} {dayOfWeek.substring(0, 3)}, {startDate}</span>
                     </section>
                     <section>
-                        <label>Booked for</label>
+                        <label>Provider</label>
                         <Tag color="blue">{staff.firstname} {staff.lastname}</Tag>
                     </section>
                     <section>
-                        <label>Packages / Services Added</label>
+                        <label>Packages / Services</label>
                         {services.map((service) => <span key={Math.random()}>{service}</span>)}
                     </section>
                 </div>
                 <div style={{marginTop: "4rem"}}>
                 </div>
             </Form>
-            <Confetti
-                recycle={false}
-                width={width}
-                height={height}
-            />
+            {props.confetti ?
+                <Confetti
+                    recycle={false}
+                    width={width}
+                    height={height}
+                />
+                : <></>}
         </>
     )
 

@@ -79,7 +79,7 @@ function Home({designSettings, setupData}) {
             title: "Provider"
         },
         {
-            component: <BookingConfirmation {...PROPS} />,
+            component: <BookingConfirmation {...PROPS} confetti={true} />,
             title: ["Confirmation ", <FontAwesomeIcon key={Math.random()} icon={faCheck} height={"16px"}/>]
         }
     ]

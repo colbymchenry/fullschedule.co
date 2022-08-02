@@ -3,8 +3,10 @@ import React, {useEffect} from "react";
 import Head from "next/head";
 import styles from "../../styles/Booking.module.css";
 import BookingConfirmation from "../../components/BookingStages/BookingConfirmation/BookingConfirmation";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faEnvelope, faPhone} from "@fortawesome/free-solid-svg-icons";
 
-export default function Booking({ bookingData, leadData, designSettings, setupData }) {
+export default function Booking({bookingData, leadData, designSettings, setupData}) {
 
     useEffect(() => {
         if (typeof document !== "undefined" && designSettings) {
@@ -51,10 +53,21 @@ export default function Booking({ bookingData, leadData, designSettings, setupDa
             </Head>
 
             <div className={styles.container} id={"booking-container"}>
-                <BookingConfirmation setupData={setupData} formValues={{
-                    lead: leadData,
-                    booking: bookingData
-                }} />
+                {!bookingData ?
+                    <>
+                        <p style={{ padding: '5vw' }}><h1>Uh-Oh...</h1><br /><h5>This URL seems to be broken. Please call or email us if you think this is an error.</h5>
+                        <div className={styles.callOrEmail}>
+                            <a href={`tel:${setupData["phone"]}`}><FontAwesomeIcon icon={faPhone} /></a>
+                            <a href={`mailto:${setupData["office_manager_email"]}`}><FontAwesomeIcon icon={faEnvelope} /></a>
+                        </div>
+                        </p>
+                    </>
+                    :
+                    <BookingConfirmation setupData={setupData} formValues={{
+                        lead: leadData,
+                        booking: bookingData
+                    }}/>
+                }
             </div>
         </>
     )
@@ -67,5 +80,12 @@ export async function getServerSideProps({req, query}) {
     const res1 = await axios.get(baseUrl + '/api/booking/setup-data');
     const res2 = await axios.get(baseUrl + '/api/booking/design-settings')
     // Pass data to the page via props
-    return {props: {bookingData: res.data.bookingData, leadData: res.data.leadData, setupData: res1.data, designSettings: res2.data.booking_settings}}
+    return {
+        props: {
+            bookingData: res.data.bookingData,
+            leadData: res.data.leadData,
+            setupData: res1.data,
+            designSettings: res2.data.booking_settings
+        }
+    }
 }

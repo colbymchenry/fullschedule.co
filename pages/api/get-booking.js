@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         return res.json({ bookingData, leadData});
     } catch (error) {
         console.error(error);
-        return res.status(500).json({})
+        return res.json({ bookingData: null, leadData: null });
     }
 
 }

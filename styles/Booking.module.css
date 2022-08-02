@@ -185,3 +185,28 @@
     display: inherit !important;
   }
 }
+
+.callOrEmail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20vw;
+  position: absolute;
+  left: 50%;
+  bottom: 30vw;
+  transform: translateX(-50%);
+  width: 100%;
+}
+
+.callOrEmail a {
+  width: calc(30% - 5vw);
+  height: calc(30% - 5vw);
+  border-radius: 30%;
+  border: 4px solid var(--rs-text-link-active);
+  padding: 20px;
+  background-color: var(--rs-text-link);
+}
+
+.callOrEmail a svg {
+  color: var(--rs-text-link-active);
+}

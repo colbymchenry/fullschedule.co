@@ -28,6 +28,7 @@
     "react-dom": "18.1.0",
     "react-firebase-hooks": "^5.0.3",
     "react-google-login": "^5.2.2",
+    "react-hook-form": "^7.34.0",
     "react-input-mask": "^2.0.4",
     "react-use": "^17.4.0",
     "remote-pay-cloud": "^4.1.2",
